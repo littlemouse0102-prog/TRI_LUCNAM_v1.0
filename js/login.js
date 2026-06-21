@@ -70,10 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // PHÂN QUYỀN ĐIỀU HƯỚNG: Kiểm tra cột Role trên file Sheets của mã PIN này
                     if (response.user.role === "ADMIN") {
-                        alert(`👋 Xin chào Quản trị viên: ${response.user.name}`);
                         window.location.href = "admin.html"; // Chuyển hướng thẳng sang trang Admin
                     } else {
-                        alert(`🎉 Đăng nhập thành công! Chào mừng ${response.user.name}`);
                         window.location.href = "member.html"; // Chuyển hướng sang trang Thành viên thường
                     }
                 } else {
