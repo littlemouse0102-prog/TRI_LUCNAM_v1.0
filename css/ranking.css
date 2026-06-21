@@ -101,32 +101,68 @@ body {
     margin-bottom: 16px;
 }
 
+/* BỤC VINH QUANG - CỐ ĐỊNH KÍCH THƯỚC BẰNG NHAU */
+/* BỤC VINH QUANG - BO TRÒN 4 GÓC & BẰNG NHAU */
+
 .podium-container {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-end; /* Đẩy bục chạm đáy */
     justify-content: center;
-    gap: 8px;
-    padding-top: 10px;
+    gap: 10px;
+    padding-top: 20px;
 }
 
 .podium-card {
     background-color: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    border: 2px solid var(--border);
+    border-radius: 16px;       /* BO TRÒN 4 GÓC */
     padding: 12px 6px;
     text-align: center;
+    
+    /* Cấu hình chiều ngang bằng nhau */
     flex: 1;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    min-width: 0; 
+    
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     position: relative;
     transition: transform 0.2s;
+    padding-bottom: 16px; /* Tạo khoảng trống ở đáy bục */
 }
+
+/* Điều chỉnh độ cao các bục */
+.podium-card.rank-1 { 
+    height: 150px; 
+    border-color: #FBBF24; 
+    background: linear-gradient(180deg, #fffcf0 0%, #ffffff 100%); 
+    z-index: 2; 
+}
+.podium-card.rank-2 { 
+    height: 145px; 
+    border-color: #94A3B8; 
+    background: #f8fafc; 
+}
+.podium-card.rank-3 { 
+    height: 140px; 
+    border-color: #B45309; 
+    background: #fffaf5; 
+}
+
+/* Để avatar không bị che khuất khi bo tròn 4 góc */
+.podium-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 4px auto 8px auto;
+    display: block;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px var(--border);
+}
+
+
 
 .podium-card:hover { transform: translateY(-2px); }
 
-/* Điều phối độ cao bục */
-.podium-card.rank-1 { height: 160px; border-color: #FBBF24; z-index: 2; }
-.podium-card.rank-2 { height: 140px; }
-.podium-card.rank-3 { height: 130px; }
 
 .podium-medal {
     font-size: 20px;
@@ -145,21 +181,28 @@ body {
     display: block;
     border: 2px solid var(--border);
 }
-.podium-card.rank-1 .podium-avatar { width: 52px; height: 52px; border-color: #FBBF24; }
 
+/* Tên thành viên: Nhỏ hơn và màu xanh chủ đạo */
 .podium-name {
-    font-size: 13px;
+    font-size: 5px;           /* Giảm kích thước xuống 11px */
     font-weight: 700;
-    color: var(--dark);
+    color: var(--primary);     /* Đổi thành màu xanh chủ đạo */
+    margin: 4px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0 4px;
 }
 
+/* Điểm số: Nhỏ hơn nữa và màu xanh đậm */
 .podium-score {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--primary);
+    font-size: 10px;           /* Giảm kích thước xuống 10px */
+    font-weight: 700;
+    color: var(--dark);        /* Màu xanh đậm để tạo tương phản */
+    background-color: var(--light);
+    padding: 2px 6px;
+    border-radius: 10px;
+    display: inline-block;
     margin-top: 2px;
 }
 
@@ -292,8 +335,13 @@ body {
     font-size: 13px;
     font-weight: 700;
     color: var(--primary);
-    width: 65px;
-    text-align: right;
+    
+    /* Thiết lập quan trọng để thẳng hàng */
+    width: 80px;            /* Cố định độ rộng cột (tùy chỉnh nếu thấy hẹp) */
+    text-align: right;      /* Căn lề phải để các con số thẳng hàng theo hàng đơn vị */
+    white-space: nowrap;    /* Ngăn xuống dòng */
+    flex-shrink: 0;         /* Không bị co lại */
+    padding-right: 5px;     /* Khoảng cách nhỏ với icon cúp */
 }
 
 .row-cups {
@@ -395,4 +443,27 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover; /* Giúp ảnh không bị méo */
+}
+/* Chữ hiển thị trên bục (đã bỏ tên thành viên) */
+/* Khung chứa điểm số */
+.member-score {
+    font-size: 10px;          /* Cực kỳ nhỏ gọn */
+    font-weight: 700;
+    color: var(--dark);       /* Màu xanh đậm */
+    background-color: var(--white); /* Nền trắng cho khung */
+    border: 1px solid var(--primary); /* Viền màu xanh chính để nhấn */
+    padding: 2px 8px;
+    border-radius: 12px;      /* Bo tròn hoàn toàn 2 đầu */
+    display: inline-block;
+    margin-top: 6px;
+    box-shadow: 0 2px 4px rgba(15, 81, 50, 0.1); /* Đổ bóng nhẹ cho khung */
+}
+
+/* Nhãn thứ hạng (1st, 2nd, 3rd) */
+.rank-label {
+    font-size: 9px;
+    font-weight: 900;
+    color: var(--dark);      /* Chuyển sang xanh đậm để đồng bộ */
+    text-transform: uppercase;
+    margin-bottom: 6px;
 }
