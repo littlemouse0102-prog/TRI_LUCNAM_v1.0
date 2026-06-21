@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - TRIATHLON LỤC NAM</title>
+    <!-- Thêm thư viện icon cho vòng xoay loading lúc bấm đăng nhập -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0A3D25; /* Màu xanh thương hiệu */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-card {
+            background: #FFFFFF;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .logo-title h2 { color: #0A3D25; font-size: 24px; margin-bottom: 5px; font-weight: 700; }
+        .logo-title p { color: #718096; font-size: 14px; margin-bottom: 30px; }
+        
+        .input-group { position: relative; margin-bottom: 25px; }
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            font-size: 20px;
+            letter-spacing: 6px; /* Giúp dấu chấm mật khẩu hiển thị giãn cách đẹp */
+            text-align: center;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .input-group input:focus { border-color: #0F5132; box-shadow: 0 0 0 3px rgba(15,81,50,0.1); }
+        .input-group input.invalid { border-color: #E53E3E; background-color: #FFF5F5; }
+        
+        .error-message {
+            color: #E53E3E;
+            font-size: 13px;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+        .error-message.show { display: block; }
+        
+        .submit-btn {
+            width: 100%;
+            background-color: #0F5132;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .submit-btn:hover { background-color: #0A3D25; }
+        .submit-btn:disabled { background-color: #A0AEC0; cursor: not-allowed; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-title">
+            <h2>TRIATHLON LỤC NAM</h2>
+            <p>Vui lòng nhập mã PIN để đăng nhập</p>
+        </div>
+
+        <!-- Đảm bảo cấu trúc Form bọc quanh để nhận lệnh nút bấm -->
+        <form id="loginForm">
+            <!-- CHỈ GIỮ LẠI DUY NHẤT 1 Ô MÃ PIN NHƯ BAN ĐẦU -->
+            <div class="input-group">
+                <input type="password" id="pinInput" placeholder="••••" maxlength="6" autocomplete="off">
+            </div>
+
+            <!-- Nơi hiện chữ thông báo nếu gõ sai PIN -->
+            <div id="errorMessage" class="error-message"></div>
+
+            <button type="submit" id="submitBtn" class="submit-btn">
+                <span class="btn-text">Đăng nhập</span>
+                <span class="spinner hidden"><i class="fa-solid fa-spinner fa-spin"></i> Đang xác thực...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Gọi chuẩn đường dẫn file trong thư mục js/ -->
+    <script src="js/api.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

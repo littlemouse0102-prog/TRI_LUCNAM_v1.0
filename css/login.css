@@ -1,0 +1,244 @@
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #F8F9FA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: #333333;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ==========================================================================
+   LAYOUT & CONTAINER (Mobile First)
+   ========================================================================== */
+.login-container {
+    width: 100%;
+    max-width: 400px; /* Cảm giác như một app điện thoại trên màn hình lớn */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ==========================================================================
+   LOGO SECTION
+   ========================================================================== */
+.logo-section {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.logo-icon {
+    background-color: #0F5132;
+    color: #FFFFFF;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 4px 12px rgba(15, 81, 50, 0.2);
+}
+
+.logo-section h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0A3D25;
+    letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   LOGIN CARD
+   ========================================================================== */
+.login-card {
+    background-color: #FFFFFF;
+    width: 100%;
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.login-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333333;
+    text-align: center;
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   INPUT FIELDS
+   ========================================================================== */
+.input-group {
+    margin-bottom: 24px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 20px;
+    color: #0F5132;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px 20px 14px 50px;
+    font-size: 16px;
+    border: 2px solid #0F5132;
+    border-radius: 50px; /* Dạng viên thuốc */
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #FFFFFF;
+    letter-spacing: 2px; /* Tạo khoảng cách đẹp cho mã PIN */
+}
+
+.input-wrapper input::placeholder {
+    letter-spacing: normal;
+    color: #A0AEC0;
+    font-size: 15px;
+}
+
+.input-wrapper input:focus {
+    border-color: #0A3D25;
+    box-shadow: 0 0 0 4px rgba(15, 81, 50, 0.15);
+}
+
+/* Error State */
+.error-message {
+    color: #DC3545;
+    font-size: 13px;
+    margin-top: 8px;
+    padding-left: 16px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+}
+
+.error-message.show {
+    display: flex;
+}
+
+.input-wrapper input.invalid {
+    border-color: #DC3545;
+}
+
+.input-wrapper input.invalid:focus {
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.15);
+}
+
+/* ==========================================================================
+   BUTTONS & LINKS
+   ========================================================================== */
+.btn-submit {
+    width: 100%;
+    background-color: #0F5132;
+    color: #FFFFFF;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-submit:hover {
+    background-color: #0A3D25;
+}
+
+.btn-submit:active {
+    transform: scale(0.97); /* Hiệu ứng scale nhẹ khi bấm */
+}
+
+.btn-submit:disabled {
+    background-color: #A0AEC0;
+    cursor: not-allowed;
+}
+
+.card-footer {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.contact-link {
+    font-size: 13px;
+    color: #718096;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.contact-link:hover {
+    color: #0F5132;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   ANIMATIONS & LOADING
+   ========================================================================== */
+.animate-fade-in {
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #FFFFFF;
+    animation: spin 1s ease-in-out infinite;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

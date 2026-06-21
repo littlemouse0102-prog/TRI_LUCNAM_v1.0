@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin Portal - TRIATHLON LỤC NAM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+    <div class="app-container animate-fade-in">
+        
+        <header class="app-header">
+            <div class="header-left">
+                <i class="fa-solid fa-person-triathlon"></i>
+                <span>TRIATHLON LỤC NAM</span>
+            </div>
+            <div class="header-right">
+                <span class="header-role">ADMIN</span>
+                <img src="https://ui-avatars.com/api/?name=Admin&background=0A3D25&color=fff&rounded=true" alt="Admin Avatar" class="header-avatar" id="headerAvatar">
+            </div>
+        </header>
+
+        <main class="app-content">
+            
+            <div class="admin-card">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=0F5132&color=fff&rounded=true" alt="Admin Profile" class="admin-card-avatar" id="adminCardAvatar">
+                <div class="admin-card-info">
+                    <h2 id="adminName">Đang tải...</h2>
+                    <p class="admin-card-role"><i class="fa-solid fa-shield-halved"></i> Vai trò: <span>ADMIN</span></p>
+                    <p class="admin-card-date"><i class="fa-solid fa-calendar-day"></i> Ngày: <span id="currentDate">--/--/----</span></p>
+                </div>
+            </div>
+
+            <section class="dashboard-section">
+                <div class="section-title">Thống Kê Tổng Quan</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header"><i class="fa-solid fa-users"></i> Thành viên</div>
+                        <div class="stat-card-body skeleton" id="statMembers">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header"><i class="fa-solid fa-trophy"></i> Tổng Cups</div>
+                        <div class="stat-card-body skeleton" id="statCups">--</div>
+                    </div>
+                    <div class="stat-card full-width">
+                        <div class="stat-card-header"><i class="fa-solid fa-swimming-pool"></i> Tổng Bơi</div>
+                        <div class="stat-card-body skeleton" id="statSwim">-- <span>km</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header"><i class="fa-solid fa-bicycle"></i> Tổng Đạp</div>
+                        <div class="stat-card-body skeleton" id="statBike">-- <span>km</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header"><i class="fa-solid fa-person-running"></i> Tổng Chạy</div>
+                        <div class="stat-card-body skeleton" id="statRun">-- <span>km</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section">
+                <div class="section-title">Thống Kê Nhanh</div>
+                <div class="quick-stats-scroll">
+                    <div class="quick-card swim">
+                        <span class="quick-label">Top Swim 🏊</span>
+                        <h4 id="topSwimName" class="skeleton-text">--</h4>
+                        <p id="topSwimVal">-- km</p>
+                    </div>
+                    <div class="quick-card bike">
+                        <span class="quick-label">Top Bike 🚴</span>
+                        <h4 id="topBikeName" class="skeleton-text">--</h4>
+                        <p id="topBikeVal">-- km</p>
+                    </div>
+                    <div class="quick-card run">
+                        <span class="quick-label">Top Run 🏃</span>
+                        <h4 id="topRunName" class="skeleton-text">--</h4>
+                        <p id="topRunVal">-- km</p>
+                    </div>
+                    <div class="quick-card total">
+                        <span class="quick-label">Top Total 🏆</span>
+                        <h4 id="topTotalName" class="skeleton-text">--</h4>
+                        <p id="topTotalVal">-- Pts</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section">
+                <div class="section-title">Khu vực quản lý</div>
+                <div class="management-buttons">
+                    <button class="btn-manage" onclick="toggleModal('modalMembers')">
+                        <i class="fa-solid fa-address-book"></i> Quản lý thành viên
+                    </button>
+                    <button class="btn-manage" onclick="toggleModal('modalAddMember')">
+                        <i class="fa-solid fa-user-plus"></i> Thêm thành viên mới
+                    </button>
+                    <button class="btn-manage" onclick="toggleModal('modalResetPin')">
+                        <i class="fa-solid fa-key"></i> Đặt lại mã PIN thành viên
+                    </button>
+                    <button class="btn-manage" onclick="alert('Tính năng đang phát triển đồng bộ API!')">
+                        <i class="fa-solid fa-pen-to-square"></i> Sửa dữ liệu tập luyện
+                    </button>
+                    <button class="btn-manage danger" onclick="alert('Tính năng bảo mật dữ liệu!')">
+                        <i class="fa-solid fa-trash-can"></i> Xóa dữ liệu tập luyện
+                    </button>
+                </div>
+            </section>
+
+            <section class="dashboard-section">
+                <div class="section-title">Bảng xếp hạng (Top 10)</div>
+                <div class="ranking-table-container">
+                    <table class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px; text-align: center;">Hạng</th>
+                                <th>Thành viên</th>
+                                <th style="text-align: right;">Điểm</th>
+                                <th style="text-align: center; width: 60px;"><i class="fa-solid fa-trophy"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankingTableBody">
+                            <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+                            <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+                            <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="ranking.html" class="btn-view-more">Xem bảng xếp hạng đầy đủ <i class="fa-solid fa-angle-right"></i></a>
+            </section>
+
+            <section class="dashboard-section">
+                <div class="section-title">Hoạt động gần đây</div>
+                <div class="activity-list" id="activityList">
+                    <div class="skeleton-activity"></div>
+                    <div class="skeleton-activity"></div>
+                </div>
+            </section>
+
+            <button id="logoutBtn" class="btn-logout">
+                <i class="fa-solid fa-power-off"></i> Đăng xuất hệ thống
+            </button>
+        </main>
+    </div>
+
+    <div id="modalMembers" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Danh sách thành viên</h3>
+                <button onclick="toggleModal('modalMembers')">&times;</button>
+            </div>
+            <div class="modal-body scrollable">
+                <div id="membersContainerList">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAddMember" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Thêm thành viên</h3>
+                <button onclick="toggleModal('modalAddMember')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addMemberForm" class="admin-form">
+                    <div class="form-group">
+                        <label>Họ tên thành viên</label>
+                        <input type="text" id="addName" required placeholder="Ví dụ: Nguyễn Văn A">
+                    </div>
+                    <div class="form-group">
+                        <label>Mã PIN đăng nhập (Số)</label>
+                        <input type="password" id="addPin" pattern="[0-9]*" inputmode="numeric" required placeholder="Ví dụ: 123456">
+                    </div>
+                    <div class="form-group">
+                        <label>Vai trò</label>
+                        <select id="addRole">
+                            <option value="MEMBER">MEMBER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit-form">Thêm Mới Hệ Thống</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalResetPin" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Đặt lại mã PIN</h3>
+                <button onclick="toggleModal('modalResetPin')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="resetPinForm" class="admin-form">
+                    <div class="form-group">
+                        <label>Chọn thành viên</label>
+                        <select id="resetUserSelect" required>
+                            <option value="">-- Chọn thành viên --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mã PIN bảo mật mới</label>
+                        <input type="password" id="resetNewPin" pattern="[0-9]*" inputmode="numeric" required placeholder="Nhập chuỗi số mới">
+                    </div>
+                    <button type="submit" class="btn-submit-form">Cập Nhật Mã PIN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

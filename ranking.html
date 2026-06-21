@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bảng Xếp Hạng - TRIATHLON LỤC NAM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/ranking.css">
+</head>
+<body>
+
+    <div class="app-container animate-fade-in">
+        
+        <header class="app-header">
+            <div class="header-left" onclick="window.location.href='member.html'">
+                <i class="fa-solid fa-chevron-left"></i>
+                <span class="brand-short">TRỞ VỀ</span>
+            </div>
+            <div class="header-center">BẢNG XẾP HẠNG</div>
+            <div class="header-right">
+                <i class="fa-solid fa-trophy-star trophy-icon"></i>
+            </div>
+        </header>
+
+        <main class="app-content">
+
+            <section class="summary-cards">
+                <div class="mini-card">
+                    <span class="icon">🏊</span>
+                    <div class="info">
+                        <span class="label">Tổng Bơi</span>
+                        <h5 id="clubSwim">-- km</h5>
+                    </div>
+                </div>
+                <div class="mini-card">
+                    <span class="icon">🚴</span>
+                    <div class="info">
+                        <span class="label">Tổng Đạp</span>
+                        <h5 id="clubBike">-- km</h5>
+                    </div>
+                </div>
+                <div class="mini-card">
+                    <span class="icon">🏃</span>
+                    <div class="info">
+                        <span class="label">Tổng Chạy</span>
+                        <h5 id="clubRun">-- km</h5>
+                    </div>
+                </div>
+                <div class="mini-card">
+                    <span class="icon">🏆</span>
+                    <div class="info">
+                        <span class="label">Tổng Cups</span>
+                        <h5 id="clubCups">--</h5>
+                    </div>
+                </div>
+            </section>
+
+            <section class="podium-section">
+                <div class="podium-container" id="podiumContainer">
+                    <div class="podium-card skeleton" style="height: 120px;"></div>
+                    <div class="podium-card skeleton" style="height: 140px;"></div>
+                    <div class="podium-card skeleton" style="height: 110px;"></div>
+                </div>
+            </section>
+
+            <section class="filter-section">
+                <div class="tabs-scroll">
+                    <button class="tab-btn active" data-type="all">Tổng</button>
+                    <button class="tab-btn" data-type="swim">Bơi</button>
+                    <button class="tab-btn" data-type="bike">Đạp</button>
+                    <button class="tab-btn" data-type="run">Chạy</button>
+                    <button class="tab-btn" data-type="month">Tháng này</button>
+                    <button class="tab-btn" data-type="year">Năm nay</button>
+                </div>
+            </section>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchBar" placeholder="Tìm tên hoặc mã thành viên...">
+            </div>
+
+            <section class="leaderboard-section">
+                <div class="section-title" id="leaderboardTitle">BXH TỔNG TRIATHLON</div>
+                
+                <div class="leaderboard-list" id="leaderboardRows">
+                    <div class="list-item-skeleton"></div>
+                    <div class="list-item-skeleton"></div>
+                    <div class="list-item-skeleton"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="userModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
