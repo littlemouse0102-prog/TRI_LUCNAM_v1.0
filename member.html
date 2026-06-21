@@ -22,9 +22,6 @@
                 <img src="https://ui-avatars.com/api/?name=TL&background=0F5132&color=fff" alt="Logo" class="mini-logo">
                 <span class="brand-name">TRIATHLON LỤC NAM</span>
             </div>
-            <div class="header-right">
-                <button id="logoutBtn" title="Đăng xuất"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </div>
         </header>
 
         <!-- NỘI DUNG CHÍNH -->
@@ -50,7 +47,7 @@
                     </div>
                     <div class="badge">
                         <span class="badge-label">Danh hiệu</span>
-                        <span id="userCups" class="badge-value amber">🏆 --</span>
+                        <span id="userCups" class="badge-value amber">-- 🏆</span>
                     </div>
                 </div>
             </section>
@@ -59,8 +56,8 @@
             <section class="quick-banner-link">
                 <a href="ranking.html" class="banner-anchor">
                     <div class="banner-text">
-                        <h4>BẢNG XẾP HẠNG CLB</h4>
-                        <p>Xem vị trí của bạn và đồng đội toàn đoàn</p>
+                        <h4>BẢNG XẾP HẠNG </h4>
+                        <p>Xem vị trí của bạn và đồng đội</p>
                     </div>
                     <i class="fa-solid fa-chevron-right"></i>
                 </a>
@@ -102,6 +99,30 @@
                     <div class="empty-log">Đang tải nhật ký từ hệ thống...</div>
                 </div>
             </section>
+             
+              <!-- nút đăng xuất -->
+            <div id="logoutSection" style="margin: 20px 0; padding: 20px; text-align: center;">
+            <button id="adminLogoutBtn" class="btn-logout" style="
+                background-color: #FFF5F5;
+                color: #C53030;
+                border: 1px solid #FEB2B2;
+                padding: 12px 24px;
+                border-radius: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+                font-size: 14px;
+                transition: all 0.3s;
+            ">
+                <i class="fa-solid fa-power-off"></i> Đăng xuất
+            </button>
+        </div>
+
+        <div class="bottom-spacer"></div>
 
             <!-- ĐOẠN ĐỆM TRÁNH BỊ THANH MENU CHE NỘI DUNG -->
             <div class="bottom-spacer"></div>
@@ -114,14 +135,18 @@
                 <i class="fa-solid fa-user"></i>
                 <span>Cá nhân</span>
             </a>
-            <a href="ranking.html" class="nav-item">
+        
+            <!-- Chỉ số cá nhân SET SAU -->
+            <!-- <a href="ranking.html" class="nav-item">
                 <i class="fa-solid fa-trophy"></i>
                 <span>Xếp hạng</span>
-            </a>
+            </a> -->
+
         </nav>
+        
 
     </div>
-
+    
     <!-- JS Scripts Layer -->
     <script src="js/api.js"></script>
     <script src="js/member.js"></script>
