@@ -43,22 +43,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Khởi tạo trang
     async function initRankingPage() {
         const res = await callSystemAPI("getDashboard");
-        console.log("Dữ liệu trả về từ Server:", res); // <-- THÊM DÒNG NÀY
+        
+        if (!res || !res.success) return;
 
-        if (!res || !res.success) {
-            return;
-        }
-
+        // 1. Cập nhật chỉ số tổng CLB
         if (res.summary) {
-            // Kiểm tra xem ID có tồn tại trong HTML không
-            const elSwim = document.getElementById('clubSwim');
-            if(elSwim) elSwim.textContent = res.summary.swim + " km";
-            
+            document.getElementById('clubSwim').textContent = res.summary.swim + " km";
             document.getElementById('clubBike').textContent = res.summary.bike + " km";
             document.getElementById('clubRun').textContent = res.summary.run + " km";
             document.getElementById('clubCups').textContent = res.summary.cups;
         }
-   }
+
+        // 2. QUAN TRỌNG: Lưu dữ liệu vào biến toàn cục để hàm render dùng
+        if (res.rankings) {
+            rawMembersData = res.rankings; // Gán dữ liệu từ Sheets vào đây
+            renderPodium(rawMembersData);   // Hiển thị bục vinh quang
+            renderLeaderboard();           // Hiển thị danh sách bên dưới
+        }
+    }
 
     // Hiển thị danh sách lên giao diện
     function renderLeaderboard() {
@@ -90,3 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
     searchBar.addEventListener('input', renderLeaderboard);
     initRankingPage();
 });
+
+//dữ liệu JSON
+async function loadMemberDashboardData(userId) {
+    const response = await callSystemAPI("getDashboard", { userId: userId });
+    
+    // THÊM DÒNG NÀY VÀO ĐỂ XEM DỮ LIỆU
+    console.log("Dữ liệu từ Google Sheets trả về:", response); 
+
+    if (response.success) {
+        // ... các xử lý tiếp theo
+    }
+}
