@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 2. TẢI DỮ LIỆU THỜI GIAN THỰC TỪ GOOGLE SHEETS
     await loadMemberDashboardData(currentUser.id);
 
-    // 3. XỬ LÝ SỰ KIỆN GỬI THÀNH TÍCH TẬP LUYỆN (SUBMIT FORM)
     // 3. XỬ LÝ SỰ KIỆN GỬI THÀNH TÍCH TẬP LUYỆN (SUBMIT FORM TỰ ĐỘNG ĐẨY VÀO SHEET ACTIVITIES)
     const activityForm = document.getElementById("activityForm");
     if (activityForm) {
@@ -105,7 +104,7 @@ function renderBasicProfile(user) {
         const jpgAvatar = `avatars/${user.id}.jpg`; 
         
         // Ảnh chữ dự phòng nếu thành viên đó chưa có ảnh chân dung trong thư mục
-        const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}&background=0F5132&color=fff`;
+        const defaultAvatar = `avatars/default.jpg`;
 
         // Gắn ảnh .jpg vào hiển thị
         userAvatarEl.src = jpgAvatar;
@@ -166,9 +165,10 @@ async function loadMemberDashboardData(userId) {
                 (act.userId && String(act.userId).trim() === String(userId).trim()) || 
                 (act.name && String(act.name).trim().toLowerCase() === currentUserName.trim().toLowerCase())
             );
+            myActivities.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
             if (myActivities.length === 0) {
-                historyLogList.innerHTML = `<div class="empty-log">Anh chưa có hoạt động nào được ghi nhận gần đây. Hãy tập luyện và cập nhật kết quả ngay nhé!</div>`;
+                historyLogList.innerHTML = `<div class="empty-log">Bạn chưa có hoạt động nào được ghi nhận gần đây. Hãy tập luyện và cập nhật kết quả ngay nhé!</div>`;
                 return;
             }
 
@@ -189,7 +189,16 @@ async function loadMemberDashboardData(userId) {
                 
                 logItem.innerHTML = `
                     <div>
-                        <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">Ngày gửi: ${act.date || 'Hôm nay'}</span>
+                    <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">Ngày gửi: ${act.date 
+                        ? new Date(act.date).toLocaleString('vi-VN', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            year: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        }) 
+                        : 'Hôm nay'}
+                    </span>
                         <span style="color: #718096; font-size: 12px; font-weight: 500;">
                             ${act.swim ? `🏊 ${act.swim}m ` : ''}
                             ${act.bike ? `🚴 ${act.bike}km ` : ''}
@@ -218,4 +227,17 @@ function calculateEstimatedPoints(swim, bike, run) {
     const bPts = (parseFloat(bike) || 0) * 0.6;  // 1km được 0.6đ
     const rPts = (parseFloat(run) || 0) * 1.4;   // 1km được 1.4đ
     return (sPts + bPts + rPts).toFixed(1);
+}
+// Sự kiện cho nút Đăng xuất ở cuối trang (không hiện thông báo)
+const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+
+if (adminLogoutBtn) {
+    adminLogoutBtn.addEventListener("click", function() {
+        // Xóa dữ liệu phiên làm việc ngay lập tức
+        localStorage.clear(); 
+        sessionStorage.clear();
+        
+        // Chuyển hướng về trang đăng nhập
+        window.location.href = "index.html"; 
+    });
 }
