@@ -32,10 +32,7 @@ async function callSystemAPI(action, data = {}) {
 
     } catch (error) {
         console.error("❌ Lỗi cục bộ hệ thống API:", error);
-        return { 
-            success: false, 
-            msg: "Không thể kết nối tới máy chủ Google Sheets. Anh kiểm tra lại mạng hoặc quyền cấu hình 'Anyone' trên Apps Script nhé!" 
-        };
+        return { success: false, msg: "Lỗi kết nối server" }; // Đảm bảo luôn trả về Object
     }
 }
 
