@@ -1,216 +1,364 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Portal - TRIATHLON LỤC NAM</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/admin.css">
-</head>
-<body>
+/**
+ * ==========================================
+ * TRIATHLON LỤC NAM - ADMIN LOGIC (admin.js)
+ * ==========================================
+ * Quản lý giao diện admin, tải danh sách thành viên, tổng hợp dữ liệu từ Google Sheets
+ */
 
-    <div class="app-container animate-fade-in">
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // ==========================================================================
+    // 1. KIỂM TRA BẢO MẬT & PHÂN QUYỀN (ĐỒNG BỘ CHUẨN LOCALSTORAGE)
+    // ==========================================================================
+    let currentUser = null;
+    try {
+        // Đọc đúng gói dữ liệu "triathlon_user" được sinh ra từ file login.js
+        const userJson = localStorage.getItem("triathlon_user");
+        currentUser = userJson ? JSON.parse(userJson) : null;
+
+        // 2. Kiểm tra và chạy hàm
+        if (currentUser) {
+            if (currentUser.role === 'ADMIN') {
+                renderAdminProfile(currentUser); // Chạy hàm cho Admin
+            } else {
+                renderBasicProfile(currentUser); // Chạy hàm cho thành viên thường
+            }
+        }
+
+    } catch (err) {
+        console.error("Lỗi đọc cấu hình bảo mật:", err);
+    }
+
+    // Nếu không có dữ liệu hoặc quyền trong hệ thống KHÔNG PHẢI là ADMIN -> Đá ngược về login
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+        alert('Cảnh báo bảo mật: Vui lòng đăng nhập tài khoản ADMIN để truy cập!');
+        localStorage.removeItem("triathlon_user"); // Dọn dẹp bộ nhớ nếu có dữ liệu rác
+        window.location.href = 'index.html';
+        return;
+    }
+
         
-        <header class="app-header">
-            <div class="header-left">
-                <i class="fa-solid fa-person-triathlon"></i>
-                <span>TRIATHLON LỤC NAM</span>
-            </div>
-            <div class="header-right">
-                <span class="header-role">ADMIN</span>
-                <img src="https://ui-avatars.com/api/?name=Admin&background=0A3D25&color=fff&rounded=true" alt="Admin Avatar" class="header-avatar" id="headerAvatar">
-            </div>
-        </header>
+    // Gắn ngày hiện tại chuẩn định dạng DD/MM/YYYY
+    const today = new Date();
+    document.getElementById('currentDate').textContent = 
+        `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
 
-        <main class="app-content">
+    // ==========================================================================
+    // 2. TẢI VÀ ĐỔ DỮ LIỆU DASHBOARD HỆ THỐNG
+    // ==========================================================================
+    let listUsersCache = []; // Lưu trữ tạm danh sách để nạp vào Select Form
+
+    async function loadDashboardData() {
+        // Gọi hàm kết nối từ file api.js
+        const res = await callSystemAPI("getDashboard");
+    
+        // Kiểm tra xem res có tồn tại và thành công không
+        if (!res || !res.success) {
+            console.error("Dữ liệu trả về bị lỗi hoặc trống:", res);
+            alert("Không thể tải dữ liệu: " + (res?.msg || "Lỗi không xác định"));
+            return;
+        }
+
+
+       // --- A. Đổ dữ liệu Thống kê tổng quan & Tắt Skeleton ---
+        const m = document.getElementById('statMembers');
+        if (m && res.rankings) { m.textContent = res.rankings.length; m.classList.remove('skeleton'); }
+        
+        const c = document.getElementById('statCups');
+        if (c) { c.textContent = res.summary?.cups || 0; c.classList.remove('skeleton'); }
+        
+        const s = document.getElementById('statSwim');
+        if (s) { s.innerHTML = `${res.summary?.swim ? res.summary.swim.toFixed(1) : 0} <span>km</span>`; s.classList.remove('skeleton'); }
+        
+        const b = document.getElementById('statBike');
+        if (b) { b.innerHTML = `${res.summary?.bike ? res.summary.bike.toFixed(1) : 0} <span>km</span>`; b.classList.remove('skeleton'); }
+        
+        const r = document.getElementById('statRun');
+        if (r) { r.innerHTML = `${res.summary?.run ? res.summary.run.toFixed(1) : 0} <span>km</span>`; r.classList.remove('skeleton'); }
+
+        // // --- B. Đổ dữ liệu Thống kê nhanh (SỬA ĐỂ TRÁNH SẬP DO THIẾU QUICKSTATS) ---
+        // // Thêm dấu ?. sau res.quickStats để nếu Backend chưa làm tính năng này thì Frontend không bị sập
+        // if(document.getElementById('topSwimName')) {
+        //     document.getElementById('topSwimName').textContent = res.quickStats?.topSwim?.name || "Chưa cập nhật";
+        //     document.getElementById('topSwimName').classList.remove('skeleton-text');
+        //     document.getElementById('topSwimVal').textContent = `${res.quickStats?.topSwim?.val || 0} km`;
+        // }
+
+        // if(document.getElementById('topBikeName')) {
+        //     document.getElementById('topBikeName').textContent = res.quickStats?.topBike?.name || "Chưa cập nhật";
+        //     document.getElementById('topBikeName').classList.remove('skeleton-text');
+        //     document.getElementById('topBikeVal').textContent = `${res.quickStats?.topBike?.val || 0} km`;
+        // }
+
+        // if(document.getElementById('topRunName')) {
+        //     document.getElementById('topRunName').textContent = res.quickStats?.topRun?.name || "Chưa cập nhật";
+        //     document.getElementById('topRunName').classList.remove('skeleton-text');
+        //     document.getElementById('topRunVal').textContent = `${res.quickStats?.topRun?.val || 0} km`;
+        // }
+
+        // if(document.getElementById('topTotalName')) {
+        //     document.getElementById('topTotalName').textContent = res.quickStats?.topTotal?.name || "Chưa cập nhật";
+        //     document.getElementById('topTotalName').classList.remove('skeleton-text');
+        //     document.getElementById('topTotalVal').textContent = `${res.quickStats?.topTotal?.val || 0} Pts`;
+        // }
+        
+// --- C. Đổ dữ liệu Bảng xếp hạng (ĐÃ SẮP XẾP, LÀM TRÒN & CÓ AVATAR THEO ID) ---
+        const tbody = document.getElementById('rankingTableBody');
+        if (tbody && res.rankings) {
+            tbody.innerHTML = ""; // Xóa dữ liệu cũ / Hàng Skeleton
+
+            // 1. Sao chép và Sắp xếp danh sách theo điểm (points) từ cao xuống thấp
+            const sortedRankings = [...res.rankings].sort((a, b) => {
+                const pointsA = parseFloat(a.points) || 0;
+                const pointsB = parseFloat(b.points) || 0;
+                return pointsB - pointsA; // Xếp điểm cao lên đầu
+            });
+
+            // 2. Chạy vòng lặp đổ dữ liệu lên bảng
+            sortedRankings.forEach((item, index) => {
+                const currentRank = index + 1; // Thứ hạng thực tế sau khi sắp xếp
+                
+                // Xử lý hiển thị danh hiệu/huy chương cho Top 3
+                let rankDisplay = `<span class="rank-badge rank-${currentRank}">${currentRank}</span>`;
+                if (currentRank === 1) rankDisplay = "🥇";
+                if (currentRank === 2) rankDisplay = "🥈";
+                if (currentRank === 3) rankDisplay = "🥉";
+
+                // Làm tròn điểm số chính xác 2 chữ số thập phân
+                const displayPoints = item.points ? parseFloat(item.points).toFixed(2) : "0.00";
+
+                // Đường dẫn ảnh theo ID của từng người (Ví dụ: avatars/U001.jpg)
+                const avatarPath = `avatars/${item.id || 'default'}.jpg`;
+
+                const row = `
+                    <tr>
+                        <td style="text-align: center;">${rankDisplay}</td>
+                        <td>
+                            <div class="user-cell">
+                                <img src="${avatarPath}" 
+                                     onerror="this.onerror=null; this.src='avatars/default.jpg';" 
+                                     alt="user">
+                                <span>${item.name}</span>
+                            </div>
+                        </td>
+                        <td style="text-align: right; font-weight: 600; color: var(--primary);">${displayPoints}</td>
+                        <td style="text-align: center; font-weight: bold; color: #D97706;">${item.cups || 0}</td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+      // --- D. Đổ dữ liệu Hoạt động gần đây (GIỚI HẠN 10, CÓ CUỘN & ĐỊNH DẠNG LẠI THỜI GIAN) ---
+        const actList = document.getElementById('activityList');
+        if (actList && res.activities) {
+            actList.innerHTML = "";
             
-            <div class="admin-card">
-                <img src="https://ui-avatars.com/api/?name=Admin&background=0F5132&color=fff&rounded=true" alt="Admin Profile" class="admin-card-avatar" id="adminCardAvatar">
-                <div class="admin-card-info">
-                    <h2 id="adminName">Đang tải...</h2>
-                    <p class="admin-card-role"><i class="fa-solid fa-shield-halved"></i> Vai trò: <span>ADMIN</span></p>
-                    <p class="admin-card-date"><i class="fa-solid fa-calendar-day"></i> Ngày: <span id="currentDate">--/--/----</span></p>
-                </div>
-            </div>
+            // 1. Cấu hình khung cuộn bằng JS
+            actList.style.maxHeight = "380px"; 
+            actList.style.overflowY = "auto";  
+            actList.style.paddingRight = "5px"; 
 
-            <section class="dashboard-section">
-                <div class="section-title">Thống Kê Tổng Quan</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-card-header"><i class="fa-solid fa-users"></i> Thành viên</div>
-                        <div class="stat-card-body skeleton" id="statMembers">--</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-header"><i class="fa-solid fa-trophy"></i> Tổng Cups</div>
-                        <div class="stat-card-body skeleton" id="statCups">--</div>
-                    </div>
-                    <div class="stat-card full-width">
-                        <div class="stat-card-header"><i class="fa-solid fa-swimming-pool"></i> Tổng Bơi</div>
-                        <div class="stat-card-body skeleton" id="statSwim">-- <span>km</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-header"><i class="fa-solid fa-bicycle"></i> Tổng Đạp</div>
-                        <div class="stat-card-body skeleton" id="statBike">-- <span>km</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-header"><i class="fa-solid fa-person-running"></i> Tổng Chạy</div>
-                        <div class="stat-card-body skeleton" id="statRun">-- <span>km</span></div>
-                    </div>
-                </div>
-            </section>
+            // 2. Lấy đúng 10 hoạt động đầu tiên
+            const top10Activities = res.activities.slice(0, 10);
 
-            <section class="dashboard-section">
-                <div class="section-title">Thống Kê Nhanh</div>
-                <div class="quick-stats-scroll">
-                    <div class="quick-card swim">
-                        <span class="quick-label">Top Swim 🏊</span>
-                        <h4 id="topSwimName" class="skeleton-text">--</h4>
-                        <p id="topSwimVal">-- km</p>
-                    </div>
-                    <div class="quick-card bike">
-                        <span class="quick-label">Top Bike 🚴</span>
-                        <h4 id="topBikeName" class="skeleton-text">--</h4>
-                        <p id="topBikeVal">-- km</p>
-                    </div>
-                    <div class="quick-card run">
-                        <span class="quick-label">Top Run 🏃</span>
-                        <h4 id="topRunName" class="skeleton-text">--</h4>
-                        <p id="topRunVal">-- km</p>
-                    </div>
-                    <div class="quick-card total">
-                        <span class="quick-label">Top Total 🏆</span>
-                        <h4 id="topTotalName" class="skeleton-text">--</h4>
-                        <p id="topTotalVal">-- Pts</p>
-                    </div>
-                </div>
-            </section>
+            top10Activities.forEach(act => {
+                // 3. Logic làm tròn số thực của bạn
+                const swimMeters = act.swim ? parseFloat(act.swim).toFixed(0) : "0";
+                const bikeKm = act.bike ? parseFloat(act.bike).toFixed(2) : "0";
+                const runKm = act.run ? parseFloat(act.run).toFixed(2) : "0";
 
-            <section class="dashboard-section">
-                <div class="section-title">Khu vực quản lý</div>
-                <div class="management-buttons">
-                    <button class="btn-manage" onclick="toggleModal('modalMembers')">
-                        <i class="fa-solid fa-address-book"></i> Quản lý thành viên
-                    </button>
-                    <button class="btn-manage" onclick="toggleModal('modalAddMember')">
-                        <i class="fa-solid fa-user-plus"></i> Thêm thành viên mới
-                    </button>
-                    <button class="btn-manage" onclick="toggleModal('modalResetPin')">
-                        <i class="fa-solid fa-key"></i> Đặt lại mã PIN thành viên
-                    </button>
-                    <button class="btn-manage" onclick="alert('Tính năng đang phát triển đồng bộ API!')">
-                        <i class="fa-solid fa-pen-to-square"></i> Sửa dữ liệu tập luyện
-                    </button>
-                    <button class="btn-manage danger" onclick="alert('Tính năng bảo mật dữ liệu!')">
-                        <i class="fa-solid fa-trash-can"></i> Xóa dữ liệu tập luyện
-                    </button>
-                </div>
-            </section>
+                // 4. XỬ LÝ ĐỊNH DẠNG THỜI GIAN (Giờ:Phút Ngày/Tháng/Năm)
+                let displayDate = "Chưa rõ thời gian";
+                if (act.date) {
+                    const dateObj = new Date(act.date);
+                    
+                    // Kiểm tra xem chuỗi ngày tháng có hợp lệ không
+                    if (!isNaN(dateObj.getTime())) {
+                        const hours = String(dateObj.getHours()).padStart(2, '0');
+                        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                        const day = String(dateObj.getDate()).padStart(2, '0');
+                        const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Tháng trong JS chạy từ 0-11
+                        const year = dateObj.getFullYear();
 
-            <section class="dashboard-section">
-                <div class="section-title">Bảng xếp hạng (Top 10)</div>
-                <div class="ranking-table-container">
-                    <table class="ranking-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px; text-align: center;">Hạng</th>
-                                <th>Thành viên</th>
-                                <th style="text-align: right;">Điểm</th>
-                                <th style="text-align: center; width: 60px;"><i class="fa-solid fa-trophy"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="rankingTableBody">
-                            <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
-                            <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
-                            <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <a href="ranking.html" class="btn-view-more">Xem bảng xếp hạng đầy đủ <i class="fa-solid fa-angle-right"></i></a>
-            </section>
+                        displayDate = `${hours}:${minutes} ${day}/${month}/${year}`;
+                    } else {
+                        // Nếu chuỗi không parse trực tiếp được (vd dạng dd/mm/yyyy hh:mm sẵn), giữ nguyên chuỗi gốc
+                        displayDate = act.date;
+                    }
+                }
 
-            <section class="dashboard-section">
-                <div class="section-title">Hoạt động gần đây</div>
-                <div class="activity-list" id="activityList">
-                    <div class="skeleton-activity"></div>
-                    <div class="skeleton-activity"></div>
-                </div>
-            </section>
-
-            <button id="logoutBtn" class="btn-logout">
-                <i class="fa-solid fa-power-off"></i> Đăng xuất hệ thống
-            </button>
-        </main>
-    </div>
-
-    <div id="modalMembers" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h3>Danh sách thành viên</h3>
-                <button onclick="toggleModal('modalMembers')">&times;</button>
-            </div>
-            <div class="modal-body scrollable">
-                <div id="membersContainerList">Đang tải dữ liệu...</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalAddMember" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h3>Thêm thành viên</h3>
-                <button onclick="toggleModal('modalAddMember')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addMemberForm" class="admin-form">
-                    <div class="form-group">
-                        <label>Họ tên thành viên</label>
-                        <input type="text" id="addName" required placeholder="Ví dụ: Nguyễn Văn A">
+                const item = `
+                    <div class="activity-item" style="margin-bottom: 8px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
+                        <div class="activity-top" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="activity-user" style="font-weight: 700; color: #2d3748;">${act.name}</span>
+                            <span class="activity-date" style="font-size: 11px; color: #A0AEC0;">${displayDate}</span>
+                        </div>
+                        <div class="activity-metrics" style="margin-top: 4px; display: flex; gap: 12px; font-size: 13px;">
+                            <span>🏊 ${swimMeters}m</span>
+                            <span>🚴 ${bikeKm}km</span>
+                            <span>🏃 ${runKm}km</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Mã PIN đăng nhập (Số)</label>
-                        <input type="password" id="addPin" pattern="[0-9]*" inputmode="numeric" required placeholder="Ví dụ: 123456">
-                    </div>
-                    <div class="form-group">
-                        <label>Vai trò</label>
-                        <select id="addRole">
-                            <option value="MEMBER">MEMBER</option>
-                            <option value="ADMIN">ADMIN</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-submit-form">Thêm Mới Hệ Thống</button>
-                </form>
-            </div>
-        </div>
-    </div>
+                `;
+                actList.insertAdjacentHTML('beforeend', item);
+            });
+        }
+        // --- E. Lưu danh sách thành viên vào bộ nhớ tạm phục vụ Form Thao Tác ---
+        listUsersCache = res.rankings || [];
+        populateUserDropdowns();
+    }
 
-    <div id="modalResetPin" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h3>Đặt lại mã PIN</h3>
-                <button onclick="toggleModal('modalResetPin')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="resetPinForm" class="admin-form">
-                    <div class="form-group">
-                        <label>Chọn thành viên</label>
-                        <select id="resetUserSelect" required>
-                            <option value="">-- Chọn thành viên --</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Mã PIN bảo mật mới</label>
-                        <input type="password" id="resetNewPin" pattern="[0-9]*" inputmode="numeric" required placeholder="Nhập chuỗi số mới">
-                    </div>
-                    <button type="submit" class="btn-submit-form">Cập Nhật Mã PIN</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    // Đổ danh sách người dùng vào các ô Select Dropdown và List Modal
+    function populateUserDropdowns() {
+        const selectDrop = document.getElementById('resetUserSelect');
+        const listContainer = document.getElementById('membersContainerList');
+        
+        if(selectDrop) selectDrop.innerHTML = '<option value="">-- Chọn thành viên --</option>';
+        if(listContainer) listContainer.innerHTML = '';
 
-    <script src="js/api.js"></script>
-    <script src="js/admin.js"></script>
-</body>
-</html>
+        listUsersCache.forEach(user => {
+            // Điền vào form Reset PIN
+            if (selectDrop) {
+                const opt = document.createElement('option');
+                opt.value = user.id;
+                opt.textContent = user.name;
+                selectDrop.appendChild(opt);
+            }
+
+            // Điền vào danh sách quản lý thành viên công khai
+            if (listContainer) {
+                const item = `
+                    <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; font-size:13px;">
+                        <strong>${user.name}</strong>
+                        <span style="color:var(--primary); font-weight:bold; font-size:11px;">${user.role}</span>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', item);
+            }
+        });
+    }
+
+    // Kích hoạt chạy hàm lấy dữ liệu ngay khi tải xong trang
+    loadDashboardData();
+
+    // ==========================================================================
+    // 3. XỬ LÝ SỰ KIỆN SUBMIT FORM (THÊM THÀNH VIÊN & ĐẶT LẠI PIN)
+    // ==========================================================================
+    
+    // Form Thêm Thành Viên
+    const addMemberForm = document.getElementById('addMemberForm');
+    if (addMemberForm) {
+        addMemberForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // 1. Lấy và chuẩn hóa dữ liệu đầu vào
+            const name = document.getElementById('addName').value.trim();
+            const pin = document.getElementById('addPin').value.trim();
+            const role = document.getElementById('addRole').value;
+
+            // 2. Kiểm tra dữ liệu nhanh (Client-side Validation)
+            if (!name || !pin || !role) {
+                alert("Vui lòng điền đầy đủ tất cả các trường thông tin!");
+                return;
+            }
+
+            if (isNaN(pin) || pin.length < 4) { // Ví dụ: kiểm tra mã PIN phải là số và tối thiểu 4 số
+                alert("Mã PIN phải là một chuỗi số (tối thiểu 4 ký số)!");
+                return;
+            }
+
+            // 3. Thay đổi trạng thái Button để tránh người dùng click liên tục (Spam)
+            const btn = e.target.querySelector('button[type="submit"]') || e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = "Đang xử lý..."; 
+            btn.disabled = true;
+
+            try {
+                // 4. Gọi API hệ thống
+                const res = await callSystemAPI("addMember", { name, pin, role });
+                
+                alert(res.msg);
+
+                // 5. Nếu thành công, làm sạch form và đóng modal
+                if (res.success) {
+                    e.target.reset();
+                    toggleModal('modalAddMember');
+                    await loadDashboardData(); // Thêm await nếu loadDashboardData cũng là hàm async
+                }
+            } catch (error) {
+                console.error("Lỗi khi thêm thành viên:", error);
+                alert("Đã xảy ra lỗi kết nối đến máy chủ. Vui lòng thử lại sau!");
+            } finally {
+                // 6. Khối này luôn chạy dù API thành công hay thất bại -> Trả lại trạng thái nút ban đầu
+                btn.textContent = originalText; 
+                btn.disabled = false;
+            }
+        });
+    }
+
+    // Form Đặt Lại Mã PIN
+    const resetPinForm = document.getElementById('resetPinForm');
+    if (resetPinForm) {
+        resetPinForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('resetUserSelect').value;
+            const newPin = document.getElementById('resetNewPin').value.trim();
+
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = "Đang cập nhật..."; btn.disabled = true;
+
+            const res = await callSystemAPI("resetPin", { userId, newPin });
+            alert(res.msg);
+
+            btn.textContent = originalText; btn.disabled = false;
+            if(res.success) {
+                e.target.reset();
+                toggleModal('modalResetPin');
+            }
+        });
+    }
+
+    // ==========================================================================
+    // 4. XỬ LÝ SỰ KIỆN ĐĂNG XUẤT (LOGOUT LỆNH)
+    // ==========================================================================
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Anh có chắc chắn muốn đăng xuất quyền Quản trị viên không?')) {
+                localStorage.clear(); // Xóa sạch bộ nhớ phiên đăng nhập
+                window.location.href = 'index.html'; // Đá ngược về trang đăng nhập chủ
+            }
+        });
+    }
+});
+
+// HÀM ĐIỀU KHIỂN BẬT TẮT SLIDE UP POPUP MODAL (GLOBAL SCOPE)
+function toggleModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.toggle('show');
+    }
+}
+
+/**
+ * Render thông tin chuyên biệt cho Admin
+ * @param {Object} admin - Đối tượng thông tin admin
+ */
+function renderAdminProfile(admin) {
+    const adminNameEl = document.getElementById("adminName");
+    const adminRoleEl = document.getElementById("adminCode");
+    const adminAvatarEl = document.getElementById("adminCardAvatar");
+
+    if (adminNameEl) adminNameEl.innerText = admin.name || "Quản Trị Viên";
+    if (adminRoleEl) adminRoleEl.innerText = `Mã số: ${admin.id || "AD--"}`;
+
+    // Xử lý Avatar chuyên biệt cho Admin
+    if (adminAvatarEl && admin.id) {
+        adminAvatarEl.src = `avatars/${admin.id}.jpg`;
+        adminAvatarEl.onerror = function() {
+            this.src = 'avatars/default.jpg';
+            this.onerror = null;
+        };
+    }
+}
