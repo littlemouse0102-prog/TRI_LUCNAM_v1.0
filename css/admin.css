@@ -43,7 +43,7 @@ body {
 
 /* HEADER CỐ ĐỊNH */
 .app-header {
-    background-color: var(--primary);
+    background-color: var(--dark);
     color: var(--white);
     padding: 16px;
     display: flex;
@@ -52,39 +52,40 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(10, 61, 37, 0.15);
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+}
+
+.mini-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.brand-name {
+    font-size: 14px;
     font-weight: 700;
-    font-size: 15px;
     letter-spacing: 0.5px;
 }
 
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+#logoutBtn {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
 }
+#logoutBtn:hover { opacity: 1; }
 
-.header-role {
-    font-size: 10px;
-    font-weight: 700;
-    background-color: var(--dark);
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.header-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid var(--white);
+.app-content {
+    padding: 14px;
+    flex: 1;
 }
 
 /* SCROLL AREA CONTENT */
@@ -92,47 +93,89 @@ body {
     padding: 16px;
     flex: 1;
 }
-
 /* CARD THÔNG TIN ADMIN */
+/* Sửa phần card chính */
 .admin-card {
     background-color: var(--white);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 16px;
+    display: flex; /* Vẫn giữ flex */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 14px; /* Khoảng cách giữa avatar và info */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    margin-bottom: 14px;
+}
+
+/* Thêm đoạn này để phần info chiếm không gian còn lại */
+.admin-card-info {
+    flex: 1;
+    min-width: 0; /* Quan trọng: giúp chữ dài không bị tràn hoặc xuống dòng vô lý */
+}
+
+/* Đảm bảo h3 không có margin bottom dư thừa nếu có */
+.admin-card-info h3 {
+    font-size: 16px;
+    color: var(--dark);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.admin-card-info p {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Phần thông tin chính trong card */
+.admin-card-main {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    border: 1px solid var(--border);
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+    margin-bottom: 12px;
 }
 
 .admin-card-avatar {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--primary);
 }
 
-.admin-card-info h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--dark);
+
+/* Phần badges trong card */
+.admin-card-badges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    text-align: center;
 }
 
-.admin-card-role, .admin-card-date {
-    font-size: 12px;
+.admin-card-badge {
+    background-color: var(--background);
+    padding: 8px 4px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.admin-card-badge-label {
+    font-size: 9px;
     color: var(--text-muted);
-    margin-top: 4px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    display: block;
+    margin-bottom: 2px;
 }
 
-.admin-card-role span {
-    color: var(--primary);
+.admin-card-badge-value {
+    font-size: 13px;
     font-weight: 700;
+    color: var(--text-main);
 }
+
+.admin-card-badge-value.highlight { color: var(--primary); }
+.admin-card-badge-value.amber { color: var(--amber); }
 
 /* KHU VỰC TIÊU ĐỀ SECTION */
 .dashboard-section {
@@ -260,7 +303,12 @@ body {
     background-color: var(--white);
     border-radius: 12px;
     border: 1px solid var(--border);
-    overflow: hidden;
+    overflow: hidden; /* Cũ: Giữ nguyên để bo góc đẹp */
+    
+    /* 🛠️ SỬA/THÊM Ở ĐÂY ĐỂ ĐƯỢC 4 NGƯỜI CÓ THANH CUỘN */
+    max-height: 255px;    /* Chiều cao vừa khít 1 dòng tiêu đề + 4 dòng dữ liệu */
+    overflow-y: auto;     /* Bật thanh cuộn dọc khi danh sách dài hơn 4 người */
+    position: relative;   /* Làm mốc định vị cho tiêu đề dính (sticky) */
 }
 
 .ranking-table {
@@ -275,6 +323,11 @@ body {
     font-weight: 600;
     padding: 10px 12px;
     text-align: left;
+    
+    /* 🛠️ THÊM ĐOẠN NÀY: Để tiêu đề KHÔNG bị cuộn mất khi lướt xuống */
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .ranking-table td {
@@ -352,24 +405,41 @@ body {
 }
 
 /* ĐĂNG XUẤT CUỐI TRANG */
+/* --- ĐỊNH DẠNG NÚT ĐĂNG XUẤT (ÉP MÀU CHUẨN) --- */
 .btn-logout {
-    width: 100%;
-    margin-top: 20px;
-    background-color: #FFF5F5;
-    color: var(--danger);
-    border: 1px solid rgba(197, 48, 48, 0.2);
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: background 0.2s;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    padding: 14px !important;
+    
+    /* Ép màu đỏ và màu chữ trắng tuyệt đối, không cho thằng khác ghi đè */
+    background-color: #DC2626 !important; 
+    color: #ffffff !important;
+    
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    margin-top: 24px !important;
+    margin-bottom: 40px !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease-in-out !important;
 }
-.btn-logout:hover { background-color: var(--danger); color: var(--white); }
+
+/* Hiệu ứng khi di chuột vào */
+.btn-logout:hover {
+    background-color: #B91C1C !important;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
+}
+
+/* Hiệu ứng khi bấm vào trên điện thoại */
+.btn-logout:active {
+    transform: scale(0.98) !important;
+    background-color: #991B1B !important;
+}
 
 /* ==========================================================================
    HỆ THỐNG POPUP MODAL STYLES
