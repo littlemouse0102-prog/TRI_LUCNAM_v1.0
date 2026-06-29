@@ -101,116 +101,148 @@ body {
     margin-bottom: 16px;
 }
 
-/* BỤC VINH QUANG - CỐ ĐỊNH KÍCH THƯỚC BẰNG NHAU */
-/* BỤC VINH QUANG - BO TRÒN 4 GÓC & BẰNG NHAU */
+/* ==========================================================================
+   BỤC VINH QUANG TOP 3 - SỬA LỖI CHE CHỮ & TRÀN KHUNG
+   ========================================================================== */
 
-.podium-container {
-    display: flex;
-    align-items: flex-end; /* Đẩy bục chạm đáy */
-    justify-content: center;
-    gap: 10px;
-    padding-top: 20px;
-}
-
-.podium-card {
-    background-color: var(--white);
-    border: 2px solid var(--border);
-    border-radius: 16px;       /* BO TRÒN 4 GÓC */
-    padding: 12px 6px;
-    text-align: center;
-    
-    /* Cấu hình chiều ngang bằng nhau */
-    flex: 1;
-    min-width: 0; 
-    
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    position: relative;
-    transition: transform 0.2s;
-    padding-bottom: 16px; /* Tạo khoảng trống ở đáy bục */
-}
-
-/* Điều chỉnh độ cao các bục */
-.podium-card.rank-1 { 
-    height: 150px; 
-    border-color: #FBBF24; 
-    background: linear-gradient(180deg, #fffcf0 0%, #ffffff 100%); 
-    z-index: 2; 
-}
-.podium-card.rank-2 { 
-    height: 145px; 
-    border-color: #94A3B8; 
-    background: #f8fafc; 
-}
-.podium-card.rank-3 { 
-    height: 140px; 
-    border-color: #B45309; 
-    background: #fffaf5; 
-}
-
-/* Để avatar không bị che khuất khi bo tròn 4 góc */
-.podium-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 4px auto 8px auto;
-    display: block;
-    border: 3px solid #fff;
-    box-shadow: 0 0 0 2px var(--border);
-}
-
-
-
-.podium-card:hover { transform: translateY(-2px); }
-
-
-.podium-medal {
-    font-size: 20px;
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.podium-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 4px auto 6px auto;
-    display: block;
-    border: 2px solid var(--border);
-}
-
-/* Tên thành viên: Nhỏ hơn và màu xanh chủ đạo */
-.podium-name {
-    font-size: 5px;           /* Giảm kích thước xuống 11px */
-    font-weight: 700;
-    color: var(--primary);     /* Đổi thành màu xanh chủ đạo */
-    margin: 4px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.podium-section {
+    margin-bottom: 24px;
     padding: 0 4px;
 }
 
-/* Điểm số: Nhỏ hơn nữa và màu xanh đậm */
-.podium-score {
-    font-size: 10px;           /* Giảm kích thước xuống 10px */
-    font-weight: 700;
-    color: var(--dark);        /* Màu xanh đậm để tạo tương phản */
-    background-color: var(--light);
-    padding: 2px 6px;
-    border-radius: 10px;
-    display: inline-block;
-    margin-top: 2px;
+.podium-container {
+    display: flex;
+    align-items: flex-end;    /* Đảm bảo 3 chân bục bằng hàng nhau ở đáy */
+    justify-content: center;
+    gap: 8px;                 /* Khoảng cách vừa phải giữa các bục trên màn hình mobile */
+    padding-top: 24px;
 }
 
-.podium-cups {
+/* Cấu hình chung cho card bục vinh quang */
+.podium-card {
+    background-color: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 6px;       /* Thu nhỏ padding để tăng khoảng trống cho nội dung */
+    text-align: center;
+    
+    flex: 1;                  /* Chia đều 3 cột tự động */
+    min-width: 0;             /* Ngăn chặn text dài làm vỡ layout flex */
+    
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transition: transform 0.2s ease;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Sắp xếp tuần tự từ trên xuống dưới */
+    align-items: center;
+}
+
+.podium-card:hover { 
+    transform: translateY(-4px); 
+}
+
+/* Sử dụng min-height thay vì height cố định để khung tự co giãn nếu text dài */
+.podium-card.rank-1 { 
+    min-height: 185px; 
+    border-color: #FBBF24; 
+    background: linear-gradient(180deg, #FFFDF0 0%, #FFFFFF 100%); 
+    z-index: 2; 
+}
+
+.podium-card.rank-2 { 
+    min-height: 165px; 
+    border-color: #94A3B8; 
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%); 
+    z-index: 1;
+}
+
+.podium-card.rank-3 { 
+    min-height: 150px; 
+    border-color: #B45309; 
+    background: linear-gradient(180deg, #FFF8F5 0%, #FFFFFF 100%); 
+    z-index: 1;
+}
+
+/* Huy hiệu icon trên đỉnh đầu */
+.podium-medal {
+    font-size: 22px;
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* Khung Avatar chuẩn hóa kích thước (Không dùng chung 2 khai báo đá nhau) */
+.avatar-frame {
+    width: 56px;        /* Kích thước vừa vặn nhất cho màn hình rộng tối đa 430px */
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 4px auto 6px auto;
+    background-color: #E2E8F0;
+    box-shadow: 0 0 0 2px var(--white), 0 4px 6px rgba(0,0,0,0.05);
+    flex-shrink: 0;     /* Ép ảnh không bao giờ bị bóp méo méo */
+}
+
+/* Viền phân cấp màu sắc chuẩn cho Avatar từng thứ hạng */
+.rank-1 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #FBBF24; }
+.rank-2 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #94A3B8; }
+.rank-3 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #B45309; }
+
+.avatar-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Nhãn thứ hạng (1ST, 2ND, 3RD) */
+.rank-label {
     font-size: 10px;
-    color: var(--amber);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+.rank-1 .rank-label { color: #D97706; }
+.rank-2 .rank-label { color: #475569; }
+.rank-3 .rank-label { color: #9A3412; }
+
+/* Tên thành viên - ĐÃ SỬA: Đảm bảo hiển thị rõ, không bị che khuất */
+.podium-name {
+    font-size: 12px;         
     font-weight: 700;
-    margin-top: 2px;
+    color: var(--primary);    
+    margin: 4px 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Tạo dấu ... nếu tên quá dài mà không làm vỡ giao diện */
+    padding: 0 2px;
+    display: block;          /* Đảm bảo luôn chiếm 1 hàng riêng */
+}
+
+/* Khung hiển thị điểm số */
+.member-score {
+    font-size: 11px;          
+    font-weight: 700;
+    color: var(--dark);       
+    background-color: var(--white); 
+    border: 1px solid var(--border); 
+    padding: 2px 6px;
+    border-radius: 12px;      
+    display: inline-block;
+    margin-top: auto;        /* Đẩy điểm số luôn nằm sát đáy của card */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    white-space: nowrap;
+}
+
+.rank-1 .member-score {
+    border-color: #FBBF24;
+    background-color: #FFFDF0;
+    color: #B45309;
 }
 
 /* BỘ LỌC TABS SCROLL */
