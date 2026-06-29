@@ -110,5 +110,14 @@
     <!-- Gọi chuẩn đường dẫn file trong thư mục js/ -->
     <script src="js/api.js"></script>
     <script src="js/login.js"></script>
+    <script src="https://unpkg.com/pulltorefreshjs@0.1.22/dist/pulltorefresh.min.js"></script>
+    <script>
+      PullToRefresh.init({
+        mainElement: 'body',
+        onRefresh: function() { 
+          window.location.reload(); // Tự động tải lại trang khi kéo xuống
+        }
+      });
+    </script>
 </body>
 </html>
