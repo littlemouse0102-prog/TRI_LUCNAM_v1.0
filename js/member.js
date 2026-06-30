@@ -159,7 +159,7 @@ async function loadMemberDashboardData(userId) {
         if (bikeEl) bikeEl.innerText = totalBike.toFixed(1);
         if (runEl) runEl.innerText = totalRun.toFixed(1);
 
-       if (userInRank) {
+        if (userInRank) {
             // 1. Hiển thị Hạng đoàn (Lấy chính xác chuỗi "TOP 1", "TOP 2" từ cột G sheet Rankings)
             if (rankEl) {
                 rankEl.innerText = userInRank.rank || "Chưa xếp hạng"; 
