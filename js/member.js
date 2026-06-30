@@ -155,7 +155,7 @@ async function loadMemberDashboardData(userId) {
         const totalRun = myActivities.reduce((sum, act) => sum + (parseFloat(act.run) || 0), 0);
 
         // Gán giá trị vào HTML
-        if (swimEl) swimEl.innerText = totalSwim;
+        if (swimEl) swimEl.innerText = totalSwim.toFixed(1);
         if (bikeEl) bikeEl.innerText = totalBike.toFixed(1);
         if (runEl) runEl.innerText = totalRun.toFixed(1);
 
