@@ -219,8 +219,14 @@ body {
 }
 .input-group input:focus { border-color: var(--primary); }
 
-.input-tip { font-size: 10px; color: var(--text-muted); display: block; margin-top: 4px; }
-
+.input-tip {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Phông chữ hiện đại, dễ đọc */
+    font-size: 10px;
+    line-height: 1.4;
+    font-weight: 400;
+    color: #555;
+    font-style: italic; /* Chữ nghiêng tạo cảm giác là ghi chú */
+}
 .submit-btn {
     width: 100%;
     background-color: var(--primary);
