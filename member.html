@@ -11,12 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/member.css">
-
-        <!-- CODE HIỂN THỊ ICON APP TRÊN IPHONE: -->
-    <link rel="apple-touch-icon" href="avatars/TRILN.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Tri-LN">
 </head>
 <body>
 
@@ -25,7 +19,7 @@
         <!-- HEADER CỐ ĐỊNH -->
         <header class="app-header">
             <div class="header-left">
-                <img src="https://ui-avatars.com/api/?name=TL&background=0F5132&color=fff" alt="Logo" class="mini-logo">
+                <img src="avatars/triln.png" alt="Logo" class="mini-logo">
                 <span class="brand-name">TRIATHLON LỤC NAM</span>
             </div>
         </header>
@@ -48,25 +42,27 @@
                         <span id="userGlobalRank" class="badge-value">#--</span>
                     </div>
                     <div class="badge">
-                        <span class="badge-label">Tổng Điểm</span>
+                        <span class="badge-label">Điểm IM</span>
                         <span id="userTotalScore" class="badge-value highlight">--đ</span>
                     </div>
                     <div class="badge">
                         <span class="badge-label">Danh hiệu</span>
                         <span id="userCups" class="badge-value amber">-- 🏆</span>
                     </div>
-                </div>
-            </section>
-
-            <!-- LỐI VÀO BẢNG XẾP HẠNG (QUICK LINK) -->
-            <section class="quick-banner-link">
-                <a href="ranking.html" class="banner-anchor">
-                    <div class="banner-text">
-                        <h4>BẢNG XẾP HẠNG </h4>
-                        <p>Xem vị trí của bạn và đồng đội</p>
+                    <!-- Thêm 3 ô mới bên dưới -->
+                    <div class="badge">
+                        <span class="badge-label">Bơi (km)</span>
+                        <span id="userTotalSwim" class="badge-value">0</span>
                     </div>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </a>
+                    <div class="badge">
+                        <span class="badge-label">Đạp (km)</span>
+                        <span id="userTotalBike" class="badge-value">0</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-label">Chạy (km)</span>
+                        <span id="userTotalRun" class="badge-value">0</span>
+                    </div>
+                </div>
             </section>
 
             <!-- FORM CẬP NHẬT THÀNH TÍCH TẬP LUYỆN -->
@@ -142,15 +138,14 @@
                 <span>Cá nhân</span>
             </a>
         
-            <!-- Chỉ số cá nhân SET SAU -->
-            <!-- <a href="ranking.html" class="nav-item">
+            <a href="wall.html" class="nav-item">
+                <i class="fa-solid fa-medal"></i>
+                <span>Thành tích</span>
+            </a>
+            <a href="ranking.html" class="nav-item">
                 <i class="fa-solid fa-trophy"></i>
                 <span>Xếp hạng</span>
-            </a> -->
-
-        </nav>
-        
-
+            </a>       
     </div>
     
     <!-- JS Scripts Layer -->
