@@ -1,0 +1,193 @@
+.achievement-cabinet {
+    position: relative;
+    width: 100%;
+    max-width: 430px; /* Điều chỉnh theo độ rộng web Triathlon Lục Nam */
+    height: 900px;    /* Tỉ lệ chiều cao theo wall.jpg */
+    margin: 0 auto;
+    background-image: url('../avatars/wall.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.cup-slot {
+    position: absolute;
+    width: 80px; 
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Bỏ border-radius: 50%; */
+    border: none; /* Xóa viền */
+    box-shadow: none; /* Xóa bóng đổ */
+    transition: transform 0.3s;
+}
+
+.avatar-img:hover { transform: scale(1.1); }
+
+/* Định vị 9 vị trí (Căn giữa đối xứng) */
+.cup-slot {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    transform: translateX(-50%); /* Giúp căn giữa chính xác tại điểm left */
+}
+
+/* Tầng trên cùng */
+.top-left   { top: 230px; left: 65px; }
+.top-center { top: 210px; left: 215px; }
+.top-right  { top: 230px; left: 365px; }
+
+/* Tầng giữa */
+.mid-left   { top: 340px; left: 85px; }
+.mid-center { top: 340px; left: 215px; }
+.mid-right  { top: 340px; left: 345px; }
+
+/* Tầng dưới */
+.bot-left   { top: 455px; left: 85px; }
+.bot-center { top: 455px; left: 215px; }
+.bot-right  { top: 455px; left: 345px; }
+
+/* CSS viết lại cho chế độ phóng to full chiều ngang tủ */
+.is-full-screen {
+    position: absolute !important;
+    top: 50% !important; /* Đẩy xuống giữa theo chiều dọc tủ */
+    left: 50% !important; /* Đẩy sang giữa theo chiều ngang tủ */
+    transform: translate(-50%, -50%) !important;
+    
+    /* Phóng to và căn giữa ảnh */
+    width: 90% !important;    
+    max-width: 350px !important; /* Giới hạn độ rộng để không bị quá to */
+    height: auto !important;
+    
+    z-index: 9999 !important;
+    background-color: transparent !important; /* Thay đổi từ màu đen chuyển sang trong suốt */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: zoom-out;
+    border-radius: 10px; /* Bo góc cho đẹp */
+}
+
+/* Đảm bảo ảnh bên trong cũng giãn đều */
+.is-full-screen .avatar-img {
+    width: 100% !important;
+    height: auto !important;
+    transform: scale(1) !important;
+    transition: none !important;
+}
+
+.back-btn {
+    position: absolute !important; 
+    top: 20px !important;
+    left: 20px !important;
+    padding: 8px 16px;
+    
+    /* Điều chỉnh nền và chữ để có độ tương phản cao */
+    background-color: rgba(255, 255, 255, 0.2) !important; /* Nền trắng mờ */
+    backdrop-filter: blur(5px) !important;                /* Hiệu ứng kính mờ */
+    color: #ffffff !important;                            /* Chữ màu trắng để nổi bật */
+    
+    text-decoration: none !important;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 99999 !important; 
+    border: 1px solid rgba(255, 255, 255, 0.4) !important; /* Viền sáng hơn */
+    cursor: pointer;
+    display: block !important; 
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Container loading tối giản - không nền, tập trung vào chữ và animation */
+.loading-spinner {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #150c3a; /* Màu trắng hơi mờ tạo cảm giác sang trọng */
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 1px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column; /* Xếp dọc: vòng tròn trên, chữ dưới */
+    align-items: center;
+    gap: 12px;
+}
+
+/* Vòng xoay thanh mảnh */
+.loading-spinner::before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    border: 2px solid #150c3a; /* Vòng ngoài mờ */
+    border-top: 2px solid #150c3a; /* Vòng trên sáng */
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Hiệu ứng mờ dần (Fade in) để khi xuất hiện không bị gắt */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+/* Mặc định ẩn trong tủ */
+.cmt-overlay {
+    display: none;
+    pointer-events: none;
+}
+
+/* Khi huy chương ở chế độ phóng to (is-full-screen) */
+/* Thiết lập định dạng chữ tri ân mới */
+.is-full-screen .cmt-overlay {
+    display: block !important;
+    position: absolute;
+    /* CỐ ĐỊNH KHOẢNG CÁCH: Sử dụng % hoặc giá trị âm đủ lớn */
+    /* top: -60px; Thay vì cố định pixel, hãy thử cách này: */
+    bottom: 110%; /* Luôn nằm cách mép dưới của ảnh một khoảng bằng 110% chiều cao ảnh */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 400px;           /* Tăng độ rộng để chữ trải dài hơn */
+    text-align: justify; /* Căn đều hai bên */
+    
+    /* Phong cách chữ: không đậm, in nghiêng, nhỏ hơn, không nền */
+    font-family: 'Playfair Display', 'Times New Roman', serif; /* Ưu tiên font cổ điển, sang trọng */ 
+    font-size: 16px;        /* Kích thước chữ nhỏ hơn */
+    font-weight: 300;       /* Độ mỏng của chữ (không đậm) */
+    font-style: italic;     /* In nghiêng */
+    
+    color: #150c3a;         /* Màu trắng tinh tế */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Bóng nhẹ để dễ đọc trên nền ảnh */
+    background: transparent !important; /* Loại bỏ hoàn toàn nền */
+    
+    padding: 5px;
+    z-index: 10001;
+    pointer-events: none;
+}
+.content {
+    line-height: 1.8;
+    margin-bottom: 20px;
+    text-align: justify;       /* Căn đều hai bên */
+    white-space: pre-wrap;     /* GIỮ NGUYÊN xuống dòng từ dữ liệu gốc */
+}
