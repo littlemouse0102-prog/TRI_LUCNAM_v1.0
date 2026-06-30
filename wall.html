@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tủ Kỷ Niệm Chương</title>
+    <!-- Đảm bảo đường dẫn đến wall.css đúng với cấu trúc thư mục của bạn -->
+    <link rel="stylesheet" href="css/wall.css">
+</head>
+<body>
+
+    <!-- Khung tủ chính -->
+    <div class="achievement-cabinet">
+        <!-- Nút quay lại được đặt trực tiếp trong khung để đảm bảo tính logic -->
+        <!-- Đã thêm style nội dòng cho z-index để ép hiển thị nếu file CSS bị chặn -->
+        <a href="member.html" class="back-btn" style="z-index: 99999 !important;">← Quay lại</a>
+        
+        <!-- Các phần tử huy chương (cup-slot) sẽ được JS render vào đây -->
+    </div>
+
+    <!-- Nạp script: Đảm bảo api.js được nạp trước -->
+    <script src="js/api.js"></script>
+    <!-- Sử dụng defer để script chạy sau khi DOM đã sẵn sàng -->
+    <script src="js/wall.js" defer></script>
+
+</body>
+</html>
