@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thành Viên - TRIATHLON LỤC NAM</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/member.css">
+</head>
+<body>
+
+    <div class="app-container animate-fade-in">
+        
+        <!-- HEADER CỐ ĐỊNH -->
+        <header class="app-header">
+            <div class="header-left">
+                <img src="avatars/triln.png" alt="Logo" class="mini-logo">
+                <span class="brand-name">TRIATHLON LỤC NAM</span>
+            </div>
+        </header>
+
+        <!-- NỘI DUNG CHÍNH -->
+        <main class="app-content">
+
+            <!-- THẺ PROfILE TÓM TẮT THÀNH VIÊN -->
+            <section class="profile-card">
+                <div class="profile-main">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User" alt="Avatar" class="profile-avatar">
+                    <div class="profile-info">
+                        <h3 id="userName">Đang tải...</h3>
+                        <p id="userCode">Mã số: --</p>
+                    </div>
+                </div>
+                <div class="profile-badges">
+                    <div class="badge">
+                        <span class="badge-label">Hạng</span>
+                        <span id="userGlobalRank" class="badge-value">#--</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-label">Điểm IM</span>
+                        <span id="userTotalScore" class="badge-value highlight">--đ</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-label">Danh hiệu</span>
+                        <span id="userCups" class="badge-value amber">-- 🏆</span>
+                    </div>
+                    <!-- Thêm 3 ô mới bên dưới -->
+                    <div class="badge">
+                        <span class="badge-label">Bơi (km)</span>
+                        <span id="userTotalSwim" class="badge-value">0</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-label">Đạp (km)</span>
+                        <span id="userTotalBike" class="badge-value">0</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-label">Chạy (km)</span>
+                        <span id="userTotalRun" class="badge-value">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FORM CẬP NHẬT THÀNH TÍCH TẬP LUYỆN -->
+            <section class="form-section">
+                <div class="section-title"><i class="fa-solid fa-pen-to-square"></i> CẬP NHẬT KẾT QUẢ HÔM NAY</div>
+                <form id="activityForm" class="styled-form">
+                    <div class="input-group">
+                        <label for="swimInput">🏊 Bơi Lội (Mét)</label>
+                        <input type="number" id="swimInput" placeholder="Ví dụ: 1500" min="0">
+                        <small class="input-tip">Công thức: 100m = 0,8 điểm</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bikeInput">🚴 Đạp Xe (Km)</label>
+                        <input type="number" id="bikeInput" step="0.1" placeholder="Ví dụ: 40" min="0">
+                        <small class="input-tip">Công thức: 1km = 0,6 điểm</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="runInput">🏃 Chạy Bộ (Km)</label>
+                        <input type="number" id="runInput" step="0.1" placeholder="Ví dụ: 10" min="0">
+                        <small class="input-tip">Công thức: 1km = 1,4 điểm</small>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Gửi Thành Tích
+                    </button>
+                </form>
+            </section>
+
+            <!-- LỊCH SỬ HOẠT ĐỘNG GẦN ĐÂY -->
+            <section class="history-section">
+                <div class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> NHẬT KÝ TẬP LUYỆN GẦN ĐÂY</div>
+                <div id="historyLogList" class="history-list">
+                    <!-- Trạng thái chờ -->
+                    <div class="empty-log">Đang tải nhật ký từ hệ thống...</div>
+                </div>
+            </section>
+             
+              <!-- nút đăng xuất -->
+            <div id="logoutSection" style="margin: 20px 0; padding: 20px; text-align: center;">
+            <button id="adminLogoutBtn" class="btn-logout" style="
+                background-color: #FFF5F5;
+                color: #C53030;
+                border: 1px solid #FEB2B2;
+                padding: 12px 24px;
+                border-radius: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+                font-size: 14px;
+                transition: all 0.3s;
+            ">
+                <i class="fa-solid fa-power-off"></i> Đăng xuất
+            </button>
+        </div>
+
+        <div class="bottom-spacer"></div>
+
+            <!-- ĐOẠN ĐỆM TRÁNH BỊ THANH MENU CHE NỘI DUNG -->
+            <div class="bottom-spacer"></div>
+
+        </main>
+
+        <!-- THANH ĐIỀU HƯỚNG ĐÁY MÀN HÌNH (BOTTOM NAVIGATION) -->
+        <nav class="bottom-nav">
+            <a href="member.html" class="nav-item active">
+                <i class="fa-solid fa-user"></i>
+                <span>Cá nhân</span>
+            </a>
+        
+            <a href="wall.html" class="nav-item">
+                <i class="fa-solid fa-medal"></i>
+                <span>Thành tích</span>
+            </a>
+            <a href="ranking.html" class="nav-item">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Xếp hạng</span>
+            </a>       
+    </div>
+    
+    <!-- JS Scripts Layer -->
+    <script src="js/api.js"></script>
+    <script src="js/member.js"></script>
+</body>
+</html>
