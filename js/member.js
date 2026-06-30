@@ -45,9 +45,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             const runVal = parseFloat(document.getElementById("runInput").value) || 0;
             
 
-            // Kiểm tra tính hợp lệ tối thiểu (Tránh gửi form trống toàn bộ số 0)
+            // 1. Kiểm tra xem có nhập ít nhất 1 môn không
             if (swimVal === 0 && bikeVal === 0 && runVal === 0) {
                 alert("⚠️ Vui lòng nhập thành tích của ít nhất 1 môn trước khi gửi!");
+                return;
+            }
+
+            // 2. Kiểm tra điều kiện tối thiểu cho từng môn (chỉ kiểm tra nếu người dùng có nhập giá trị > 0)
+            if ((swimVal > 0 && swimVal < 500) || 
+                (bikeVal > 0 && bikeVal < 5) || 
+                (runVal > 0 && runVal < 3.5)) {
+                
+                alert("⚠️ Giá trị nhập không hợp lệ:\n" +
+                    "- Bơi phải từ 500m trở lên \n" +
+                    "- Đạp phải từ 5km trở lên \n" +
+                    "- Chạy phải từ 3.5km trở lên ");
                 return;
             }
 
@@ -259,7 +271,7 @@ if (response && response.success) {
  * Hàm hỗ trợ tính nhẩm điểm số hiển thị tạm thời trên giao diện nhật ký thành viên
  */
 function calculateEstimatedPoints(swim, bike, run) {
-   const sPts = (parseFloat(swim) || 0) * 0.008; // 100m được 0.8đ -> 1m = 0.008đ
+    const sPts = (parseFloat(swim) || 0) * 0.008; // 100m được 0.8đ -> 1m = 0.008đ
     const bPts = (parseFloat(bike) || 0) * 0.6;  // 1km được 0.6đ
     const rPts = (parseFloat(run) || 0) * 1.4;   // 1km được 1.4đ
     return (sPts + bPts + rPts).toFixed(1);
