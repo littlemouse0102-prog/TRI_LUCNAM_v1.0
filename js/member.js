@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const swimVal = parseFloat(document.getElementById("swimInput").value) || 0;
             const bikeVal = parseFloat(document.getElementById("bikeInput").value) || 0;
             const runVal = parseFloat(document.getElementById("runInput").value) || 0;
+            
 
             // Kiểm tra tính hợp lệ tối thiểu (Tránh gửi form trống toàn bộ số 0)
             if (swimVal === 0 && bikeVal === 0 && runVal === 0) {
@@ -137,6 +138,26 @@ async function loadMemberDashboardData(userId) {
         const rankEl = document.getElementById("userGlobalRank");
         const scoreEl = document.getElementById("userTotalScore");
         const cupsEl = document.getElementById("userCups");
+        
+
+        // Thêm cập nhật cho 3 ô mới:
+        const swimEl = document.getElementById("userTotalSwim");
+        const bikeEl = document.getElementById("userTotalBike");
+        const runEl = document.getElementById("userTotalRun");
+        // Lọc danh sách hoạt động của chính user đó
+         const myActivities = response.activities.filter(act => 
+            (act.userId && String(act.userId).trim() === String(userId).trim())
+    );
+
+    // Tính tổng
+        const totalSwim = myActivities.reduce((sum, act) => sum + (parseFloat(act.swim/1000) || 0), 0);
+        const totalBike = myActivities.reduce((sum, act) => sum + (parseFloat(act.bike) || 0), 0);
+        const totalRun = myActivities.reduce((sum, act) => sum + (parseFloat(act.run) || 0), 0);
+
+        // Gán giá trị vào HTML
+        if (swimEl) swimEl.innerText = totalSwim;
+        if (bikeEl) bikeEl.innerText = totalBike.toFixed(1);
+        if (runEl) runEl.innerText = totalRun.toFixed(1);
 
        if (userInRank) {
             // 1. Hiển thị Hạng đoàn (Lấy chính xác chuỗi "TOP 1", "TOP 2" từ cột G sheet Rankings)
