@@ -125,41 +125,53 @@ async function loadMemberDashboardData(userId) {
     const historyLogList = document.getElementById("historyLogList");
     if (!historyLogList) return;
     
-    // Gọi API lấy dữ liệu tổng hợp (Hành động: getDashboard)
-    const response = await callSystemAPI("getDashboard", { userId: userId });
+// Gọi API lấy dữ liệu tổng hợp
+const response = await callSystemAPI("getDashboard", { userId: userId });
+console.log("gói dữ liệu", response);
 
-    if (response.success) {
-        // 1. Cập nhật các khối thông tin Huy chương, Điểm số, Thứ hạng từ dữ liệu thật
-        const currentUserName = document.getElementById("userName") ? document.getElementById("userName").innerText : "";
-        
-        // Chuẩn hóa so sánh chuỗi để không bị lệch kiểu dữ liệu Số/Chữ
-        const userInRank = response.rankings ? response.rankings.find(r => String(r.id).trim() === String(userId).trim() || String(r.name).trim() === currentUserName.trim()) : null;
-        
-        const rankEl = document.getElementById("userGlobalRank");
-        const scoreEl = document.getElementById("userTotalScore");
-        const cupsEl = document.getElementById("userCups");
-        
-
-        // Thêm cập nhật cho 3 ô mới:
-        const swimEl = document.getElementById("userTotalSwim");
-        const bikeEl = document.getElementById("userTotalBike");
-        const runEl = document.getElementById("userTotalRun");
-        // Lọc danh sách hoạt động của chính user đó
-         const myActivities = response.activities.filter(act => 
-            (act.userId && String(act.userId).trim() === String(userId).trim())
+if (response && response.success) {
+    const currentUserName = document.getElementById("userName")?.innerText || "";
+    
+    // 1. Tìm thông tin user
+    const userInRank = response.rankings?.find(r => 
+        String(r.id).trim() === String(userId).trim() || 
+        String(r.name).trim() === currentUserName.trim()
     );
 
-    // Tính tổng
-        const totalSwim = myActivities.reduce((sum, act) => sum + (parseFloat(act.swim/1000) || 0), 0);
-        const totalBike = myActivities.reduce((sum, act) => sum + (parseFloat(act.bike) || 0), 0);
-        const totalRun = myActivities.reduce((sum, act) => sum + (parseFloat(act.run) || 0), 0);
+    // 2. Lọc hoạt động của user (đề phòng trường hợp userId có thể là kiểu khác nhau)
+    const myActivities = (response.activities || []).filter(act => 
+        String(act.userId || "").trim() === String(userId).trim()
+    );
 
-        // Gán giá trị vào HTML
-        if (swimEl) swimEl.innerText = totalSwim.toFixed(1);
-        if (bikeEl) bikeEl.innerText = totalBike.toFixed(1);
-        if (runEl) runEl.innerText = totalRun.toFixed(1);
+    // 3. Tính toán tổng (ưu tiên lấy từ userInRank trước nếu có, nếu không thì cộng từ myActivities)
+    const totalSwim = userInRank?.swim || myActivities.reduce((sum, act) => sum + (parseFloat(act.swim) || 0), 0);
+    const totalBike = userInRank?.bike || myActivities.reduce((sum, act) => sum + (parseFloat(act.bike) || 0), 0);
+    const totalRun = userInRank?.run || myActivities.reduce((sum, act) => sum + (parseFloat(act.run) || 0), 0);
+    const totalCups = userInRank?.cups || userInRank?.cup || 0;
 
-        if (userInRank) {
+    // 4. Gán giá trị vào HTML
+    const rankEl = document.getElementById("userGlobalRank");
+    const scoreEl = document.getElementById("userTotalScore");
+    const cupsEl = document.getElementById("userCups");
+    const swimEl = document.getElementById("userTotalSwim");
+    const bikeEl = document.getElementById("userTotalBike");
+    const runEl = document.getElementById("userTotalRun");
+
+    if (rankEl) rankEl.innerText = userInRank?.rank || "N/A";
+    if (scoreEl) scoreEl.innerText = userInRank?.score || "0";
+    
+    // Hiển thị cúp dạng icon 🏆
+    if (cupsEl) {
+        cupsEl.innerText = totalCups > 0 ? "🏆".repeat(totalCups) : "0 🏆";
+    }
+
+    // Hiển thị chỉ số (giả sử đơn vị bơi là mét nên chia 1000)
+    if (swimEl) swimEl.innerText = (totalSwim / 1000).toFixed(1);
+    if (bikeEl) bikeEl.innerText = totalBike.toFixed(1);
+    if (runEl) runEl.innerText = totalRun.toFixed(1);
+
+
+       if (userInRank) {
             // 1. Hiển thị Hạng đoàn (Lấy chính xác chuỗi "TOP 1", "TOP 2" từ cột G sheet Rankings)
             if (rankEl) {
                 rankEl.innerText = userInRank.rank || "Chưa xếp hạng"; 
@@ -168,12 +180,15 @@ async function loadMemberDashboardData(userId) {
             // 2. Hiển thị Điểm số (Lấy từ cột F sheet Rankings, ép kiểu số và làm tròn 2 chữ số thập phân)
             if (scoreEl) {
                 const pointsValue = Number(userInRank.points) || 0;
-                scoreEl.innerText = pointsValue.toFixed(2) + "đ";
+                scoreEl.innerText = pointsValue.toFixed(0) + "đ";
             }
             
             // 3. Hiển thị Cúp (Nếu có)
             if (cupsEl) {
-                cupsEl.innerText = `🏆 ${userInRank.cups || userInRank.cup || 0}`;
+                const cupCount = userInRank.cups || userInRank.cup || 0;
+    
+                //  Sử dụng .repeat() để nhân bản emoji theo số lượng
+                cupsEl.innerText = "🏆".repeat(cupCount);
             }
         }
 
