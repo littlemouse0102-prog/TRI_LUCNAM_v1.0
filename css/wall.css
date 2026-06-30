@@ -76,11 +76,13 @@
 }
 
 /* Đảm bảo ảnh bên trong cũng giãn đều */
+/* Đảm bảo ảnh bên trong cũng giãn đều */
 .is-full-screen .avatar-img {
-    width: 100% !important;
-    height: auto !important;
-    transform: scale(1) !important;
-    transition: none !important;
+    /* Câu lệnh tự phóng theo chiều ngang điện thoại */
+    width: 100vw !important;  /* Chiều rộng bằng 100% màn hình thiết bị */
+    max-width: 100% !important; /* Đảm bảo không vượt quá khung chứa */
+    height: auto !important;    /* Tự động điều chỉnh chiều cao để giữ tỷ lệ ảnh */
+    object-fit: contain;        /* Hiển thị toàn bộ ảnh mà không bị cắt */
 }
 
 .back-btn {
