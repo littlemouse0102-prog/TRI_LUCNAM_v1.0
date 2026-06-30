@@ -23,8 +23,6 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    touch-action: pan-y;
-    overscroll-behavior-y: contain;
 }
 
 .app-container {
@@ -291,7 +289,7 @@ body {
     color: var(--text-muted);
 }
 
-.bottom-spacer { height: 75px; }
+.bottom-spacer { height: 20px; }
 
 /* 📱 THANH ĐIỀU HƯỚNG DƯỚI ĐÁY CỐ ĐỊNH (BOTTOM NAVIGATION) */
 .bottom-nav {
@@ -338,3 +336,72 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+.strava-connect-container {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin: 16px 0;
+}
+
+.connect-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+}
+
+.strava-btn {
+    display: inline-block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 4px; /* Bo nhẹ theo thiết kế gốc của nút Strava */
+}
+
+.strava-btn :hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(252, 76, 2, 0.25); /* Đổ bóng màu cam Strava nhẹ */
+}
+
+.strava-btn img {
+    height: 48px; /* Chiều cao chuẩn hiển thị đẹp trên cả mobile và desktop */
+    display: block;
+}
+
+.connect-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-style: italic;
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-around; /* Chia đều khoảng cách giữa các nút */
+    align-items: center;
+    background: #fff;
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #718096;
+    font-size: 12px;
+}
+
+.nav-item.active {
+    color: #0F5132; /* Màu thương hiệu Triathlon Lục Nam */
+}
+
+.nav-item i {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
