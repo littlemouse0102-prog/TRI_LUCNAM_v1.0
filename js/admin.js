@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'index.html';
         return;
     }
-
-        
+     
     // Gắn ngày hiện tại chuẩn định dạng DD/MM/YYYY
     const today = new Date();
     document.getElementById('currentDate').textContent = 
@@ -58,9 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("Không thể tải dữ liệu: " + (res?.msg || "Lỗi không xác định"));
             return;
         }
-
-
-       // --- A. Đổ dữ liệu Thống kê tổng quan & Tắt Skeleton ---
+        // --- A. Đổ dữ liệu Thống kê tổng quan & Tắt Skeleton ---
         const m = document.getElementById('statMembers');
         if (m && res.rankings) { m.textContent = res.rankings.length; m.classList.remove('skeleton'); }
         
@@ -76,32 +73,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const r = document.getElementById('statRun');
         if (r) { r.innerHTML = `${res.summary?.run ? res.summary.run.toFixed(1) : 0} <span>km</span>`; r.classList.remove('skeleton'); }
 
-        // // --- B. Đổ dữ liệu Thống kê nhanh (SỬA ĐỂ TRÁNH SẬP DO THIẾU QUICKSTATS) ---
-        // // Thêm dấu ?. sau res.quickStats để nếu Backend chưa làm tính năng này thì Frontend không bị sập
-        // if(document.getElementById('topSwimName')) {
-        //     document.getElementById('topSwimName').textContent = res.quickStats?.topSwim?.name || "Chưa cập nhật";
-        //     document.getElementById('topSwimName').classList.remove('skeleton-text');
-        //     document.getElementById('topSwimVal').textContent = `${res.quickStats?.topSwim?.val || 0} km`;
-        // }
+                // 3. Đổ dữ liệu Top Vận động viên (Hàng 2)
+        if (res.rankings && res.rankings.length > 0) {
+            const list = res.rankings;
+            const findMax = (arr, key) => arr.reduce((max, curr) => 
+                (parseFloat(curr[key]) || 0) > (parseFloat(max[key]) || 0) ? curr : max, arr[0]);
 
-        // if(document.getElementById('topBikeName')) {
-        //     document.getElementById('topBikeName').textContent = res.quickStats?.topBike?.name || "Chưa cập nhật";
-        //     document.getElementById('topBikeName').classList.remove('skeleton-text');
-        //     document.getElementById('topBikeVal').textContent = `${res.quickStats?.topBike?.val || 0} km`;
-        // }
+            const topData = {
+                swim: { data: findMax(list, 'swim'), key: 'swim', unit: 'km', factor: 1000 },
+                bike: { data: findMax(list, 'bike'), key: 'bike', unit: 'km', factor: 1 },
+                run: { data: findMax(list, 'run'), key: 'run', unit: 'km', factor: 1 }
+            };
 
-        // if(document.getElementById('topRunName')) {
-        //     document.getElementById('topRunName').textContent = res.quickStats?.topRun?.name || "Chưa cập nhật";
-        //     document.getElementById('topRunName').classList.remove('skeleton-text');
-        //     document.getElementById('topRunVal').textContent = `${res.quickStats?.topRun?.val || 0} km`;
-        // }
+            // Hàm cập nhật cả tên và số liệu
+            const updateTop = (nameId, valId, obj) => {
+                const nameEl = document.getElementById(nameId);
+                const valEl = document.getElementById(valId);
+                const val = parseFloat(obj.data[obj.key] || 0) / obj.factor;
 
-        // if(document.getElementById('topTotalName')) {
-        //     document.getElementById('topTotalName').textContent = res.quickStats?.topTotal?.name || "Chưa cập nhật";
-        //     document.getElementById('topTotalName').classList.remove('skeleton-text');
-        //     document.getElementById('topTotalVal').textContent = `${res.quickStats?.topTotal?.val || 0} Pts`;
-        // }
-        
+                if (nameEl) {
+                    nameEl.textContent = obj.data?.name || "--";
+                    nameEl.parentElement.classList.remove('skeleton-text');
+                }
+                if (valEl) {
+                    valEl.textContent = `${val.toFixed(1)} ${obj.unit}`;
+                }
+            };
+
+            updateTop('topSwimName', 'topSwimVal', topData.swim);
+            updateTop('topBikeName', 'topBikeVal', topData.bike);
+            updateTop('topRunName', 'topRunVal', topData.run);
+        }
+
+       
 // --- C. Đổ dữ liệu Bảng xếp hạng (ĐÃ SẮP XẾP, LÀM TRÒN & CÓ AVATAR THEO ID) ---
         const tbody = document.getElementById('rankingTableBody');
         if (tbody && res.rankings) {
@@ -148,61 +152,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 tbody.insertAdjacentHTML('beforeend', row);
             });
         }
-      // --- D. Đổ dữ liệu Hoạt động gần đây (GIỚI HẠN 10, CÓ CUỘN & ĐỊNH DẠNG LẠI THỜI GIAN) ---
-        const actList = document.getElementById('activityList');
-        if (actList && res.activities) {
-            actList.innerHTML = "";
-            
-            // 1. Cấu hình khung cuộn bằng JS
-            actList.style.maxHeight = "380px"; 
-            actList.style.overflowY = "auto";  
-            actList.style.paddingRight = "5px"; 
+            // D. Đổ dữ liệu Hoạt động gần đây (HIỂN THỊ TẤT CẢ, CÓ CUỘN & ĐIỂM SỐ)
+            const actList = document.getElementById('activityList');
+            if (actList && res.activities) {
+                actList.innerHTML = "";
+                
+                // 1. Cấu hình khung cuộn bằng JS
+                actList.style.maxHeight = "400px"; 
+                actList.style.overflowY = "auto";  
+                actList.style.paddingRight = "5px"; 
 
-            // 2. Lấy đúng 10 hoạt động đầu tiên
-            const top10Activities = res.activities.slice(0, 10);
+                // 2. Sắp xếp hoạt động: mới nhất lên đầu
+                const sortedActivities = [...res.activities].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-            top10Activities.forEach(act => {
-                // 3. Logic làm tròn số thực của bạn
-                const swimMeters = act.swim ? parseFloat(act.swim).toFixed(0) : "0";
-                const bikeKm = act.bike ? parseFloat(act.bike).toFixed(2) : "0";
-                const runKm = act.run ? parseFloat(act.run).toFixed(2) : "0";
-
-                // 4. XỬ LÝ ĐỊNH DẠNG THỜI GIAN (Giờ:Phút Ngày/Tháng/Năm)
-                let displayDate = "Chưa rõ thời gian";
-                if (act.date) {
-                    const dateObj = new Date(act.date);
+                sortedActivities.forEach(act => {
+                    // 3. Logic làm tròn số
+                    const swimVal = act.swim ? parseFloat(act.swim).toFixed(0) : "0";
+                    const bikeVal = act.bike ? parseFloat(act.bike).toFixed(1) : "0";
+                    const runVal = act.run ? parseFloat(act.run).toFixed(1) : "0";
                     
-                    // Kiểm tra xem chuỗi ngày tháng có hợp lệ không
-                    if (!isNaN(dateObj.getTime())) {
-                        const hours = String(dateObj.getHours()).padStart(2, '0');
-                        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                        const day = String(dateObj.getDate()).padStart(2, '0');
-                        const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Tháng trong JS chạy từ 0-11
-                        const year = dateObj.getFullYear();
+                    // 4. Tính điểm dựa trên công thức từ member_2.js
+                    const points = calculateEstimatedPoints(act.swim, act.bike, act.run);
 
-                        displayDate = `${hours}:${minutes} ${day}/${month}/${year}`;
-                    } else {
-                        // Nếu chuỗi không parse trực tiếp được (vd dạng dd/mm/yyyy hh:mm sẵn), giữ nguyên chuỗi gốc
-                        displayDate = act.date;
-                    }
-                }
+                    // 5. Định dạng thời gian
+                    const dateObj = new Date(act.date);
+                    const formattedDate = act.date ? dateObj.toLocaleString('vi-VN', { 
+                        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+                    }) : 'Hôm nay';
 
-                const item = `
-                    <div class="activity-item" style="margin-bottom: 8px; padding: 8px; background: #f8f9fa; border-radius: 6px;">
-                        <div class="activity-top" style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="activity-user" style="font-weight: 700; color: #2d3748;">${act.name}</span>
-                            <span class="activity-date" style="font-size: 11px; color: #A0AEC0;">${displayDate}</span>
+                    // 6. Tạo phần tử hiển thị
+                    const div = document.createElement('div');
+                    div.className = 'activity-item animate-fade-in';
+                    div.style.cssText = `background: #FFFFFF; border-bottom: 1px solid #EDF2F7; padding: 12px 0; display: flex; justify-content: space-between; align-items: center;`;
+                    
+                    div.innerHTML = `
+                        <div>
+                            <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">
+                                ${act.name} - ${formattedDate}
+                            </span>
+                            <span style="color: #718096; font-size: 12px; font-weight: 500;">
+                                ${act.swim ? `🏊 ${swimVal}m ` : ''}
+                                ${act.bike ? `🚴 ${bikeVal}km ` : ''}
+                                ${act.run ? `🏃 ${runVal}km` : ''}
+                            </span>
                         </div>
-                        <div class="activity-metrics" style="margin-top: 4px; display: flex; gap: 12px; font-size: 13px;">
-                            <span>🏊 ${swimMeters}m</span>
-                            <span>🚴 ${bikeKm}km</span>
-                            <span>🏃 ${runKm}km</span>
+                        <div style="font-weight: 700; color: #0F5132; background-color: #EBF8F2; padding: 10px 10px; border-radius: 20px; font-size: 12px;">
+                            +${points}đ
                         </div>
-                    </div>
-                `;
-                actList.insertAdjacentHTML('beforeend', item);
-            });
-        }
+                    `;
+                    actList.appendChild(div);
+                });
+            }
+
+            /**
+             * Hàm hỗ trợ tính điểm số đồng bộ với member_2.js
+             */
+            function calculateEstimatedPoints(swim, bike, run) {
+                const sPts = (parseFloat(swim) || 0) * 0.008; // 1m = 0.008đ
+                const bPts = (parseFloat(bike) || 0) * 0.6;   // 1km = 0.6đ
+                const rPts = (parseFloat(run) || 0) * 1.4;    // 1km = 1.4đ
+                return (sPts + bPts + rPts).toFixed(1);
+            }
         // --- E. Lưu danh sách thành viên vào bộ nhớ tạm phục vụ Form Thao Tác ---
         listUsersCache = res.rankings || [];
         populateUserDropdowns();
@@ -301,33 +311,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetPinForm) {
         resetPinForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // 1. Lấy dữ liệu đầu vào
             const userId = document.getElementById('resetUserSelect').value;
             const newPin = document.getElementById('resetNewPin').value.trim();
 
-            const btn = e.target.querySelector('button');
-            const originalText = btn.textContent;
-            btn.textContent = "Đang cập nhật..."; btn.disabled = true;
-
-            const res = await callSystemAPI("resetPin", { userId, newPin });
-            alert(res.msg);
-
-            btn.textContent = originalText; btn.disabled = false;
-            if(res.success) {
-                e.target.reset();
-                toggleModal('modalResetPin');
+            // 2. Kiểm tra dữ liệu nhanh (Client-side Validation)
+            if (!userId || !newPin) {
+                alert("Vui lòng chọn thành viên và nhập mã PIN mới!");
+                return;
             }
-        });
-    }
 
-    // ==========================================================================
-    // 4. XỬ LÝ SỰ KIỆN ĐĂNG XUẤT (LOGOUT LỆNH)
-    // ==========================================================================
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            if (confirm('Anh có chắc chắn muốn đăng xuất quyền Quản trị viên không?')) {
-                localStorage.clear(); // Xóa sạch bộ nhớ phiên đăng nhập
-                window.location.href = 'index.html'; // Đá ngược về trang đăng nhập chủ
+            // Sử dụng Regex để đảm bảo PIN chỉ gồm 4-6 chữ số
+            const pinRegex = /^[0-9]{4,6}$/;
+            if (!pinRegex.test(newPin)) {
+                alert("Mã PIN mới phải là số và có độ dài từ 4 đến 6 ký số!");
+                return;
+            }
+
+            // 3. Khóa nút bấm chống spam click
+            const btn = e.target.querySelector('button[type="submit"]') || e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = "Đang cập nhật..."; 
+            btn.disabled = true;
+
+            try {
+                // 4. Gọi API hệ thống với hành động "resetPin"
+                const res = await callSystemAPI("resetPin", { userId, newPin });
+                alert(res.msg);
+
+                // 5. Nếu thành công, làm sạch form và đóng modal
+                if (res.success) {
+                    e.target.reset();
+                    toggleModal('modalResetPin');
+                    if (typeof loadDashboardData === "function") {
+                        await loadDashboardData(); // Cập nhật lại giao diện nếu cần
+                    }
+                }
+            } catch (error) {
+                console.error("Lỗi khi đặt lại mã PIN:", error);
+                alert("Đã xảy ra lỗi kết nối. Không thể cập nhật mã PIN lúc này!");
+            } finally {
+                // 6. Luôn mở khóa nút bấm dù thành công hay thất bại
+                btn.textContent = originalText; 
+                btn.disabled = false;
             }
         });
     }
