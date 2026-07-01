@@ -26,8 +26,6 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
-   touch-action: pan-y;
-   overscroll-behavior-y: contain;
 }
 
 /* KHUNG GIẢ LẬP MOBILE APP (MAX 430PX) */
@@ -41,6 +39,7 @@ body {
     position: relative;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
     overflow-x: hidden;
+    margin: 0 auto; /* Căn giữa màn hình */
 }
 
 /* HEADER CỐ ĐỊNH */
@@ -85,10 +84,6 @@ body {
 }
 #logoutBtn:hover { opacity: 1; }
 
-.app-content {
-    padding: 14px;
-    flex: 1;
-}
 
 /* SCROLL AREA CONTENT */
 .app-content {
@@ -181,9 +176,8 @@ body {
 
 /* KHU VỰC TIÊU ĐỀ SECTION */
 .dashboard-section {
-    margin-bottom: 24px;
+    margin-bottom: 35px !important; /* Đảm bảo không dính sát section dưới */
 }
-
 .section-title {
     font-size: 15px;
     font-weight: 700;
@@ -193,74 +187,58 @@ body {
     letter-spacing: 0.3px;
 }
 
-/* THỐNG KÊ TỔNG QUAN (LƯỚI 2 CỘT) */
+/* THỐNG KÊ TỔNG QUAN (LƯỚI 3 CỘT) */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
+/* Định dạng thẻ card tiêu chuẩn */
 .stat-card {
-    background-color: var(--white);
+    background: #1e481d;
+    padding: 10px 5px;
     border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.01);
-    border: 1px solid var(--border);
-    transition: transform 0.2s;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid #f0f0f0;
 }
+
 
 .stat-card:hover { transform: translateY(-2px); }
 
 .stat-card.full-width {
-    grid-column: span 2;
+    grid-column: span 3;
 }
 
+/* Thêm class mới để chia đôi hàng cho 2 ô */
+.stat-card.half-width {
+    grid-column: span 1;
+}
+/* Căn chỉnh lại font chữ cho thẻ Top */
 .stat-card-header {
-    background-color: var(--light);
-    color: var(--dark);
-    padding: 8px 12px;
-    font-size: 12px;
+    font-size: 9px;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    color: #ffffff;
+    margin-bottom: 4px;
+    text-transform: uppercase;
 }
 
+/* Đồng nhất giá trị chính */
 .stat-card-body {
-    padding: 14px 12px;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-.stat-card-body span {
     font-size: 13px;
-    color: var(--text-muted);
-    font-weight: 400;
+    font-weight: 700;
+    color: #ffffff;
 }
 
-/* THỐNG KÊ NHANH (SCROLL NGANG HORIZONTAL) */
-.quick-stats-scroll {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    scrollbar-width: none;
-}
-.quick-stats-scroll::-webkit-scrollbar { display: none; }
+/* Đồng nhất giá trị phụ (đơn vị hoặc số liệu nhỏ) */
 
-.quick-card {
-    min-width: 110px;
-    background-color: var(--white);
-    border-radius: 12px;
-    padding: 12px;
-    border: 1px solid var(--border);
-    flex-shrink: 0;
+[id$="Val"], .stat-card-body span {
+    font-size: 10px !important; /* Size 10px cho các đơn vị tính */
+    color: #ffffff;
+    font-weight: 500;
 }
-
-.quick-label { font-size: 10px; font-weight: 700; color: var(--text-muted); }
-.quick-card h4 { font-size: 13px; color: var(--dark); margin: 4px 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-.quick-card p { font-size: 12px; font-weight: 700; color: var(--primary); }
 
 /* KHU VỰC QUẢN LÝ (LIST NÚT LỚN WIDE LÊN 100%) */
 .management-buttons {
@@ -308,7 +286,7 @@ body {
     overflow: hidden; /* Cũ: Giữ nguyên để bo góc đẹp */
     
     /* 🛠️ SỬA/THÊM Ở ĐÂY ĐỂ ĐƯỢC 4 NGƯỜI CÓ THANH CUỘN */
-    max-height: 255px;    /* Chiều cao vừa khít 1 dòng tiêu đề + 4 dòng dữ liệu */
+    max-height: 180px;    /* Chiều cao vừa khít 1 dòng tiêu đề + 4 dòng dữ liệu */
     overflow-y: auto;     /* Bật thanh cuộn dọc khi danh sách dài hơn 4 người */
     position: relative;   /* Làm mốc định vị cho tiêu đề dính (sticky) */
 }
@@ -377,17 +355,33 @@ body {
 }
 
 /* HOẠT ĐỘNG GẦN ĐÂY */
+/* Trong admin.css */
 .activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    max-height: 400px; /* Độ cao khung chứa danh sách */
+    overflow-y: auto;  /* Kích hoạt thanh cuộn dọc */
+    padding-right: 5px;
+    scrollbar-width: thin;
 }
 
+.activity-list::-webkit-scrollbar {
+    width: 4px;
+}
+.activity-list::-webkit-scrollbar-thumb {
+    background-color: #CBD5E0;
+    border-radius: 10px;
+}
+
+/* Tạo khoảng cách cho danh sách */
 .activity-item {
-    background-color: var(--white);
+    background: #FFFFFF;
+    border: 1px solid #EDF2F7; /* Tạo viền mỏng */
     border-radius: 12px;
-    padding: 12px;
-    border: 1px solid var(--border);
+    padding: 24px 16px;      /* Padding trái/phải 16px giúp chữ không sát lề */
+    margin: 0 10px 10px 10px; /* Cách lề trái/phải 10px so với khung cha */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02); /* Đổ bóng nhẹ cho chuyên nghiệp */
 }
 
 .activity-top {
@@ -557,8 +551,57 @@ body {
 }
 
 /* ANIMATION FADE IN */
-.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+/* ANIMATION FADE IN */
+.animate-fade-in { 
+    animation: fadeIn 0.4s ease-out forwards; 
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+/* --- SỬA ĐỔI THANH ĐIỀU HƯỚNG DƯỚI ĐÁY --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Dịch lùi về trái đúng 50% chiều rộng để căn giữa */
+    width: 100%;
+    max-width: 430px; /* Cố định chiều rộng theo container */
+    background-color: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+    z-index: 999;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+    flex: 1; /* Mỗi icon chiếm tỉ lệ bằng nhau */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    flex: 1;
+    gap: 3px;
+    transition: color 0.2s;
+}
+
+.nav-item i {
+    font-size: 18px;
+}
+
+.nav-item.active {
+    color: var(--primary); /* Màu xanh thương hiệu Triathlon Lục Nam */
+}
+
+/* Khoảng cách đệm để nội dung không bị che khuất bởi thanh nav */
+.bottom-spacer {
+    height: 80px; 
+    width: 100%;
 }
