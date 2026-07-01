@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             // 2. Kiểm tra điều kiện tối thiểu cho từng môn (chỉ kiểm tra nếu người dùng có nhập giá trị > 0)
-            if ((swimVal > 0 && swimVal < 500) || 
+            if ((swimVal > 0 && swimVal < 100) || 
                 (bikeVal > 0 && bikeVal < 5) || 
                 (runVal > 0 && runVal < 3.5)) {
                 
