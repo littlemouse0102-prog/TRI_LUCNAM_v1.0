@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem("triathlon_user", JSON.stringify(response.user));
 
                     // PHÂN QUYỀN ĐIỀU HƯỚNG: Kiểm tra cột Role trên file Sheets của mã PIN này
-                    if (response.user.role === "ADMIN") {
+                    if (response.user.role2 === "ADMIN") {
                         window.location.href = "admin.html"; // Chuyển hướng thẳng sang trang Admin
                     } else {
                         window.location.href = "member.html"; // Chuyển hướng sang trang Thành viên thường
