@@ -605,3 +605,37 @@ body {
     height: 80px; 
     width: 100%;
 }
+/* Khung chứa chuẩn (Dùng cho cả Bảng xếp hạng & Hoạt động gần đây) */
+.admin-card-container {
+    background: #ffffff;
+    border: 1px solid #EDF2F0; /* Màu viền đồng bộ */
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow: hidden; /* Cần thiết để bo góc cho nội dung bên trong */
+}
+
+/* Khu vực cuộn bên trong (Viewport) */
+.scroll-viewport {
+    max-height: 250px;       /* Chiều cao cố định */
+    overflow-y: auto;        /* Kích hoạt cuộn */
+    scrollbar-width: thin;   /* Cho Firefox */
+}
+
+/* Tùy chỉnh thanh cuộn cho chuyên nghiệp (Chrome, Safari, Edge) */
+.scroll-viewport::-webkit-scrollbar {
+    width: 4px;
+}
+.scroll-viewport::-webkit-scrollbar-thumb {
+    background-color: #CBD5E0;
+    border-radius: 4px;
+}
+
+/* Tinh chỉnh lại style item trong danh sách để không bị sát mép */
+.activity-item {
+    background: #ffffff;
+    border-bottom: 1px solid #F5F7F6; /* Viền ngăn cách nhẹ giữa các dòng */
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
