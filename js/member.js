@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         if (typeof getCurrentUser === "function") {
             currentUser = getCurrentUser();
+            console.log("kiểm tra tk",currentUser);
         } else {
             // Giải pháp dự phòng nếu file api.js chưa tải kịp hoặc lỗi liên kết
             const userJson = localStorage.getItem("triathlon_user");
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             // 2. Kiểm tra điều kiện tối thiểu cho từng môn (chỉ kiểm tra nếu người dùng có nhập giá trị > 0)
-            if ((swimVal > 0 && swimVal < 100) || 
+            if ((swimVal > 0 && swimVal < 500) || 
                 (bikeVal > 0 && bikeVal < 5) || 
                 (runVal > 0 && runVal < 3.5)) {
                 
