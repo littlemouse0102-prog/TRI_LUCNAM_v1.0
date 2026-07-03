@@ -297,7 +297,8 @@ body {
 }
 
 .ranking-table th {
-    background-color: #EDF2F0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7f6;
     color: var(--dark);
     font-size: 12px;
     font-weight: 600;
@@ -311,10 +312,25 @@ body {
 }
 
 .ranking-table td {
+    font-family: 'Inter', sans-serif;
     padding: 12px;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-main);
     border-bottom: 1px solid var(--background);
+}
+/* Tùy chỉnh cột Thành viên (nếu nó là cột thứ 2) */
+.ranking-table td:nth-child(2) {
+    font-weight: 600;        /* Làm chữ đậm hơn để nổi bật tên */
+    color: #4e0101;          /* Màu xanh đen đậm, rất sang và dễ đọc */
+    font-family: 'Inter', sans-serif;
+    text-align: left;        /* Đảm bảo tên luôn căn trái */
+    padding-left: 15px;      /* Tạo khoảng cách với đường kẻ bảng */
+}
+
+/* Hiệu ứng khi di chuột vào dòng chứa thành viên đó */
+.ranking-table tr:hover td:nth-child(2) {
+    color: var(--primary);   /* Đổi tên thành viên sang màu chủ đạo khi di chuột vào */
+    cursor: pointer;
 }
 
 .rank-badge {
