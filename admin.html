@@ -20,7 +20,6 @@
                 <img src="avatars/TRILN.png" alt="Logo" class="mini-logo">
                 <span class="brand-name">TRIATHLON LỤC NAM</span>
             </div>
-            </div>
         </header>
 
         <main class="app-content">
@@ -77,10 +76,12 @@
 
             <section class="dashboard-section">
                 <div class="section-title">Hoạt động gần đây</div>
-                <div class="activity-list" id="activityList">
-                    <!-- Các hoạt động sẽ được đổ vào đây bởi file admin.js -->
-                    <div class="skeleton-activity"></div>
-                    <div class="skeleton-activity"></div>
+                <!-- Áp dụng chung khung chứa -->
+                <div class="admin-card-container">
+                    <!-- Áp dụng chung viewport cuộn -->
+                    <div class="scroll-viewport" id="activityList">
+                        <!-- Dữ liệu sẽ được đổ vào đây -->
+                    </div>
                 </div>
             </section>
 
