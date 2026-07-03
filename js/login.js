@@ -16,21 +16,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
     const spinner = submitBtn ? submitBtn.querySelector('.spinner') : null;
 
-    // Tự động nhấp nháy con trỏ chuột vào ô nhập PIN khi vừa mở trang
-    if (pinInput) {
-        pinInput.focus();
         
-        /**
-         * RÀNG BUỘC Ô NHẬP PIN: 
-         * Chỉ cho phép gõ số, tự xóa thông báo lỗi đỏ khi anh gõ chữ số mới
-         */
+    // Tự động nhấp nháy con trỏ chuột vào ô nhập PIN khi vừa mở trang
+    // TỰ ĐỘNG NHÁY CON TRỎ (FOCUS)
+    if (pinInput) {
+        pinInput.focus(); // Lệnh này giúp con trỏ tự động xuất hiện trong ô nhập
+    }
+
+    // TỰ ĐỘNG ĐĂNG NHẬP KHI ĐỦ 6 SỐ
+    if (pinInput) {
         pinInput.addEventListener('input', (e) => {
-            // Chặn tuyệt đối không cho gõ chữ hoặc ký tự đặc biệt, chỉ nhận số từ 0-9
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            
-            // Nếu ô nhập đang bị viền đỏ lỗi, người dùng gõ số mới sẽ tự động xóa lỗi đi
-            if (pinInput.classList.contains('invalid')) {
-                clearError();
+            if (e.target.value.length === 6) {
+                loginForm.dispatchEvent(new Event('submit'));
+                pinInput.blur(); // Bỏ focus sau khi đã gửi để tránh gõ thêm
             }
         });
     }
