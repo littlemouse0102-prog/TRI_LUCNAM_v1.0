@@ -6,13 +6,6 @@
     <title>Đăng Nhập - TRIATHLON LỤC NAM</title>
     <!-- Thêm thư viện icon cho vòng xoay loading lúc bấm đăng nhập -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CODE HIỂN THỊ ICON APP TRÊN IPHONE: -->
-    <link rel="apple-touch-icon" href="avatars/TRILN.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Tri-LN">
-    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -87,14 +80,14 @@
     <div class="login-card">
         <div class="logo-title">
             <h2>TRIATHLON LỤC NAM</h2>
-            <p>Vui lòng nhập mã PIN để đăng nhập</p>
+            <p>Chào các TRI thủ. Hãy đăng nhập nào</p>
         </div>
 
         <!-- Đảm bảo cấu trúc Form bọc quanh để nhận lệnh nút bấm -->
         <form id="loginForm">
             <!-- CHỈ GIỮ LẠI DUY NHẤT 1 Ô MÃ PIN NHƯ BAN ĐẦU -->
             <div class="input-group">
-                <input type="password" id="pinInput" placeholder="••••" maxlength="6" autocomplete="off">
+                <input type="password" id="pinInput" placeholder="🏊 - 🚴 - 🏃" maxlength="6" autocomplete="off">
             </div>
 
             <!-- Nơi hiện chữ thông báo nếu gõ sai PIN -->
@@ -110,14 +103,5 @@
     <!-- Gọi chuẩn đường dẫn file trong thư mục js/ -->
     <script src="js/api.js"></script>
     <script src="js/login.js"></script>
-    <script src="https://unpkg.com/pulltorefreshjs@0.1.22/dist/pulltorefresh.min.js"></script>
-    <script>
-      PullToRefresh.init({
-        mainElement: 'body',
-        onRefresh: function() { 
-          window.location.reload(); // Tự động tải lại trang khi kéo xuống
-        }
-      });
-    </script>
 </body>
 </html>
