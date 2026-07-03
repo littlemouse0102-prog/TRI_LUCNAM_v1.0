@@ -2,109 +2,108 @@
  * ==========================================
  * TRIATHLON LỤC NAM - MEMBER LOGIC (member.js)
  * ==========================================
- * Quản lý trạng thái thành viên, hiển thị dữ liệu và gửi thành tích
  */
 
+// 1. CÁC HÀM TIỆN ÍCH (Global Scope)
+function parseDecimal(value) {
+    return parseFloat(value.replace(',', '.')) || 0;
+}
+
+function calculateEstimatedPoints(swim, bike, run) {
+    const sPts = (parseFloat(swim) || 0) * 0.008;
+    const bPts = (parseFloat(bike) || 0) * 0.6;
+    const rPts = (parseFloat(run) || 0) * 1.4;
+    return (sPts + bPts + rPts).toFixed(1);
+}
+
+// 2. SỰ KIỆN CHÍNH
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP (Cơ chế phòng vệ an toàn chống bị đá ra ngoài)
     let currentUser = null;
     try {
         if (typeof getCurrentUser === "function") {
             currentUser = getCurrentUser();
-            console.log("kiểm tra tk",currentUser);
         } else {
-            // Giải pháp dự phòng nếu file api.js chưa tải kịp hoặc lỗi liên kết
             const userJson = localStorage.getItem("triathlon_user");
             currentUser = userJson ? JSON.parse(userJson) : null;
         }
     } catch (err) {
-        console.error("Lỗi đọc bộ nhớ trình duyệt:", err);
+        console.error("Lỗi đọc bộ nhớ:", err);
     }
 
-    // Nếu chưa đăng nhập (không có dữ liệu), lập tức đẩy người dùng về trang login
     if (!currentUser) {
-        alert("🔒 Vui lòng đăng nhập để tiếp tục!");
+        alert("🔒 Vui lòng đăng nhập!");
         window.location.href = "index.html";
         return;
     }
 
-    // Nếu đã đăng nhập, hiển thị thông tin cơ bản ngay để tối ưu trải nghiệm (chưa cần đợi API)
     renderBasicProfile(currentUser);
 
-    // 2. TẢI DỮ LIỆU THỜI GIAN THỰC TỪ GOOGLE SHEETS
+    // Xử lý Input số thập phân
+    document.querySelectorAll('.decimal-input').forEach(input => {
+        input.addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^0-9.,]/g, '');
+            const parts = this.value.split(/[,.]/);
+            if (parts.length > 2) {
+                this.value = parts[0] + (this.value.includes(',') ? ',' : '.') + parts[1];
+            }
+        });
+    });
+
     await loadMemberDashboardData(currentUser.id);
 
-    // 3. XỬ LÝ SỰ KIỆN GỬI THÀNH TÍCH TẬP LUYỆN (SUBMIT FORM TỰ ĐỘNG ĐẨY VÀO SHEET ACTIVITIES)
+    // Xử lý Form
     const activityForm = document.getElementById("activityForm");
     if (activityForm) {
         activityForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+            const swimVal = parseDecimal(document.getElementById("swimInput").value);
+            const bikeVal = parseDecimal(document.getElementById("bikeInput").value);
+            const runVal = parseDecimal(document.getElementById("runInput").value);
 
-            // Thu thập dữ liệu từ các ô Input
-            const swimVal = parseFloat(document.getElementById("swimInput").value) || 0;
-            const bikeVal = parseFloat(document.getElementById("bikeInput").value) || 0;
-            const runVal = parseFloat(document.getElementById("runInput").value) || 0;
-            
-
-            // 1. Kiểm tra xem có nhập ít nhất 1 môn không
             if (swimVal === 0 && bikeVal === 0 && runVal === 0) {
-                alert("⚠️ Vui lòng nhập thành tích của ít nhất 1 môn trước khi gửi!");
+                alert("⚠️ Vui lòng nhập thành tích!");
                 return;
             }
 
-            // 2. Kiểm tra điều kiện tối thiểu cho từng môn (chỉ kiểm tra nếu người dùng có nhập giá trị > 0)
-            if ((swimVal > 0 && swimVal < 500) || 
-                (bikeVal > 0 && bikeVal < 5) || 
-                (runVal > 0 && runVal < 3.5)) {
-                
-                alert("⚠️ Giá trị nhập không hợp lệ:\n" +
-                    "- Bơi phải từ 500m trở lên \n" +
-                    "- Đạp phải từ 5km trở lên \n" +
-                    "- Chạy phải từ 3.5km trở lên ");
+            if ((swimVal > 0 && swimVal < 500) || (bikeVal > 0 && bikeVal < 5) || (runVal > 0 && runVal < 3.5)) {
+                alert("⚠️ Giá trị nhập không hợp lệ:\nBơi >= 500m, Đạp >= 5km, Chạy >= 3.5km");
                 return;
             }
 
-            // Hiển thị trạng thái đang xử lý trên nút bấm
             const submitBtn = activityForm.querySelector(".submit-btn");
             if (submitBtn) {
                 const originalBtnText = submitBtn.innerHTML;
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi lên Sheets...`;
+                submitBtn.innerHTML = `Đang gửi...`;
 
-                // Chuẩn bị gói dữ liệu gửi lên Google Apps Script (Đồng bộ chữ thường khớp với cột của Sheets)
-                const activityData = {
-                    id: currentUser.id,      // Khớp cột 'id' trên sheet
-                    name: currentUser.name,  // Khớp cột 'name' trên sheet
-                    swim: swimVal,           // Khớp cột 'swim' trên sheet
-                    bike: bikeVal,           // Khớp cột 'bike' trên sheet
-                    run: runVal              // Khớp cột 'run' trên sheet
-                };
-
-                // Gọi hàm API gửi dữ liệu (Sử dụng hành động mặc định: addActivity)
+                const activityData = { id: currentUser.id, name: currentUser.name, swim: swimVal, bike: bikeVal, run: runVal };
                 const response = await callSystemAPI("addActivity", activityData);
 
                 if (response.success) {
-                    alert("🎉 Đã ghi nhận thành tích thành công vào hệ thống!");
-                    activityForm.reset(); // Xóa sạch dữ liệu ô nhập sau khi gửi thành công
-                    
-                    // Tải lại bảng dữ liệu nhật ký mới nhất hiển thị dưới giao diện
+                    alert("🎉 Ghi nhận thành công!");
+                    activityForm.reset();
                     await loadMemberDashboardData(currentUser.id);
                 } else {
                     alert("❌ Lỗi: " + response.msg);
                 }
-
-                // Khôi phục lại nút bấm ban đầu
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
             }
         });
     }
+
+    // Đăng xuất
+    const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+    if (adminLogoutBtn) {
+        adminLogoutBtn.addEventListener("click", () => {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        });
+    }
 });
 
-/**
- * Đổ thông tin cơ bản của User lên Thẻ Profile ngay khi vừa load trang
- * Tối ưu tải trực tiếp Avatar định dạng .jpg theo ID từ thư mục avatars/
- */
+// 3. CÁC HÀM RENDER (Tách biệt ngoài DOMContentLoaded)
 function renderBasicProfile(user) {
     const userNameEl = document.getElementById("userName");
     const userCodeEl = document.getElementById("userCode");
@@ -114,22 +113,11 @@ function renderBasicProfile(user) {
     if (userCodeEl) userCodeEl.innerText = `Mã số: ${user.id || "TL--"}`;
     
     if (userAvatarEl && user.id) {
-        // Đường dẫn thẳng tới file .jpg theo ID
-        const jpgAvatar = `avatars/${user.id}.jpg`; 
-        
-        // Ảnh chữ dự phòng nếu thành viên đó chưa có ảnh chân dung trong thư mục
-        const defaultAvatar = `avatars/default.jpg`;
-
-        // Gắn ảnh .jpg vào hiển thị
-        userAvatarEl.src = jpgAvatar;
-
-        // Nếu file .jpg bị lỗi (không tìm thấy ảnh của ID này) -> Chuyển sang ảnh chữ dự phòng
-        userAvatarEl.onerror = function() {
-            userAvatarEl.src = defaultAvatar;
-            userAvatarEl.onerror = null; // Ngắt vòng lặp lỗi tránh treo trình duyệt
-        };
+        userAvatarEl.src = `avatars/${user.id}.jpg`;
+        userAvatarEl.onerror = function() { this.src = `avatars/default.jpg`; };
     }
 }
+
 
 /**
  * Gọi API lấy dữ liệu chỉ số cá nhân, thứ hạng và nhật ký hoạt động từ Sheets
@@ -290,3 +278,4 @@ if (adminLogoutBtn) {
         window.location.href = "index.html"; 
     });
 }
+
