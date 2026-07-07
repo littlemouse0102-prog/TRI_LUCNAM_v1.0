@@ -15,8 +15,16 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjIwkbSvpfN5wg
  */
 async function callSystemAPI(action, data = {}) {
     try {
+
+        const url = `${APPS_SCRIPT_URL}?_t=${new Date().getTime()}`;
+        
+        let res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({ action, ...data })
+        });
         // Sử dụng text/plain để biến thành Simple Request, tránh bị chặn CORS khắt khe bởi trình duyệt
-        const response = await fetch(APPS_SCRIPT_URL, {
+         resp = await fetch(APPS_SCRIPT_URL, {
             method: "POST",
             headers: { 
                 "Content-Type": "text/plain" 
@@ -25,7 +33,7 @@ async function callSystemAPI(action, data = {}) {
         });
 
         // Đọc toàn bộ nội dung phản hồi dưới dạng văn bản (text)
-        const textData = await response.text();
+        const textData = await res.text();
         
         // Chuyển đổi chuỗi văn bản nhận được thành đối tượng JSON và trả về
         return JSON.parse(textData);
