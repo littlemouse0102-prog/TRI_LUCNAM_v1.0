@@ -18,11 +18,7 @@ async function callSystemAPI(action, data = {}) {
 
         const url = `${APPS_SCRIPT_URL}?_t=${new Date().getTime()}`;
         
-        let res = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({ action, ...data })
-        });
+        
         // Sử dụng text/plain để biến thành Simple Request, tránh bị chặn CORS khắt khe bởi trình duyệt
          resp = await fetch(APPS_SCRIPT_URL, {
             method: "POST",
