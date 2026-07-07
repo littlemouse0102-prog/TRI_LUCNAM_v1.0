@@ -655,3 +655,52 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+.btn-edit-small {
+    background: #edf2f7;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #4a5568;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-edit-small:hover {
+    background: #e2e8f0;
+    color: var(--primary);
+}
+/* Container chứa các ô môn tập */
+.stats-row {
+    display: flex;       /* Xếp các item nằm ngang */
+    gap: 10px;           /* Khoảng cách giữa các ô */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+/* Từng ô chỉ số */
+.stat-item {
+    background: #f7fafc;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4a5568;
+    min-width: 60px;     /* Đảm bảo các ô có độ rộng tối thiểu để thẳng cột */
+    text-align: center;
+    border: 1px solid #edf2f7;
+}
+
+/* Badge điểm số */
+.points-badge {
+    font-weight: 700;
+    color: #0F5132;
+    background-color: #EBF8F2;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-left: auto;   /* Đẩy badge sang phải, nút sửa sát biên */
+    margin-right: 10px;
+}
+.member-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
+.role-badge { font-size: 10px; padding: 2px 6px; border-radius: 8px; font-weight: bold; }
+.role-admin { background: #fee2e2; color: #991b1b; }
+.role-member { background: #e2e8f0; color: #475569; }
