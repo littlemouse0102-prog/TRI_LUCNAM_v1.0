@@ -97,9 +97,7 @@
                     <button class="btn-manage" onclick="toggleModal('modalResetPin')">
                         <i class="fa-solid fa-key"></i> Đặt lại mã PIN thành viên
                     </button>
-                    <button class="btn-manage" onclick="alert('Tính năng đang phát triển đồng bộ API!')">
-                        <i class="fa-solid fa-pen-to-square"></i> Sửa dữ liệu tập luyện
-                    </button>
+               
                     <button class="btn-manage danger" onclick="alert('Tính năng bảo mật dữ liệu!')">
                         <i class="fa-solid fa-trash-can"></i> Xóa dữ liệu tập luyện
                     </button>
@@ -147,7 +145,7 @@
             </div>
         </div>
     </div>
-<!-- 
+
     <div id="modalAddMember" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
@@ -158,11 +156,11 @@
                 <form id="addMemberForm" class="admin-form">
                     <div class="form-group">
                         <label>Họ tên thành viên</label>
-                        <input type="text" id="addName" required placeholder="Ví dụ: Nguyễn Văn A">
+                        <input type="text" id="addName" name="name" required autocomplete="name" placeholder="Ví dụ: NAM">
                     </div>
                     <div class="form-group">
                         <label>Mã PIN đăng nhập (Số)</label>
-                        <input type="password" id="resetNewPin" autocomplete="new-password" pattern="[0-9]*" inputmode="numeric" required placeholder="Nhập chuỗi số mới">
+                        <input type="password" id="addPin" name="password" required autocomplete="new-password" placeholder="Mật khẩu 6 số">
                     </div>
                     <div class="form-group">
                         <label>Vai trò</label>
@@ -171,13 +169,13 @@
                             <option value="ADMIN">ADMIN</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn-submit-form">Thêm Mới Hệ Thống</button>
+                    <button type="submit" class="btn-submit-form">Thêm Thành viên</button>
                 </form>
             </div>
         </div>
-    </div> -->
+    </div>
 
-    <!-- <div id="modalResetPin" class="modal-overlay">
+    <div id="modalResetPin" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
                 <h3>Đặt lại mã PIN</h3>
@@ -185,6 +183,8 @@
             </div>
             <div class="modal-body">
                 <form id="resetPinForm" class="admin-form">
+                    <input type="text" name="username" style="display:none;" aria-hidden="true" autocomplete="username">
+                    
                     <div class="form-group">
                         <label>Chọn thành viên</label>
                         <select id="resetUserSelect" required>
@@ -193,13 +193,31 @@
                     </div>
                     <div class="form-group">
                         <label>Mã PIN bảo mật mới</label>
-                        <input type="password" id="resetNewPin" pattern="[0-9]*" inputmode="numeric" required placeholder="Nhập chuỗi số mới">
+                        <input type="password" id="resetNewPin" pattern="[0-9]*" inputmode="numeric" required autocomplete="new-password" placeholder="Nhập chuỗi số mới">
                     </div>
                     <button type="submit" class="btn-submit-form">Cập Nhật Mã PIN</button>
                 </form>
             </div>
         </div>
-    </div> -->
+    </div>
+
+    <div id="modalEditActivity" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Sửa thành tích</h3>
+                <button onclick="toggleModal('modalEditActivity')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editActivityForm" class="admin-form">
+                    <input type="hidden" id="editRowIndex">
+                    <div class="form-group"><label>Bơi (m)</label><input type="number" id="editSwim" step="1"></div>
+                    <div class="form-group"><label>Đạp (km)</label><input type="number" id="editBike" step="0.01"></div>
+                    <div class="form-group"><label>Chạy (km)</label><input type="number" id="editRun" step="0.01"></div>
+                    <button type="submit" class="btn-submit-form">Cập Nhật Dữ Liệu</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script src="js/api.js"></script>
     <script src="js/admin.js"></script>
