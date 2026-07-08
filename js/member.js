@@ -65,8 +65,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
-            if ((swimVal > 0 && swimVal < 500) || (bikeVal > 0 && bikeVal < 5) || (runVal > 0 && runVal < 3.5)) {
-                alert("⚠️ Giá trị nhập không hợp lệ:\nBơi >= 500m, Đạp >= 5km, Chạy >= 3.5km");
+            if ((swimVal > 0 && swimVal < 100) || (bikeVal > 0 && bikeVal < 5) || (runVal > 0 && runVal < 3.5)) {
+                alert("⚠️ Giá trị nhập không hợp lệ:\nBơi >= 100m, Đạp >= 5km, Chạy >= 3.5km");
                 return;
             }
 
