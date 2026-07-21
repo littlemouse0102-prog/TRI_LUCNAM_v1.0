@@ -15,6 +15,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Tri-LN">
+    <!-- Các thẻ meta, font, css cũ của anh -->
+    <link rel="stylesheet" href="css/global.css">
+    
+    <!-- THẺ QUAN TRỌNG ĐỂ ĐỒNG BỘ MÀU -->
+    <link id="dynamic-theme-css" rel="stylesheet" href="">
 </head>
 <body>
 
@@ -196,6 +201,61 @@
             }
         }
     });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Tự động nạp theme đã lưu cho mọi file HTML ngay khi mở lên
+            const savedTheme = localStorage.getItem('app_theme');
+            if (savedTheme) {
+                loadThemeCss(savedTheme);
+            }
+
+            // Xử lý bật/tắt menu chấm màu sổ xuống (nếu trang đó có nút đổi màu)
+            const themeBtn = document.getElementById('themeSwitcherBtn');
+            const themeDropdown = document.getElementById('themeDropdown');
+
+            if (themeBtn && themeDropdown) {
+                themeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    themeDropdown.classList.toggle('show');
+                });
+
+                document.addEventListener('click', () => {
+                    themeDropdown.classList.remove('show');
+                });
+                
+                themeDropdown.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            }
+        });
+
+        // Hàm thay đổi, lưu trữ và đồng bộ hóa cho toàn bộ các trang HTML khác
+        function setTheme(themeName) {
+            localStorage.setItem('app_theme', themeName);
+            loadThemeCss(themeName);
+            
+            const dropdown = document.getElementById('themeDropdown');
+            if (dropdown) dropdown.classList.remove('show');
+        }
+
+        // Hàm thực thi chèn link CSS tương ứng vào thẻ <head>
+        function loadThemeCss(themeName) {
+            let themeLink = document.getElementById('dynamic-theme-css');
+            
+            if (!themeLink) {
+                themeLink = document.createElement('link');
+                themeLink.id = 'dynamic-theme-css';
+                themeLink.rel = 'stylesheet';
+                document.head.appendChild(themeLink);
+            }
+
+            if (themeName === 'default') {
+                themeLink.href = '';
+            } else {
+                themeLink.href = `css/${themeName}.css`;
+            }
+        }
     </script>
 </body>
 </html>
