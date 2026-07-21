@@ -1,13 +1,21 @@
+/**
+ * ==========================================
+ * TRIATHLON LỤC NAM - RANKING STYLES (Ngọc Trai Style)
+ * ==========================================
+ */
+
 :root {
-    --primary: #0F5132;
-    --dark: #0A3D25;
-    --light: #DFF5E8;
+    --primary: #059669;
+    --primary-hover: #047857;
+    --dark: #064E3B;
+    --light: #ECFDF5;
     --white: #FFFFFF;
-    --background: #F5F7F6;
-    --border: #D9E2DC;
-    --text-main: #2D3748;
-    --text-muted: #718096;
-    --amber: #D97706;
+    --background: #F8FAFC;
+    --border: #E2E8F0;
+    --text-main: #1E293B;
+    --text-muted: #64748B;
+    --amber: #F59E0B;
+    --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
 }
 
 * {
@@ -19,7 +27,7 @@
 }
 
 body {
-    background-color: #E5E7EB;
+    background-color: #CBD5E1;
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -27,6 +35,7 @@ body {
     overscroll-behavior-y: contain;
 }
 
+/* KHUNG ỨNG DỤNG CHÍNH */
 .app-container {
     width: 100%;
     max-width: 430px;
@@ -35,26 +44,30 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 0 20px rgba(0,0,0,0.08);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+    padding-bottom: 70px;
+    overflow-x: hidden;
+    margin: 0 auto;
 }
 
 /* HEADER CỐ ĐỊNH */
 .app-header {
-    background-color: var(--dark);
+    background: linear-gradient(135deg, var(--dark), #065F46);
     color: var(--white);
-    padding: 16px;
+    padding: 18px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 4px 12px rgba(6, 78, 59, 0.15);
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
@@ -72,7 +85,7 @@ body {
 }
 
 .app-content {
-    padding: 14px;
+    padding: 16px;
     flex: 1;
 }
 
@@ -80,33 +93,40 @@ body {
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 16px;
 }
 
 .mini-card {
     background-color: var(--white);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 14px;
+    padding: 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: var(--card-shadow);
 }
 
-.mini-card .icon { font-size: 18px; }
-.mini-card .label { font-size: 10px; color: var(--text-muted); display: block; }
-.mini-card h5 { font-size: 13px; color: var(--dark); font-weight: 700; }
+.mini-card .icon { 
+    font-size: 20px; 
+}
+
+.mini-card .label { 
+    font-size: 10px; 
+    color: var(--text-muted); 
+    display: block; 
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.mini-card h5 { 
+    font-size: 14px; 
+    color: var(--text-main); 
+    font-weight: 700; 
+}
 
 /* BỤC VINH QUANG TOP 3 */
-.podium-section {
-    margin-bottom: 16px;
-}
-
-/* ==========================================================================
-   BỤC VINH QUANG TOP 3 - SỬA LỖI CHE CHỮ & TRÀN KHUNG
-   ========================================================================== */
-
 .podium-section {
     margin-bottom: 24px;
     padding: 0 4px;
@@ -114,30 +134,26 @@ body {
 
 .podium-container {
     display: flex;
-    align-items: flex-end;    /* Đảm bảo 3 chân bục bằng hàng nhau ở đáy */
+    align-items: flex-end;
     justify-content: center;
-    gap: 8px;                 /* Khoảng cách vừa phải giữa các bục trên màn hình mobile */
+    gap: 8px;
     padding-top: 24px;
 }
 
-/* Cấu hình chung cho card bục vinh quang */
 .podium-card {
     background-color: var(--white);
     border: 2px solid var(--border);
-    border-radius: 16px;
-    padding: 12px 6px;       /* Thu nhỏ padding để tăng khoảng trống cho nội dung */
+    border-radius: 18px;
+    padding: 14px 6px;
     text-align: center;
-    
-    flex: 1;                  /* Chia đều 3 cột tự động */
-    min-width: 0;             /* Ngăn chặn text dài làm vỡ layout flex */
-    
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-width: 0;
+    box-shadow: var(--card-shadow);
     position: relative;
     transition: transform 0.2s ease;
-    
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Sắp xếp tuần tự từ trên xuống dưới */
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -145,51 +161,46 @@ body {
     transform: translateY(-4px); 
 }
 
-/* Sử dụng min-height thay vì height cố định để khung tự co giãn nếu text dài */
 .podium-card.rank-1 { 
-    min-height: 185px; 
+    min-height: 190px; 
     border-color: #FBBF24; 
     background: linear-gradient(180deg, #FFFDF0 0%, #FFFFFF 100%); 
     z-index: 2; 
 }
 
 .podium-card.rank-2 { 
-    min-height: 165px; 
+    min-height: 170px; 
     border-color: #94A3B8; 
     background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%); 
     z-index: 1;
 }
 
 .podium-card.rank-3 { 
-    min-height: 150px; 
+    min-height: 155px; 
     border-color: #B45309; 
     background: linear-gradient(180deg, #FFF8F5 0%, #FFFFFF 100%); 
     z-index: 1;
 }
 
-/* Huy hiệu icon trên đỉnh đầu */
 .podium-medal {
     font-size: 22px;
     position: absolute;
     top: -14px;
     left: 50%;
     transform: translateX(-50%);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-/* Khung Avatar chuẩn hóa kích thước (Không dùng chung 2 khai báo đá nhau) */
 .avatar-frame {
-    width: 56px;        /* Kích thước vừa vặn nhất cho màn hình rộng tối đa 430px */
-    height: 56px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     overflow: hidden;
     margin: 4px auto 6px auto;
     background-color: #E2E8F0;
-    box-shadow: 0 0 0 2px var(--white), 0 4px 6px rgba(0,0,0,0.05);
-    flex-shrink: 0;     /* Ép ảnh không bao giờ bị bóp méo méo */
+    flex-shrink: 0;
 }
 
-/* Viền phân cấp màu sắc chuẩn cho Avatar từng thứ hạng */
 .rank-1 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #FBBF24; }
 .rank-2 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #94A3B8; }
 .rank-3 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #B45309; }
@@ -200,44 +211,41 @@ body {
     object-fit: cover;
 }
 
-/* Nhãn thứ hạng (1ST, 2ND, 3RD) */
 .rank-label {
     font-size: 10px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 }
+
 .rank-1 .rank-label { color: #D97706; }
 .rank-2 .rank-label { color: #475569; }
 .rank-3 .rank-label { color: #9A3412; }
 
-/* Tên thành viên - ĐÃ SỬA: Đảm bảo hiển thị rõ, không bị che khuất */
 .podium-name {
-    font-size: 12px;         
+    font-size: 12px;
     font-weight: 700;
-    color: var(--primary);    
-    margin: 4px 0;
+    color: var(--text-main);
+    margin: 2px 0;
     width: 100%;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Tạo dấu ... nếu tên quá dài mà không làm vỡ giao diện */
+    text-overflow: ellipsis;
     padding: 0 2px;
-    display: block;          /* Đảm bảo luôn chiếm 1 hàng riêng */
+    display: block;
 }
 
-/* Khung hiển thị điểm số */
 .member-score {
-    font-size: 11px;          
+    font-size: 10px;
     font-weight: 700;
-    color: var(--dark);       
-    background-color: var(--white); 
-    border: 1px solid var(--border); 
-    padding: 2px 6px;
-    border-radius: 12px;      
+    color: var(--dark);
+    background-color: var(--light);
+    border: 1px solid var(--primary);
+    padding: 3px 8px;
+    border-radius: 12px;
     display: inline-block;
-    margin-top: auto;        /* Đẩy điểm số luôn nằm sát đáy của card */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    margin-top: auto;
     white-space: nowrap;
 }
 
@@ -263,8 +271,8 @@ body {
 
 .tab-btn {
     padding: 8px 16px;
-    background-color: #E2E8F0;
-    border: none;
+    background-color: var(--white);
+    border: 1px solid var(--border);
     border-radius: 50px;
     font-size: 12px;
     font-weight: 600;
@@ -272,32 +280,40 @@ body {
     white-space: nowrap;
     cursor: pointer;
     transition: all 0.2s;
+    box-shadow: var(--card-shadow);
 }
 
 .tab-btn.active {
     background-color: var(--primary);
     color: var(--white);
+    border-color: var(--primary);
 }
 
 /* THANH TÌM KIẾM */
 .search-box {
     background-color: var(--white);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
+    border-radius: 12px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 16px;
+    box-shadow: var(--card-shadow);
 }
 
-.search-box i { color: var(--text-muted); font-size: 14px; }
+.search-box i { 
+    color: var(--text-muted); 
+    font-size: 14px; 
+}
+
 .search-box input {
     border: none;
     outline: none;
     width: 100%;
     font-size: 13px;
     color: var(--text-main);
+    background: transparent;
 }
 
 /* DANH SÁCH BẢNG XẾP HẠNG CHUNG */
@@ -305,8 +321,9 @@ body {
     font-size: 13px;
     font-weight: 700;
     color: var(--dark);
-    margin-bottom: 10px;
-    letter-spacing: 0.3px;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .leaderboard-list {
@@ -321,16 +338,20 @@ body {
 .row-item {
     background-color: var(--white);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px;
+    border-radius: 14px;
+    padding: 12px 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: var(--card-shadow);
 }
 
-.row-item:hover { background-color: #F0FDF4; }
+.row-item:hover { 
+    background-color: var(--light); 
+    border-color: var(--primary);
+}
 
 .row-left {
     display: flex;
@@ -347,10 +368,11 @@ body {
 }
 
 .row-avatar {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
+    border: 1px solid var(--border);
 }
 
 .row-name {
@@ -369,13 +391,11 @@ body {
     font-size: 13px;
     font-weight: 700;
     color: var(--primary);
-    
-    /* Thiết lập quan trọng để thẳng hàng */
-    width: 80px;            /* Cố định độ rộng cột (tùy chỉnh nếu thấy hẹp) */
-    text-align: right;      /* Căn lề phải để các con số thẳng hàng theo hàng đơn vị */
-    white-space: nowrap;    /* Ngăn xuống dòng */
-    flex-shrink: 0;         /* Không bị co lại */
-    padding-right: 5px;     /* Khoảng cách nhỏ với icon cúp */
+    width: 80px;
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-right: 5px;
 }
 
 .row-cups {
@@ -386,118 +406,119 @@ body {
     text-align: center;
 }
 
-/* POPUP MODAL ĐÁY */
+/* THANH ĐIỀU HƯỚNG ĐÁY MÀN HÌNH */
+.bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 430px !important;
+    height: 60px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+.bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    flex: 1;
+    height: 100%;
+    transition: all 0.2s ease;
+    gap: 3px;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--primary) !important;
+}
+
+.bottom-nav .nav-item.active i {
+    transform: translateY(-2px);
+}
+
+/* POPUP MODAL CHI TIẾT */
 .modal-overlay {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    opacity: 0; visibility: hidden;
+    opacity: 0; 
+    visibility: hidden;
     transition: all 0.3s ease;
 }
 
-.modal-overlay.show { opacity: 1; visibility: visible; }
+.modal-overlay.show { 
+    opacity: 1; 
+    visibility: visible; 
+}
 
 .modal-box {
-    width: 100%; max-width: 430px;
+    width: 100%; 
+    max-width: 430px;
     background-color: var(--white);
-    border-top-left-radius: 20px; border-top-right-radius: 20px;
+    border-top-left-radius: 20px; 
+    border-top-right-radius: 20px;
     padding: 20px;
     transform: translateY(100%);
     transition: transform 0.3s ease;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
 }
 
-.modal-overlay.show .modal-box { transform: translateY(0); }
+.modal-overlay.show .modal-box { 
+    transform: translateY(0); 
+}
 
 .modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 16px;
-}
-.modal-header h3 { color: var(--dark); font-size: 15px; }
-.modal-header button { background: none; border: none; font-size: 26px; color: var(--text-muted); cursor: pointer; }
-
-/* Chi tiết hồ sơ trong modal */
-.profile-modal { text-align: center; }
-.profile-modal img { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--primary); margin-bottom: 8px;}
-.profile-modal h4 { font-size: 18px; color: var(--dark); }
-.profile-rank { font-size: 12px; color: var(--text-muted); margin: 4px 0 12px 0; }
-.profile-rank span { color: var(--amber); font-weight: 700; }
-
-.profile-stats-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;
-}
-.p-stat-box {
-    background-color: var(--background); border: 1px solid var(--border);
-    padding: 10px; border-radius: 8px; text-align: left;
-}
-.p-stat-box label { font-size: 10px; color: var(--text-muted); display: block; }
-.p-stat-box span { font-size: 14px; font-weight: 700; color: var(--text-main); }
-
-/* SKELETON LOADING EFFECT */
-.skeleton {
-    background: linear-gradient(90deg, #EDF2F0 25%, #E1EAE6 50%, #EDF2F0 75%);
-    background-size: 200% 100%;
-    animation: skeletonGlow 1.5s infinite;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 1px solid var(--border); 
+    padding-bottom: 10px; 
+    margin-bottom: 16px;
 }
 
-.list-item-skeleton {
-    height: 50px; background-color: var(--white); border-radius: 12px;
-    border: 1px solid var(--border); position: relative; overflow: hidden;
-}
-.list-item-skeleton::after {
-    content: ""; display: block; position: absolute; width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(237,242,240,0.6), transparent);
-    animation: skeletonGlow 1.5s infinite;
+.modal-header h3 { 
+    color: var(--dark); 
+    font-size: 16px; 
+    font-weight: 700;
 }
 
-@keyframes skeletonGlow {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+.modal-header button { 
+    background: none; 
+    border: none; 
+    font-size: 24px; 
+    color: var(--text-muted); 
+    cursor: pointer; 
 }
 
-.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+.animate-fade-in { 
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
-}
-.avatar-frame {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #FFD700; /* Màu viền vàng bục podium */
-    margin: 0 auto 8px;
-    background-color: #eee;
-}
-
-.avatar-frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Giúp ảnh không bị méo */
-}
-/* Chữ hiển thị trên bục (đã bỏ tên thành viên) */
-/* Khung chứa điểm số */
-.member-score {
-    font-size: 10px;          /* Cực kỳ nhỏ gọn */
-    font-weight: 700;
-    color: var(--dark);       /* Màu xanh đậm */
-    background-color: var(--white); /* Nền trắng cho khung */
-    border: 1px solid var(--primary); /* Viền màu xanh chính để nhấn */
-    padding: 2px 8px;
-    border-radius: 12px;      /* Bo tròn hoàn toàn 2 đầu */
-    display: inline-block;
-    margin-top: 6px;
-    box-shadow: 0 2px 4px rgba(15, 81, 50, 0.1); /* Đổ bóng nhẹ cho khung */
-}
-
-/* Nhãn thứ hạng (1st, 2nd, 3rd) */
-.rank-label {
-    font-size: 9px;
-    font-weight: 900;
-    color: var(--dark);      /* Chuyển sang xanh đậm để đồng bộ */
-    text-transform: uppercase;
-    margin-bottom: 6px;
 }
