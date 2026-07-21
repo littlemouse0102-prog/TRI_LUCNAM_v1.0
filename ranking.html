@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/ranking.css">
 
-        <!-- CODE HIỂN THỊ ICON APP TRÊN IPHONE: -->
+    <!-- CODE HIỂN THỊ ICON APP TRÊN IPHONE: -->
     <link rel="apple-touch-icon" href="avatars/TRILN.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,6 +20,7 @@
 
     <div class="app-container animate-fade-in">
         
+        <!-- HEADER CỐ ĐỊNH -->
         <header class="app-header">
             <div class="header-left" onclick="window.location.href='member.html'">
                 <i class="fa-solid fa-chevron-left"></i>
@@ -31,8 +32,10 @@
             </div>
         </header>
 
+        <!-- NỘI DUNG CHÍNH -->
         <main class="app-content">
 
+            <!-- THẺ TỔNG KẾT CLB -->
             <section class="summary-cards">
                 <div class="mini-card">
                     <span class="icon">🏊</span>
@@ -64,6 +67,7 @@
                 </div>
             </section>
 
+            <!-- PODIUM (TOP 3) -->
             <section class="podium-section">
                 <div class="podium-container" id="podiumContainer">
                     <div class="podium-card skeleton" style="height: 120px;"></div>
@@ -72,21 +76,23 @@
                 </div>
             </section>
 
+            <!-- BỘ LỌC TABS -->
             <section class="filter-section">
                 <div class="tabs-scroll">
                     <button class="tab-btn active" data-type="all">Tổng</button>
                     <button class="tab-btn" data-type="swim">Bơi</button>
                     <button class="tab-btn" data-type="bike">Đạp</button>
                     <button class="tab-btn" data-type="run">Chạy</button>
-                    
                 </div>
             </section>
 
+            <!-- THANH TÌM KIẾM -->
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchBar" placeholder="Tìm tên hoặc mã thành viên...">
             </div>
 
+            <!-- DANH SÁCH XẾP HẠNG -->
             <section class="leaderboard-section">
                 <div class="section-title" id="leaderboardTitle">BXH TỔNG TRIATHLON</div>
                 
@@ -97,15 +103,99 @@
                 </div>
             </section>
 
+            <!-- NÚT ĐĂNG XUẤT -->
+            <div id="logoutSection" style="margin: 30px 0 10px 0; text-align: center;">
+                <button id="adminLogoutBtn" class="btn-logout" style="
+                    background-color: #FFF5F5;
+                    color: #C53030;
+                    border: 1px solid #FEB2B2;
+                    padding: 12px 24px;
+                    border-radius: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    width: 100%;
+                    font-size: 14px;
+                    transition: all 0.3s;">
+                    <i class="fa-solid fa-power-off"></i> Đăng xuất
+                </button>
+            </div>
+
+            <!-- ĐOẠN ĐỆM TRÁNH BỊ THANH MENU CHE NỘI DUNG -->
+            <div class="bottom-spacer" style="height: 70px;"></div>
+
         </main>
     </div>
 
+    <!-- MODAL CHI TIẾT THÀNH VIÊN (NẾU CÓ) -->
     <div id="userModal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
+                <!-- Nội dung modal -->
+            </div>
+        </div>
+    </div>
 
+    <!-- THANH ĐIỀU HƯỚNG ĐÁY MÀN HÌNH (BOTTOM NAVIGATION) -->
+    <nav class="bottom-nav">
+        <a href="member.html" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Cá nhân</span>
+        </a>
+
+        <!-- Thùng chứa kiểm tra quyền Admin bằng JS -->
+        <div id="admin-link-container" style="display: contents;"></div>
+
+        <a href="wall.html" class="nav-item">
+            <i class="fa-solid fa-medal"></i>
+            <span>Thành tích</span>
+        </a>
+        
+        <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Báo cáo</span>
+        </a>
+        
+        <a href="ranking.html" class="nav-item active">
+            <i class="fa-solid fa-trophy"></i>
+            <span>Xếp hạng</span>
+        </a>  
+    </nav>
+
+    <!-- SCRIPTS -->
     <script src="js/api.js"></script>
     <script src="js/ranking.js"></script>
-    
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Xử lý nút Đăng xuất
+        const logoutBtn = document.getElementById("adminLogoutBtn");
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", () => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "index.html";
+            });
+        }
+
+        // Kiểm tra quyền Admin để hiển thị icon trên thanh menu đáy
+        const userJson = localStorage.getItem("triathlon_user");
+        const user = userJson ? JSON.parse(userJson) : null;
+
+        if (user && user.role === "ADMIN") {
+            const container = document.getElementById('admin-link-container');
+            if (container) {
+                container.innerHTML = `
+                    <a href="admin.html" class="nav-item">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>ADMIN</span>
+                    </a>
+                `;
+            }
+        }
+    });
+    </script>
 </body>
 </html>
