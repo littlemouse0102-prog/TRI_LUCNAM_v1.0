@@ -1,0 +1,198 @@
+/* ==========================================================================
+   TRIATHLON LỤC NAM - GLOBAL CSS (global.css)
+   ========================================================================== */
+
+/* 1. MẶC ĐỊNH THEME: XANH NGỌC (DEFAULT) */
+:root {
+    --primary: #059669;
+    --primary-hover: #047857;
+    --primary-light: #ecfdf5;
+    --secondary: #10b981;
+    --dark: #064e3b;
+    --light: #f8fafc;
+    --white: #ffffff;
+    --border: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --danger: #e11d48;
+    --danger-bg: #fff1f2;
+    --warning: #d97706;
+}
+
+/* Kế thừa box-sizing và font chữ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--light);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Khung ứng dụng di động chung */
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--white);
+    min-height: 100vh;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   HEADER CHUNG
+   ========================================================================== */
+.app-header {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mini-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   MINI COLOR DOTS THEME SWITCHER (Nút & Menu chọn màu giao diện)
+   ========================================================================== */
+/* ==========================================================================
+   MINI COLOR DOTS THEME SWITCHER (Nút & Menu chọn màu giao diện)
+   ========================================================================== */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+/* Các ô chọn màu linh hoạt, bo tròn góc mềm mại */
+.theme-dot-option {
+    border-radius: 8px !important;
+    border: 2px solid transparent !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+    transition: transform 0.2s, border-color 0.2s !important;
+    margin: 0 auto !important;
+}
+
+.theme-dot-option:hover {
+    transform: scale(1.1) !important;
+    border-color: var(--text-main) !important;
+}
+
+/* Khung menu sổ xuống chứa các ô màu */
+.theme-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: var(--white);
+    border-radius: 12px !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 10px !important;
+    display: none;
+    z-index: 1000;
+    border: 1px solid var(--border);
+    animation: fadeIn 0.2s ease forwards;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px !important;
+    width: 120px !important;
+}
+
+.theme-dropdown.show {
+    display: grid !important;
+}
+/* ==========================================================================
+   NAVIGATION ĐÁY MÀN HÌNH (BOTTOM NAV)
+   ========================================================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 99;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    gap: 4px;
+    flex: 1;
+    transition: color 0.2s;
+}
+
+.nav-item i {
+    font-size: 18px;
+}
+
+.nav-item.active, .nav-item:hover {
+    color: var(--primary);
+}
+
+.bottom-spacer {
+    height: 70px;
+}
+
+/* ==========================================================================
+   HIỆU ỨNG & TIỆN ÍCH CHUNG
+   ========================================================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}

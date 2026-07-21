@@ -1,0 +1,15 @@
+:root {
+    --primary: #18181b;
+    --primary-hover: #27272a;
+    --primary-light: #f4f4f5;
+    --secondary: #52525b;
+    --dark: #09090b;
+    --light: #fafafa;
+    --white: #ffffff;
+    --border: #e4e4e7;
+    --text-main: #09090b;
+    --text-muted: #71717a;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --warning: #d97706;
+}

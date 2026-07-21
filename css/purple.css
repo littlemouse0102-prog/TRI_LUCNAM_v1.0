@@ -1,0 +1,22 @@
+:root {
+    --primary: #7C3AED;
+    --primary-hover: #6D28D9;
+    --primary-light: #A78BFA;
+    --dark: #4C1D95;
+    --dark-deep: #2E1065;
+    --light: #F5F3FF;
+    --border-focus: #7C3AED;
+}
+
+.app-header {
+    background: linear-gradient(135deg, var(--dark), #5B21B6);
+    box-shadow: 0 4px 12px rgba(76, 29, 149, 0.15);
+}
+
+.section-title::before {
+    background-color: var(--primary);
+}
+
+.nav-item.active {
+    color: var(--primary) !important;
+}
