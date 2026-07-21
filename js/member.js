@@ -6,17 +6,18 @@
 
 // 1. CÁC HÀM TIỆN ÍCH (Global Scope)
 function parseDecimal(value) {
-    return parseFloat(value.replace(',', '.')) || 0;
+    if (!value) return 0;
+    return parseFloat(value.toString().replace(',', '.')) || 0;
 }
 
 function calculateEstimatedPoints(swim, bike, run) {
-    const sPts = (parseFloat(swim) || 0) * 0.008;
-    const bPts = (parseFloat(bike) || 0) * 0.6;
-    const rPts = (parseFloat(run) || 0) * 1.4;
+    const sPts = (parseFloat(swim) || 0) * 0.008; // 1m = 0.008đ
+    const bPts = (parseFloat(bike) || 0) * 0.6;   // 1km = 0.6đ
+    const rPts = (parseFloat(run) || 0) * 1.4;    // 1km = 1.4đ
     return (sPts + bPts + rPts).toFixed(1);
 }
 
-// 2. SỰ KIỆN CHÍNH
+// 2. SỰ KIỆN KHỞI TẠO DOM
 document.addEventListener("DOMContentLoaded", async () => {
     let currentUser = null;
     try {
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Xử lý Input số thập phân
     document.querySelectorAll('.decimal-input').forEach(input => {
-        input.addEventListener('input', function (e) {
+        input.addEventListener('input', function () {
             this.value = this.value.replace(/[^0-9.,]/g, '');
             const parts = this.value.split(/[,.]/);
             if (parts.length > 2) {
@@ -51,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await loadMemberDashboardData(currentUser.id);
 
-    // Xử lý Form
+    // Xử lý Form gửi thành tích
     const activityForm = document.getElementById("activityForm");
     if (activityForm) {
         activityForm.addEventListener("submit", async (e) => {
@@ -79,12 +80,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const activityData = { id: currentUser.id, name: currentUser.name, swim: swimVal, bike: bikeVal, run: runVal };
                 const response = await callSystemAPI("addActivity", activityData);
 
-                if (response.success) {
+                if (response && response.success) {
                     alert("🎉 Ghi nhận thành công!");
                     activityForm.reset();
                     await loadMemberDashboardData(currentUser.id);
                 } else {
-                    alert("❌ Lỗi: " + response.msg);
+                    alert("❌ Lỗi: " + (response?.msg || "Không thể kết nối hệ thống"));
                 }
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
@@ -103,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// 3. CÁC HÀM RENDER (Tách biệt ngoài DOMContentLoaded)
+// 3. CÁC HÀM RENDER & XỬ LÝ DỮ LIỆU
 function renderBasicProfile(user) {
     const userNameEl = document.getElementById("userName");
     const userCodeEl = document.getElementById("userCode");
@@ -118,164 +119,220 @@ function renderBasicProfile(user) {
     }
 }
 
-
 /**
- * Gọi API lấy dữ liệu chỉ số cá nhân, thứ hạng và nhật ký hoạt động từ Sheets
+ * Gọi API lấy dữ liệu chỉ số cá nhân, thứ hạng, nhật ký và bảng xếp hạng từ Sheets
  */
 async function loadMemberDashboardData(userId) {
     const historyLogList = document.getElementById("historyLogList");
     if (!historyLogList) return;
     
-// Gọi API lấy dữ liệu tổng hợp
-const response = await callSystemAPI("getDashboard", { userId: userId });
-console.log("gói dữ liệu", response);
+    const response = await callSystemAPI("getDashboard", { userId: userId });
+    console.log("gói dữ liệu", response);
 
-if (response && response.success) {
-    const currentUserName = document.getElementById("userName")?.innerText || "";
-    
-    // 1. Tìm thông tin user
-    const userInRank = response.rankings?.find(r => 
-        String(r.id).trim() === String(userId).trim() || 
-        String(r.name).trim() === currentUserName.trim()
-    );
+    if (response && response.success) {
+        const currentUserName = document.getElementById("userName")?.innerText || "";
+        
+        // 1. Tìm thông tin user trong bảng xếp hạng tổng
+        const userInRank = response.rankings?.find(r => 
+            String(r.id).trim() === String(userId).trim() || 
+            String(r.name).trim().toLowerCase() === currentUserName.trim().toLowerCase()
+        );
 
-    // 2. Lọc hoạt động của user (đề phòng trường hợp userId có thể là kiểu khác nhau)
-    const myActivities = (response.activities || []).filter(act => 
-        String(act.userId || "").trim() === String(userId).trim()
-    );
+        // 2. Lọc hoạt động cá nhân của user
+        const myActivities = (response.activities || []).filter(act => 
+            String(act.userId || "").trim() === String(userId).trim() ||
+            (act.name && String(act.name).trim().toLowerCase() === currentUserName.trim().toLowerCase())
+        );
 
-    // 3. Tính toán tổng (ưu tiên lấy từ userInRank trước nếu có, nếu không thì cộng từ myActivities)
-    const totalSwim = userInRank?.swim || myActivities.reduce((sum, act) => sum + (parseFloat(act.swim) || 0), 0);
-    const totalBike = userInRank?.bike || myActivities.reduce((sum, act) => sum + (parseFloat(act.bike) || 0), 0);
-    const totalRun = userInRank?.run || myActivities.reduce((sum, act) => sum + (parseFloat(act.run) || 0), 0);
-    const totalCups = userInRank?.cups || userInRank?.cup || 0;
+        // 3. Tính toán tổng chỉ số
+        const totalSwim = userInRank?.swim || myActivities.reduce((sum, act) => sum + (parseFloat(act.swim) || 0), 0);
+        const totalBike = userInRank?.bike || myActivities.reduce((sum, act) => sum + (parseFloat(act.bike) || 0), 0);
+        const totalRun = userInRank?.run || myActivities.reduce((sum, act) => sum + (parseFloat(act.run) || 0), 0);
 
-    // 4. Gán giá trị vào HTML
-    const rankEl = document.getElementById("userGlobalRank");
-    const scoreEl = document.getElementById("userTotalScore");
-    const cupsEl = document.getElementById("userCups");
-    const swimEl = document.getElementById("userTotalSwim");
-    const bikeEl = document.getElementById("userTotalBike");
-    const runEl = document.getElementById("userTotalRun");
+        // 4. Gán giá trị vào HTML Profile Badges
+        const rankEl = document.getElementById("userGlobalRank");
+        const scoreEl = document.getElementById("userTotalScore");
+        const cupsEl = document.getElementById("userCups");
+        const swimEl = document.getElementById("userTotalSwim");
+        const bikeEl = document.getElementById("userTotalBike");
+        const runEl = document.getElementById("userTotalRun");
 
-    if (rankEl) rankEl.innerText = userInRank?.rank || "N/A";
-    if (scoreEl) scoreEl.innerText = userInRank?.score || "0";
-    
-    // Hiển thị cúp dạng icon 🏆
-    if (cupsEl) {
-        cupsEl.innerText = totalCups > 0 ? "🏆".repeat(totalCups) : "0 🏆";
-    }
-
-    // Hiển thị chỉ số (giả sử đơn vị bơi là mét nên chia 1000)
-    if (swimEl) swimEl.innerText = (totalSwim / 1000).toFixed(1);
-    if (bikeEl) bikeEl.innerText = totalBike.toFixed(1);
-    if (runEl) runEl.innerText = totalRun.toFixed(1);
-
-
-       if (userInRank) {
-            // 1. Hiển thị Hạng đoàn (Lấy chính xác chuỗi "TOP 1", "TOP 2" từ cột G sheet Rankings)
-            if (rankEl) {
-                rankEl.innerText = userInRank.rank || "Chưa xếp hạng"; 
-            }
-            
-            // 2. Hiển thị Điểm số (Lấy từ cột F sheet Rankings, ép kiểu số và làm tròn 2 chữ số thập phân)
+        if (userInRank) {
+            if (rankEl) rankEl.innerText = userInRank.rank ? `#${userInRank.rank}` : "N/A"; 
             if (scoreEl) {
                 const pointsValue = Number(userInRank.points) || 0;
                 scoreEl.innerText = pointsValue.toFixed(0) + "đ";
             }
-            
-            // 3. Hiển thị Cúp (Nếu có)
             if (cupsEl) {
                 const cupCount = userInRank.cups || userInRank.cup || 0;
-    
-                //  Sử dụng .repeat() để nhân bản emoji theo số lượng
-                cupsEl.innerText = "🏆".repeat(cupCount);
+                cupsEl.innerText = cupCount > 0 ? "🏆".repeat(cupCount) : "0 🏆";
             }
+        } else {
+            if (rankEl) rankEl.innerText = "#--";
+            if (scoreEl) scoreEl.innerText = "0đ";
+            if (cupsEl) cupsEl.innerText = "0 🏆";
         }
 
-        // 2. Cập nhật Nhật ký hoạt động gần đây (History Log)
-        if (response.activities && response.activities.length > 0) {
-            historyLogList.innerHTML = ""; // Xóa dòng chữ Chờ "Đang tải..."
-            
-            // Lọc an toàn bằng cách chuyển hết ID về dạng String viết thường hoặc đối chiếu theo tên viết thường
-            const myActivities = response.activities.filter(act => 
-                (act.userId && String(act.userId).trim() === String(userId).trim()) || 
-                (act.name && String(act.name).trim().toLowerCase() === currentUserName.trim().toLowerCase())
-            );
+        if (swimEl) swimEl.innerText = (totalSwim / 1000).toFixed(1);
+        if (bikeEl) bikeEl.innerText = totalBike.toFixed(1);
+        if (runEl) runEl.innerText = totalRun.toFixed(1);
+
+        // 4.1 Điền dữ liệu độ lệch chuẩn và đề xuất luyện tập vào member.html
+        const deviationEl = document.getElementById("deviationStatus");
+        const suggestionEl = document.getElementById("trainingSuggestion");
+
+        if (userInRank) {
+            if (deviationEl) {
+                deviationEl.textContent = userInRank.deviation ? `Độ lệch: ${userInRank.deviation}` : "Đang cập nhật chỉ số độ lệch...";
+            }
+            if (suggestionEl) {
+                suggestionEl.textContent = userInRank.missing || "Chưa có đề xuất tập luyện mới.";
+            }
+        } else {
+            if (deviationEl) deviationEl.textContent = "Chưa có dữ liệu phân tích.";
+            if (suggestionEl) suggestionEl.textContent = "Hãy cập nhật thành tích để nhận đề xuất tối ưu!";
+        }
+
+        // 5. Cập nhật Nhật ký hoạt động Cá Nhân
+        if (myActivities.length > 0) {
+            historyLogList.innerHTML = "";
             myActivities.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-            if (myActivities.length === 0) {
-                historyLogList.innerHTML = `<div class="empty-log">Bạn chưa có hoạt động nào được ghi nhận gần đây. Hãy tập luyện và cập nhật kết quả ngay nhé!</div>`;
-                return;
-            }
-
-            // Đổ danh sách hoạt động vào giao diện
             myActivities.forEach(act => {
                 const logItem = document.createElement("div");
-                logItem.style.cssText = `
-                    background-color: #FFFFFF;
-                    border: 1px solid #D9E2DC;
-                    border-radius: 12px;
-                    padding: 12px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    font-size: 13px;
-                    margin-bottom: 10px;
-                `;
+                logItem.className = "history-item";
                 
+                const swimText = act.swim ? `🏊 ${act.swim}m ` : '';
+                const bikeText = act.bike ? `🚴 ${act.bike}km ` : '';
+                const runText = act.run ? `🏃 ${act.run}km` : '';
+                const points = calculateEstimatedPoints(act.swim, act.bike, act.run);
+
+                const formattedDate = act.date 
+                    ? new Date(act.date).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) 
+                    : 'Hôm nay';
+
                 logItem.innerHTML = `
                     <div>
-                    <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">Ngày gửi: ${act.date 
-                        ? new Date(act.date).toLocaleString('vi-VN', { 
-                            day: '2-digit', 
-                            month: '2-digit', 
-                            year: 'numeric', 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                        }) 
-                        : 'Hôm nay'}
-                    </span>
-                        <span style="color: #718096; font-size: 12px; font-weight: 500;">
-                            ${act.swim ? `🏊 ${act.swim}m ` : ''}
-                            ${act.bike ? `🚴 ${act.bike}km ` : ''}
-                            ${act.run ? `🏃 ${act.run}km` : ''}
-                        </span>
+                        <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">Ngày gửi: ${formattedDate}</span>
+                        <span style="color: #718096; font-size: 12px; font-weight: 500;">${swimText}${bikeText}${runText}</span>
                     </div>
                     <div style="font-weight: 700; color: #0F5132; background-color: #EBF8F2; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
-                        +${calculateEstimatedPoints(act.swim, act.bike, act.run)}đ
+                        +${points}đ
                     </div>
                 `;
                 historyLogList.appendChild(logItem);
             });
         } else {
-            historyLogList.innerHTML = `<div class="empty-log">Chưa có nhật ký hoạt động nào trên hệ thống Sheets.</div>`;
+            historyLogList.innerHTML = `<div class="empty-log">Bạn chưa có hoạt động nào được ghi nhận gần đây. Hãy tập luyện và cập nhật kết quả ngay nhé!</div>`;
         }
+
+        // 6. Cập nhật Hoạt động gần đây của Team
+        const actList = document.getElementById('activityList');
+        if (actList && response.activities) {
+            actList.innerHTML = "";
+            const sortedTeamActivities = [...response.activities].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+            if (sortedTeamActivities.length === 0) {
+                actList.innerHTML = `<div class="empty-log">Chưa có hoạt động nào từ team.</div>`;
+            } else {
+                sortedTeamActivities.forEach((act) => {
+                    const swimVal = act.swim ? parseFloat(act.swim).toFixed(0) : "0";
+                    const bikeVal = act.bike ? parseFloat(act.bike).toFixed(1) : "0";
+                    const runVal = act.run ? parseFloat(act.run).toFixed(1) : "0";
+                    const points = calculateEstimatedPoints(act.swim, act.bike, act.run);
+
+                    const formattedDate = act.date 
+                        ? new Date(act.date).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) 
+                        : 'Hôm nay';
+
+                    const div = document.createElement('div');
+                    div.className = 'activity-item animate-fade-in';
+                    
+                    div.innerHTML = `
+                        <div>
+                            <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">
+                                ${act.name || "Thành viên"} - ${formattedDate}
+                            </span>
+                            <span style="color: #718096; font-size: 12px; font-weight: 500;">
+                                ${act.swim ? `🏊 ${swimVal}m ` : ''}
+                                ${act.bike ? `🚴 ${bikeVal}km ` : ''}
+                                ${act.run ? `🏃 ${runVal}km` : ''}
+                            </span>
+                        </div>
+                        <div style="font-weight: 700; color: #0F5132; background-color: #EBF8F2; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                            +${points}đ
+                        </div>
+                    `;
+                    actList.appendChild(div);
+                });
+            }
+        }
+
+        // 7. Cập nhật Bảng xếp hạng trong trang cá nhân
+        const rankingTableBody = document.getElementById("rankingTableBody");
+        if (rankingTableBody && response.rankings) {
+            rankingTableBody.innerHTML = "";
+            
+            const sortedRankings = [...response.rankings].sort((a, b) => (parseFloat(b.points) || 0) - (parseFloat(a.points) || 0));
+
+            if (sortedRankings.length === 0) {
+                rankingTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 15px; color: #718096;">Chưa có dữ liệu xếp hạng.</td></tr>`;
+            } else {
+                sortedRankings.forEach((rankItem, index) => {
+                    const row = document.createElement("tr");
+                    row.style.borderBottom = "1px solid #EDF2F7";
+                    
+                    const isCurrentUser = String(rankItem.id).trim() === String(userId).trim() || 
+                                          String(rankItem.name).trim().toLowerCase() === currentUserName.toLowerCase();
+                    
+                    if (isCurrentUser) {
+                        row.style.backgroundColor = "#F0FDF4";
+                        row.style.fontWeight = "600";
+                    }
+
+                    const pointsVal = parseFloat(rankItem.points) || 0;
+                    const cupsVal = rankItem.cups || rankItem.cup || 0;
+
+                    row.innerHTML = `
+                        <td style="text-align: center; font-weight: 700; padding: 10px 8px;">#${rankItem.rank || (index + 1)}</td>
+                        <td style="padding: 10px 8px; color: #2D3748;">${rankItem.name || "Thành viên"}</td>
+                        <td style="text-align: right; color: #0F5132; font-weight: 700; padding: 10px 8px;">${pointsVal.toFixed(0)}đ</td>
+                        <td style="text-align: center; padding: 10px 8px;">${cupsVal > 0 ? "🏆 " + cupsVal : "-"}</td>
+                    `;
+                    rankingTableBody.appendChild(row);
+                });
+            }
+        }
+
     } else {
-        historyLogList.innerHTML = `<div class="empty-log" style="color: #C53030;">⚠️ Không thể tải nhật ký hoạt động: ${response.msg}</div>`;
+        historyLogList.innerHTML = `<div class="empty-log" style="color: #C53030;">⚠️ Không thể tải dữ liệu: ${response?.msg || "Lỗi kết nối"}</div>`;
     }
 }
 
 /**
- * Hàm hỗ trợ tính nhẩm điểm số hiển thị tạm thời trên giao diện nhật ký thành viên
+ * Hàm chuyển đổi hiển thị giữa tab Cá nhân và tab Team
  */
-function calculateEstimatedPoints(swim, bike, run) {
-    const sPts = (parseFloat(swim) || 0) * 0.008; // 100m được 0.8đ -> 1m = 0.008đ
-    const bPts = (parseFloat(bike) || 0) * 0.6;  // 1km được 0.6đ
-    const rPts = (parseFloat(run) || 0) * 1.4;   // 1km được 1.4đ
-    return (sPts + bPts + rPts).toFixed(1);
-}
-// Sự kiện cho nút Đăng xuất ở cuối trang (không hiện thông báo)
-const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+function switchActivityTab(tabName) {
+    const btnPersonal = document.getElementById("btnTabPersonal");
+    const btnTeam = document.getElementById("btnTabTeam");
+    const contentPersonal = document.getElementById("tabContentPersonal");
+    const contentTeam = document.getElementById("tabContentTeam");
 
-if (adminLogoutBtn) {
-    adminLogoutBtn.addEventListener("click", function() {
-        // Xóa dữ liệu phiên làm việc ngay lập tức
-        localStorage.clear(); 
-        sessionStorage.clear();
+    if (tabName === "personal") {
+        btnPersonal.style.background = "#0F5132";
+        btnPersonal.style.color = "#fff";
+        btnTeam.style.background = "#fff";
+        btnTeam.style.color = "#0F5132";
         
-        // Chuyển hướng về trang đăng nhập
-        window.location.href = "index.html"; 
-    });
+        contentPersonal.style.display = "block";
+        contentTeam.style.display = "none";
+    } else {
+        btnTeam.style.background = "#0F5132";
+        btnTeam.style.color = "#fff";
+        btnPersonal.style.background = "#fff";
+        btnPersonal.style.color = "#0F5132";
+        
+        contentTeam.style.display = "block";
+        contentPersonal.style.display = "none";
+    }
 }
-
