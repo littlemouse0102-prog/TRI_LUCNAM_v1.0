@@ -1,7 +1,5 @@
 /**
- * ==========================================
- * TRIATHLON LỤC NAM - RANKING STYLES (Ngọc Trai Style)
- * ==========================================
+ * TRIATHLON LỤC NAM - RANKING STYLES
  */
 
 :root {
@@ -35,7 +33,7 @@ body {
     overscroll-behavior-y: contain;
 }
 
-/* KHUNG ỨNG DỤNG CHÍNH */
+/* --- Layout --- */
 .app-container {
     width: 100%;
     max-width: 430px;
@@ -50,7 +48,12 @@ body {
     margin: 0 auto;
 }
 
-/* HEADER CỐ ĐỊNH */
+.app-content {
+    padding: 16px;
+    flex: 1;
+}
+
+/* --- Header --- */
 .app-header {
     background: linear-gradient(135deg, var(--dark), #065F46);
     color: var(--white);
@@ -64,9 +67,13 @@ body {
     box-shadow: 0 4px 12px rgba(6, 78, 59, 0.15);
 }
 
-.header-left {
+.header-left, .header-center {
     display: flex;
     align-items: center;
+    color: var(--white);
+}
+
+.header-left {
     gap: 8px;
     font-size: 13px;
     font-weight: 700;
@@ -84,12 +91,7 @@ body {
     font-size: 16px;
 }
 
-.app-content {
-    padding: 16px;
-    flex: 1;
-}
-
-/* THẺ THỐNG KÊ NHANH */
+/* --- Summary Cards --- */
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -108,10 +110,7 @@ body {
     box-shadow: var(--card-shadow);
 }
 
-.mini-card .icon { 
-    font-size: 20px; 
-}
-
+.mini-card .icon { font-size: 20px; }
 .mini-card .label { 
     font-size: 10px; 
     color: var(--text-muted); 
@@ -119,14 +118,13 @@ body {
     font-weight: 600;
     text-transform: uppercase;
 }
-
 .mini-card h5 { 
     font-size: 14px; 
-    color: var(--text-main); 
+    color: var(--primary); 
     font-weight: 700; 
 }
 
-/* BỤC VINH QUANG TOP 3 */
+/* --- Podium --- */
 .podium-section {
     margin-bottom: 24px;
     padding: 0 4px;
@@ -153,33 +151,28 @@ body {
     transition: transform 0.2s ease;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
 }
 
-.podium-card:hover { 
-    transform: translateY(-4px); 
-}
+.podium-card:hover { transform: translateY(-4px); }
 
-.podium-card.rank-1 { 
-    min-height: 190px; 
+.podium-card.rank-1, .podium-card-1 { 
+    height: 120px; min-height: 190px; 
     border-color: #FBBF24; 
-    background: linear-gradient(180deg, #FFFDF0 0%, #FFFFFF 100%); 
+    background: linear-gradient(180deg, #FFFDF0 0%, var(--white) 100%); 
     z-index: 2; 
 }
-
-.podium-card.rank-2 { 
-    min-height: 170px; 
+.podium-card.rank-2, .podium-card-2 { 
+    height: 140px; min-height: 180px; 
     border-color: #94A3B8; 
-    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%); 
-    z-index: 1;
+    background: linear-gradient(180deg, #F8FAFC 0%, var(--white) 100%); 
+    z-index: 1; 
 }
-
-.podium-card.rank-3 { 
-    min-height: 155px; 
+.podium-card.rank-3, .podium-card-3 { 
+    height: 110px; min-height: 170px; 
     border-color: #B45309; 
-    background: linear-gradient(180deg, #FFF8F5 0%, #FFFFFF 100%); 
-    z-index: 1;
+    background: linear-gradient(180deg, #FFF8F5 0%, var(--white) 100%); 
+    z-index: 1; 
 }
 
 .podium-medal {
@@ -205,11 +198,7 @@ body {
 .rank-2 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #94A3B8; }
 .rank-3 .avatar-frame { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px #B45309; }
 
-.avatar-frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+.avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
 
 .rank-label {
     font-size: 10px;
@@ -218,7 +207,6 @@ body {
     letter-spacing: 0.5px;
     margin-bottom: 4px;
 }
-
 .rank-1 .rank-label { color: #D97706; }
 .rank-2 .rank-label { color: #475569; }
 .rank-3 .rank-label { color: #9A3412; }
@@ -233,7 +221,6 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0 2px;
-    display: block;
 }
 
 .member-score {
@@ -255,10 +242,8 @@ body {
     color: #B45309;
 }
 
-/* BỘ LỌC TABS SCROLL */
-.filter-section {
-    margin-bottom: 12px;
-}
+/* --- Filters & Search --- */
+.filter-section { margin-bottom: 12px; }
 
 .tabs-scroll {
     display: flex;
@@ -282,14 +267,12 @@ body {
     transition: all 0.2s;
     box-shadow: var(--card-shadow);
 }
-
 .tab-btn.active {
     background-color: var(--primary);
     color: var(--white);
     border-color: var(--primary);
 }
 
-/* THANH TÌM KIẾM */
 .search-box {
     background-color: var(--white);
     border: 1px solid var(--border);
@@ -301,12 +284,7 @@ body {
     margin-bottom: 16px;
     box-shadow: var(--card-shadow);
 }
-
-.search-box i { 
-    color: var(--text-muted); 
-    font-size: 14px; 
-}
-
+.search-box i { color: var(--text-muted); font-size: 14px; }
 .search-box input {
     border: none;
     outline: none;
@@ -316,7 +294,7 @@ body {
     background: transparent;
 }
 
-/* DANH SÁCH BẢNG XẾP HẠNG CHUNG */
+/* --- Leaderboard List --- */
 .section-title {
     font-size: 13px;
     font-weight: 700;
@@ -325,6 +303,7 @@ body {
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
+.section-title i { color: var(--primary); }
 
 .leaderboard-list {
     display: flex;
@@ -347,66 +326,44 @@ body {
     transition: all 0.2s;
     box-shadow: var(--card-shadow);
 }
-
 .row-item:hover { 
     background-color: var(--light); 
-    border-color: var(--primary);
+    border-color: var(--primary); 
 }
 
-.row-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+.row-left { display: flex; align-items: center; gap: 12px; }
+.row-index { font-size: 13px; font-weight: 700; color: var(--text-muted); width: 20px; text-align: center; }
+.row-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); }
+.row-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
 
-.row-index {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-muted);
-    width: 20px;
-    text-align: center;
-}
+.row-right { display: flex; align-items: center; gap: 16px; }
+.row-score { font-size: 13px; font-weight: 700; color: var(--primary); width: 80px; text-align: right; white-space: nowrap; flex-shrink: 0; padding-right: 5px; }
+.row-cups { font-size: 12px; font-weight: 700; color: var(--amber); width: 35px; text-align: center; }
 
-.row-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--border);
-}
-
-.row-name {
-    font-size: 13px;
+/* --- Logout & Spacing --- */
+.logout-section-wrap { margin: 30px 0 10px 0; text-align: center; }
+.btn-logout {
+    background-color: #FFF5F5;
+    color: #C53030;
+    border: 1px solid #FEB2B2;
+    padding: 12px 24px;
+    border-radius: 12px;
     font-weight: 600;
-    color: var(--text-main);
-}
-
-.row-right {
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    font-size: 14px;
+    transition: all 0.3s;
 }
+.btn-logout:hover { background: #FED7D7; }
 
-.row-score {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--primary);
-    width: 80px;
-    text-align: right;
-    white-space: nowrap;
-    flex-shrink: 0;
-    padding-right: 5px;
-}
+.bottom-spacer, .bottom-spacer-large { height: 70px; }
+.admin-link-contents { display: contents; }
 
-.row-cups {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--amber);
-    width: 35px;
-    text-align: center;
-}
-
-/* THANH ĐIỀU HƯỚNG ĐÁY MÀN HÌNH */
+/* --- Bottom Nav --- */
 .bottom-nav {
     position: fixed !important;
     bottom: 0 !important;
@@ -439,85 +396,44 @@ body {
     transition: all 0.2s ease;
     gap: 3px;
 }
+.bottom-nav .nav-item i { font-size: 18px; transition: transform 0.2s; }
+.bottom-nav .nav-item.active { color: var(--primary) !important; }
+.bottom-nav .nav-item.active i { transform: translateY(-2px); }
 
-.bottom-nav .nav-item i {
-    font-size: 18px;
-    transition: transform 0.2s;
-}
-
-.bottom-nav .nav-item.active {
-    color: var(--primary) !important;
-}
-
-.bottom-nav .nav-item.active i {
-    transform: translateY(-2px);
-}
-
-/* POPUP MODAL CHI TIẾT */
+/* --- Modal --- */
 .modal-overlay {
     position: fixed;
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    opacity: 0; 
-    visibility: hidden;
+    opacity: 0; visibility: hidden;
     transition: all 0.3s ease;
 }
-
-.modal-overlay.show { 
-    opacity: 1; 
-    visibility: visible; 
-}
+.modal-overlay.show { opacity: 1; visibility: visible; }
 
 .modal-box {
-    width: 100%; 
-    max-width: 430px;
+    width: 100%; max-width: 430px;
     background-color: var(--white);
-    border-top-left-radius: 20px; 
-    border-top-right-radius: 20px;
+    border-top-left-radius: 20px; border-top-right-radius: 20px;
     padding: 20px;
     transform: translateY(100%);
     transition: transform 0.3s ease;
-    box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
 }
-
-.modal-overlay.show .modal-box { 
-    transform: translateY(0); 
-}
+.modal-overlay.show .modal-box { transform: translateY(0); }
 
 .modal-header {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    border-bottom: 1px solid var(--border); 
-    padding-bottom: 10px; 
-    margin-bottom: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 16px;
 }
+.modal-header h3 { color: var(--dark); font-size: 16px; font-weight: 700; }
+.modal-header button { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; }
 
-.modal-header h3 { 
-    color: var(--dark); 
-    font-size: 16px; 
-    font-weight: 700;
-}
-
-.modal-header button { 
-    background: none; 
-    border: none; 
-    font-size: 24px; 
-    color: var(--text-muted); 
-    cursor: pointer; 
-}
-
-.animate-fade-in { 
-    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-}
-
+/* --- Animation --- */
+.animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
