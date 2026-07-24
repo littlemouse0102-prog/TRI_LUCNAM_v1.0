@@ -58,10 +58,6 @@
                 </div>
             </section>
                        
-            
-
-            
-
             <section class="dashboard-section">
                 <div class="section-title">Khu vực quản lý</div>
                 <div class="management-buttons">
@@ -81,13 +77,14 @@
                 </div>
             </section>
         </main>
+
         <!-- Đặt đoạn này ngay trước thẻ đóng </div> của app-container -->
-        <div class="logout-wrapper" style="padding: 20px;">
-            <button id="logoutBtn" class="btn-logout" style="width: 100%; padding: 12px; background: #FFF5F5; color: #C53030; border: 1px solid #FEB2B2; border-radius: 12px; cursor: pointer;">
+        <div class="logout-wrapper">
+            <button id="logoutBtn" class="btn-logout">
                 <i class="fa-solid fa-power-off"></i> Đăng xuất hệ thống
             </button>
         </div>
-        <div class="bottom-spacer" style="height: 20px;"></div>
+        <div class="bottom-spacer"></div>
 
         <!-- THANH ĐIỀU HƯỚNG ĐỒNG BỘ -->
         <nav class="bottom-nav">
@@ -164,7 +161,7 @@
             </div>
             <div class="modal-body">
                 <form id="resetPinForm" class="admin-form">
-                    <input type="text" name="username" style="display:none;" aria-hidden="true" autocomplete="username">
+                    <input type="text" name="username" class="hidden-username-input" aria-hidden="true" autocomplete="username">
                     
                     <div class="form-group">
                         <label>Chọn thành viên</label>
