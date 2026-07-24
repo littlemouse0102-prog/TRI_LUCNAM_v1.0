@@ -1,6 +1,8 @@
-/* ==========================================================================
-   TRIATHLON LỤC NAM - GLOBAL CSS (global.css)
-   ========================================================================== */
+/**
+ * ==========================================================================
+ * TRIATHLON LỤC NAM - GLOBAL & THEME SYSTEM (UPGRADED)
+ * ==========================================================================
+ */
 
 /* 1. MẶC ĐỊNH THEME: XANH NGỌC (DEFAULT) */
 :root {
@@ -17,9 +19,11 @@
     --danger: #e11d48;
     --danger-bg: #fff1f2;
     --warning: #d97706;
+    --amber: #f59e0b;
+    --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
 }
 
-/* Kế thừa box-sizing và font chữ */
+/* Kế thừa box-sizing và font chữ chuẩn */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -29,55 +33,77 @@
 }
 
 body {
-    background-color: var(--light);
+    background-color: #cbd5e1;
     color: var(--text-main);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    touch-action: pan-y;
+}
+
+/* Chống ảnh tự động to quá khổ */
+img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
 }
 
 /* Khung ứng dụng di động chung */
 .app-container {
     width: 100%;
     max-width: 480px;
-    background-color: var(--white);
+    background-color: var(--light);
     min-height: 100vh;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow-x: hidden;
+    margin: 0 auto;
+    padding-bottom: 70px;
+}
+
+.app-content {
+    padding: 16px;
+    flex: 1;
 }
 
 /* ==========================================================================
    HEADER CHUNG
    ========================================================================== */
 .app-header {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, var(--dark), var(--primary-hover));
     color: var(--white);
-    padding: 14px 16px;
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(6, 78, 59, 0.15);
 }
 
-.header-left {
+.header-left, .header-center {
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--white);
+    font-weight: 700;
 }
+
+.header-left { font-size: 13px; cursor: pointer; }
+.header-center { font-size: 15px; letter-spacing: 0.5px; }
 
 .mini-logo {
     width: 32px;
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
 }
 
 .brand-name {
@@ -89,9 +115,6 @@ body {
 /* ==========================================================================
    MINI COLOR DOTS THEME SWITCHER (Nút & Menu chọn màu giao diện)
    ========================================================================== */
-/* ==========================================================================
-   MINI COLOR DOTS THEME SWITCHER (Nút & Menu chọn màu giao diện)
-   ========================================================================== */
 .header-right {
     display: flex;
     align-items: center;
@@ -99,8 +122,34 @@ body {
     position: relative;
 }
 
+.theme-container {
+    position: relative;
+}
+
+.theme-switcher-btn {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.theme-current-color {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: inline-block;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
 /* Các ô chọn màu linh hoạt, bo tròn góc mềm mại */
 .theme-dot-option {
+    width: 30px;
+    height: 30px;
     border-radius: 8px !important;
     border: 2px solid transparent !important;
     cursor: pointer !important;
@@ -129,54 +178,86 @@ body {
     animation: fadeIn 0.2s ease forwards;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px !important;
-    width: 120px !important;
+    width: 140px !important;
 }
 
 .theme-dropdown.show {
     display: grid !important;
 }
+
+/* Danh mục màu sắc đồng bộ hệ thống */
+.theme-default { background: #059669; }
+.theme-blue { background: #2563EB; }
+.theme-amber { background: #D97706; }
+.theme-purple { background: #7C3AED; }
+.theme-rose { background: #E11D48; }
+.theme-midnight { background: #0F172A; }
+.theme-cyberpunk { background: #06b6d4; }
+.theme-glass { background: #047857; }
+.theme-sunset { background: #ea580c; }
+.theme-mono { background: #18181b; }
+.theme-ocean { background: #0284c7; }
+.theme-royalgold { background: #7c3aed; }
+.theme-matcha { background: #65a30d; }
+.theme-sakura { background: #db2777; }
+.theme-vintage { background: #78350f; }
+.theme-arctic { background: #0ea5e9; }
+.theme-rainbow-vivid { background: linear-gradient(135deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); }
+.theme-rainbow-pastel { background: linear-gradient(135deg, #fbcfe8, #fed7aa, #fef08a, #d9f99d, #bae6fd, #e9d5ff); }
+.theme-rainbow-neon { background: radial-gradient(circle, #ff007f, #7f00ff, #00ffff); }
+
 /* ==========================================================================
    NAVIGATION ĐÁY MÀN HÌNH (BOTTOM NAV)
    ========================================================================== */
 .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background: var(--white);
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-around;
-    padding: 8px 0;
-    z-index: 99;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.04);
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 8px 4px 12px 4px !important;
+    z-index: 999 !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
 }
 
 .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
     color: var(--text-muted);
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 10px;
+    font-weight: 600;
     gap: 4px;
     flex: 1;
-    transition: color 0.2s;
+    height: 100%;
+    transition: all 0.2s ease;
 }
 
 .nav-item i {
     font-size: 18px;
+    transition: transform 0.2s;
 }
 
 .nav-item.active, .nav-item:hover {
-    color: var(--primary);
+    color: var(--primary) !important;
+}
+
+.nav-item.active i {
+    transform: translateY(-2px);
 }
 
 .bottom-spacer {
-    height: 70px;
+    height: 80px;
+    width: 100%;
 }
 
 /* ==========================================================================
@@ -185,14 +266,14 @@ body {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-6px);
+        transform: translateY(-6px) scale(0.98);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
 .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
