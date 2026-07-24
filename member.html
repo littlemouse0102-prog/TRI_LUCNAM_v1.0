@@ -23,8 +23,6 @@
     <div class="app-container animate-fade-in">
         
         <!-- HEADER CỐ ĐỊNH KÈM MENU CHỌN MÀU DẠNG CHẤM TRÒN -->
-        
-        <!-- HEADER CỐ ĐỊNH KÈM NÚT VÀ MENU CHỌN MÀU DẠNG HÌNH TRÒN CÓ MÀU SẴN -->
         <header class="app-header">
             <div class="header-left">
                 <img src="avatars/TRILN.png" alt="Logo" class="mini-logo" onerror="this.src='avatars/default.jpg'">
@@ -32,45 +30,40 @@
             </div>
             
             <div class="header-right">
-            <!-- Menu sổ xuống dạng lưới hình tròn màu to rõ, không chữ -->
-                
-            <div class="header-right">
                 <!-- Nút bấm mở menu đổi màu (Hiện hình tròn màu chủ đạo) -->
-                <div class="theme-container" style="position: relative;">
-                    <button id="themeSwitcherBtn" class="theme-switcher-btn" title="Đổi màu giao diện" style="padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer;">
-                        <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: inline-block; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 2px 6px rgba(0,0,0,0.25);"></span>
+                <div class="theme-container">
+                    <button id="themeSwitcherBtn" class="theme-switcher-btn" title="Đổi màu giao diện">
+                        <span class="theme-current-color"></span>
                     </button>
                     
-                    <!-- Khung menu sổ xuống chứa các ô chọn màu (Đã thêm kích thước width/height trực tiếp vào từng ô) -->
+                    <!-- Khung menu sổ xuống chứa các ô chọn màu -->
                     <div id="themeDropdown" class="theme-dropdown">
-                        <!-- Bộ màu cơ bản cũ -->
-                        <button class="theme-dot-option" style="background: #059669; width: 30px; height: 30px;" onclick="setTheme('default')" title="Xanh Ngọc"></button>
-                        <button class="theme-dot-option" style="background: #2563EB; width: 30px; height: 30px;" onclick="setTheme('blue')" title="Xanh Dương"></button>
-                        <button class="theme-dot-option" style="background: #D97706; width: 30px; height: 30px;" onclick="setTheme('amber')" title="Hổ Phách"></button>
-                        <button class="theme-dot-option" style="background: #7C3AED; width: 30px; height: 30px;" onclick="setTheme('purple')" title="Tím Hoàng Gia"></button>
-                        <button class="theme-dot-option" style="background: #E11D48; width: 30px; height: 30px;" onclick="setTheme('rose')" title="Hồng Ruby"></button>
-                        <button class="theme-dot-option" style="background: #0F172A; width: 30px; height: 30px;" onclick="setTheme('midnight')" title="Xám Đêm"></button>
+                        <!-- Bộ màu cơ bản -->
+                        <button class="theme-dot-option theme-default" onclick="setTheme('default')" title="Xanh Ngọc"></button>
+                        <button class="theme-dot-option theme-blue" onclick="setTheme('blue')" title="Xanh Dương"></button>
+                        <button class="theme-dot-option theme-amber" onclick="setTheme('amber')" title="Hổ Phách"></button>
+                        <button class="theme-dot-option theme-purple" onclick="setTheme('purple')" title="Tím Hoàng Gia"></button>
+                        <button class="theme-dot-option theme-rose" onclick="setTheme('rose')" title="Hồng Ruby"></button>
+                        <button class="theme-dot-option theme-midnight" onclick="setTheme('midnight')" title="Xám Đêm"></button>
                         
-                        <!-- 10 phong cách hiện đại mới -->
-                        <button class="theme-dot-option" style="background: #06b6d4; width: 30px; height: 30px;" onclick="setTheme('cyberpunk')" title="Cyberpunk Neon"></button>
-                        <button class="theme-dot-option" style="background: #047857; width: 30px; height: 30px;" onclick="setTheme('glass')" title="Emerald Glass"></button>
-                        <button class="theme-dot-option" style="background: #ea580c; width: 30px; height: 30px;" onclick="setTheme('sunset')" title="Sunset Blaze"></button>
-                        <button class="theme-dot-option" style="background: #18181b; width: 30px; height: 30px;" onclick="setTheme('mono')" title="Minimalist Mono"></button>
-                        <button class="theme-dot-option" style="background: #0284c7; width: 30px; height: 30px;" onclick="setTheme('ocean')" title="Ocean Deep"></button>
-                        <button class="theme-dot-option" style="background: #7c3aed; width: 30px; height: 30px;" onclick="setTheme('royalgold')" title="Royal Gold"></button>
-                        <button class="theme-dot-option" style="background: #65a30d; width: 30px; height: 30px;" onclick="setTheme('matcha')" title="Matcha Latte"></button>
-                        <button class="theme-dot-option" style="background: #db2777; width: 30px; height: 30px;" onclick="setTheme('sakura')" title="Sakura Blossom"></button>
-                        <button class="theme-dot-option" style="background: #78350f; width: 30px; height: 30px;" onclick="setTheme('vintage')" title="Vintage Retro"></button>
-                        <button class="theme-dot-option" style="background: #0ea5e9; width: 30px; height: 30px;" onclick="setTheme('arctic')" title="Arctic Frost"></button>
-                        <button class="theme-dot-option" style="background: linear-gradient(135deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); width: 30px; height: 30px;" onclick="setTheme('rainbow-vivid')" title="Cầu Vồng Rực Rỡ"></button>
-
-                        <button class="theme-dot-option" style="background: linear-gradient(135deg, #fbcfe8, #fed7aa, #fef08a, #d9f99d, #bae6fd, #e9d5ff); width: 30px; height: 30px;" onclick="setTheme('rainbow-pastel')" title="Cầu Vồng Pastel"></button>
-
-                        <button class="theme-dot-option" style="background: radial-gradient(circle, #ff007f, #7f00ff, #00ffff); width: 30px; height: 30px;" onclick="setTheme('rainbow-neon')" title="Cầu Vồng Neon Tối"></button>
+                        <!-- Phong cách hiện đại -->
+                        <button class="theme-dot-option theme-cyberpunk" onclick="setTheme('cyberpunk')" title="Cyberpunk Neon"></button>
+                        <button class="theme-dot-option theme-glass" onclick="setTheme('glass')" title="Emerald Glass"></button>
+                        <button class="theme-dot-option theme-sunset" onclick="setTheme('sunset')" title="Sunset Blaze"></button>
+                        <button class="theme-dot-option theme-mono" onclick="setTheme('mono')" title="Minimalist Mono"></button>
+                        <button class="theme-dot-option theme-ocean" onclick="setTheme('ocean')" title="Ocean Deep"></button>
+                        <button class="theme-dot-option theme-royalgold" onclick="setTheme('royalgold')" title="Royal Gold"></button>
+                        <button class="theme-dot-option theme-matcha" onclick="setTheme('matcha')" title="Matcha Latte"></button>
+                        <button class="theme-dot-option theme-sakura" onclick="setTheme('sakura')" title="Sakura Blossom"></button>
+                        <button class="theme-dot-option theme-vintage" onclick="setTheme('vintage')" title="Vintage Retro"></button>
+                        <button class="theme-dot-option theme-arctic" onclick="setTheme('arctic')" title="Arctic Frost"></button>
+                        
+                        <!-- Cầu vồng -->
+                        <button class="theme-dot-option theme-rainbow-vivid" onclick="setTheme('rainbow-vivid')" title="Cầu Vồng Rực Rỡ"></button>
+                        <button class="theme-dot-option theme-rainbow-pastel" onclick="setTheme('rainbow-pastel')" title="Cầu Vồng Pastel"></button>
+                        <button class="theme-dot-option theme-rainbow-neon" onclick="setTheme('rainbow-neon')" title="Cầu Vồng Neon Tối"></button>
                     </div>
                 </div>
-            </div>
-            
             </div>
         </header>
 
@@ -116,8 +109,6 @@
 
             <!-- FORM CẬP NHẬT THÀNH TÍCH TẬP LUYỆN -->
             <section class="form-section">
-                          
-               
                 <div class="section-title"><i class="fa-solid fa-pen-to-square"></i> CẬP NHẬT KẾT QUẢ HÔM NAY</div>
              
                 <form id="activityForm" class="styled-form">
@@ -163,7 +154,7 @@
                 </div>
 
                 <!-- Bảng 2: Hoạt động Team -->
-                <div id="tabContentTeam" class="tab-content" style="display: none;">
+                <div id="tabContentTeam" class="tab-content tab-content-team">
                     <div class="section-title"><i class="fa-solid fa-users"></i> HOẠT ĐỘNG GẦN ĐÂY CỦA TEAM</div>
                     <div class="admin-card-container">
                         <div class="scroll-viewport" id="activityList">
@@ -176,64 +167,50 @@
             <!-- BẢNG XẾP HẠNG -->
             <section class="dashboard-section">
                 <div class="section-title"><i class="fa-solid fa-trophy"></i> Bảng xếp hạng</div>
-                <div class="ranking-table-container tab-content" style="padding: 10px;">
-                    <table class="ranking-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <div class="ranking-table-container tab-content ranking-container-pad">
+                    <table class="ranking-table">
                         <thead>
-                            <tr style="border-bottom: 2px solid var(--border); color: var(--dark);">
-                                <th style="width: 50px; text-align: center; padding: 8px;">Hạng</th>
-                                <th style="text-align: left; padding: 8px;">Thành viên</th>
-                                <th style="text-align: right; padding: 8px;">Điểm</th>
-                                <th style="text-align: center; width: 60px; padding: 8px;"><i class="fa-solid fa-trophy"></i></th>
+                            <tr class="ranking-header-row">
+                                <th class="rank-col-num">Hạng</th>
+                                <th class="rank-col-name">Thành viên</th>
+                                <th class="rank-col-score">Điểm</th>
+                                <th class="rank-col-trophy"><i class="fa-solid fa-trophy"></i></th>
                             </tr>
                         </thead>
                         <tbody id="rankingTableBody">
-                            <tr><td colspan="4" style="text-align: center; padding: 15px; color: var(--text-muted);">Đang tải bảng xếp hạng...</td></tr>
+                            <tr><td colspan="4" class="ranking-loading">Đang tải bảng xếp hạng...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section> 
             
             <!-- GỢI Ý LUYỆN TẬP & ĐỀ XUẤT -->
-            <section class="dashboard-section" style="background: var(--light); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
-                <div class="section-title" style="margin-bottom: 10px;">
+            <section class="dashboard-section suggestion-section">
+                <div class="section-title suggestion-title-margin">
                     <i class="fa-solid fa-bullseye"></i> GỢI Ý LUYỆN TẬP
                 </div>
                 
-                <div style="background: var(--white); border-left: 4px solid var(--primary); padding: 10px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; color: var(--text-main); line-height: 1.5;">
+                <div class="suggestion-goal-box">
                     <strong>Chú ý:</strong> Mục tiêu tháng 7/2026: 🏆🏆<br>
                     🏆 = 1,9 km 🏊 + 90 km 🚴 + 21,1 km 🏃 = 100 điểm IM
                 </div>
 
-                <div style="margin-bottom: 10px; font-size: 13px;">
-                    <span style="font-weight: 600; color: var(--dark);"><i class="fa-solid fa-chart-line"></i> Độ lệch cấu trúc môn:</span>
-                    <div id="deviationStatus" style="color: var(--text-muted); margin-top: 4px; font-style: italic;">Đang phân tích chỉ số tập luyện...</div>
+                <div class="suggestion-group">
+                    <span class="suggestion-label"><i class="fa-solid fa-chart-line"></i> Độ lệch cấu trúc môn:</span>
+                    <div id="deviationStatus" class="deviation-status-text">Đang phân tích chỉ số tập luyện...</div>
                 </div>
 
-                <div style="font-size: 13px;">
-                    <span style="font-weight: 600; color: var(--dark);"><i class="fa-solid fa-wand-magic-sparkles"></i> Đề xuất tập luyện để cân bằng:</span>
-                    <div id="trainingSuggestion" style="font-weight: 700; color: var(--primary); background: var(--white); padding: 10px; border-radius: 8px; margin-top: 6px; border: 1px solid var(--border);">
+                <div class="suggestion-group">
+                    <span class="suggestion-label"><i class="fa-solid fa-wand-magic-sparkles"></i> Đề xuất tập luyện để cân bằng:</span>
+                    <div id="trainingSuggestion" class="training-suggestion-box">
                         Đang cập nhật đề xuất...
                     </div>
                 </div>
             </section>
              
             <!-- Nút đăng xuất -->
-            <div id="logoutSection" style="margin: 20px 0; padding: 0 0 20px 0; text-align: center;">
-                <button id="adminLogoutBtn" class="btn-logout" style="
-                    background-color: var(--danger-bg);
-                    color: var(--danger);
-                    border: 1px solid var(--danger);
-                    padding: 12px 24px;
-                    border-radius: 12px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 10px;
-                    width: 100%;
-                    font-size: 14px;
-                    transition: all 0.3s;">
+            <div id="logoutSection" class="logout-section-wrap">
+                <button id="adminLogoutBtn" class="btn-logout">
                     <i class="fa-solid fa-power-off"></i> Đăng xuất
                 </button>
             </div>
@@ -249,7 +226,7 @@
                 <span>Cá nhân</span>
             </a>
  
-            <div id="admin-link-container" style="display: contents;"></div>
+            <div id="admin-link-container" class="admin-link-contents"></div>
 
             <a href="wall.html" class="nav-item">
                 <i class="fa-solid fa-medal"></i>
@@ -291,7 +268,7 @@
             }
         }
 
-        // Tự động nạp theme đã lưu cho mọi file HTML ngay khi mở lên[cite: 7]
+        // Tự động nạp theme đã lưu cho mọi file HTML ngay khi mở lên
         const savedTheme = localStorage.getItem('app_theme');
         if (savedTheme) {
             loadThemeCss(savedTheme);
@@ -317,7 +294,7 @@
         }
     });
 
-    // Hàm thay đổi, lưu trữ và đồng bộ hóa cho toàn bộ các trang HTML khác[cite: 7]
+    // Hàm thay đổi, lưu trữ và đồng bộ hóa cho toàn bộ các trang HTML khác
     function setTheme(themeName) {
         localStorage.setItem('app_theme', themeName);
         loadThemeCss(themeName);
