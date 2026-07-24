@@ -93,16 +93,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Đăng xuất
+    // Đăng xuất từ nút chính bên dưới
     const adminLogoutBtn = document.getElementById("adminLogoutBtn");
     if (adminLogoutBtn) {
-        adminLogoutBtn.addEventListener("click", () => {
-            localStorage.clear();
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        });
+        adminLogoutBtn.addEventListener("click", handleLogout);
+    }
+
+    // Đăng xuất từ nút nhỏ trên Header
+    const logoutBtnTop = document.getElementById("logoutBtnTop");
+    if (logoutBtnTop) {
+        logoutBtnTop.addEventListener("click", handleLogout);
     }
 });
+
+function handleLogout() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "index.html";
+}
 
 // 3. CÁC HÀM RENDER & XỬ LÝ DỮ LIỆU
 function renderBasicProfile(user) {
@@ -213,10 +221,10 @@ async function loadMemberDashboardData(userId) {
 
                 logItem.innerHTML = `
                     <div>
-                        <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">Ngày gửi: ${formattedDate}</span>
-                        <span style="color: #718096; font-size: 12px; font-weight: 500;">${swimText}${bikeText}${runText}</span>
+                        <span style="font-weight: 600; display: block; font-size: 11px; margin-bottom: 4px;">Ngày gửi: ${formattedDate}</span>
+                        <span style="color: var(--text-muted); font-size: 12px; font-weight: 500;">${swimText}${bikeText}${runText}</span>
                     </div>
-                    <div style="font-weight: 700; color: #0F5132; background-color: #EBF8F2; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                    <div style="font-weight: 700; color: var(--primary); background-color: var(--light); padding: 4px 10px; border-radius: 20px; font-size: 12px;">
                         +${points}đ
                     </div>
                 `;
@@ -250,16 +258,16 @@ async function loadMemberDashboardData(userId) {
                     
                     div.innerHTML = `
                         <div>
-                            <span style="font-weight: 600; color: #0A3D25; display: block; font-size: 11px; margin-bottom: 4px;">
+                            <span style="font-weight: 600; display: block; font-size: 11px; margin-bottom: 4px;">
                                 ${act.name || "Thành viên"} - ${formattedDate}
                             </span>
-                            <span style="color: #718096; font-size: 12px; font-weight: 500;">
+                            <span style="color: var(--text-muted); font-size: 12px; font-weight: 500;">
                                 ${act.swim ? `🏊 ${swimVal}m ` : ''}
                                 ${act.bike ? `🚴 ${bikeVal}km ` : ''}
                                 ${act.run ? `🏃 ${runVal}km` : ''}
                             </span>
                         </div>
-                        <div style="font-weight: 700; color: #0F5132; background-color: #EBF8F2; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                        <div style="font-weight: 700; color: var(--primary); background-color: var(--light); padding: 4px 10px; border-radius: 20px; font-size: 12px;">
                             +${points}đ
                         </div>
                     `;
@@ -276,17 +284,17 @@ async function loadMemberDashboardData(userId) {
             const sortedRankings = [...response.rankings].sort((a, b) => (parseFloat(b.points) || 0) - (parseFloat(a.points) || 0));
 
             if (sortedRankings.length === 0) {
-                rankingTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 15px; color: #718096;">Chưa có dữ liệu xếp hạng.</td></tr>`;
+                rankingTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 15px; color: var(--text-muted);">Chưa có dữ liệu xếp hạng.</td></tr>`;
             } else {
                 sortedRankings.forEach((rankItem, index) => {
                     const row = document.createElement("tr");
-                    row.style.borderBottom = "1px solid #EDF2F7";
+                    row.style.borderBottom = "1px solid var(--border)";
                     
                     const isCurrentUser = String(rankItem.id).trim() === String(userId).trim() || 
                                           String(rankItem.name).trim().toLowerCase() === currentUserName.toLowerCase();
                     
                     if (isCurrentUser) {
-                        row.style.backgroundColor = "#F0FDF4";
+                        row.style.backgroundColor = "var(--light)";
                         row.style.fontWeight = "600";
                     }
 
@@ -295,8 +303,8 @@ async function loadMemberDashboardData(userId) {
 
                     row.innerHTML = `
                         <td style="text-align: center; font-weight: 700; padding: 10px 8px;">#${rankItem.rank || (index + 1)}</td>
-                        <td style="padding: 10px 8px; color: #2D3748;">${rankItem.name || "Thành viên"}</td>
-                        <td style="text-align: right; color: #0F5132; font-weight: 700; padding: 10px 8px;">${pointsVal.toFixed(0)}đ</td>
+                        <td style="padding: 10px 8px; color: var(--text-main);">${rankItem.name || "Thành viên"}</td>
+                        <td style="text-align: right; color: var(--primary); font-weight: 700; padding: 10px 8px;">${pointsVal.toFixed(0)}đ</td>
                         <td style="text-align: center; padding: 10px 8px;">${cupsVal > 0 ? "🏆 " + cupsVal : "-"}</td>
                     `;
                     rankingTableBody.appendChild(row);
@@ -305,7 +313,7 @@ async function loadMemberDashboardData(userId) {
         }
 
     } else {
-        historyLogList.innerHTML = `<div class="empty-log" style="color: #C53030;">⚠️ Không thể tải dữ liệu: ${response?.msg || "Lỗi kết nối"}</div>`;
+        historyLogList.innerHTML = `<div class="empty-log" style="color: var(--danger);">⚠️ Không thể tải dữ liệu: ${response?.msg || "Lỗi kết nối"}</div>`;
     }
 }
 
@@ -319,18 +327,18 @@ function switchActivityTab(tabName) {
     const contentTeam = document.getElementById("tabContentTeam");
 
     if (tabName === "personal") {
-        btnPersonal.style.background = "#0F5132";
+        btnPersonal.style.background = "var(--primary)";
         btnPersonal.style.color = "#fff";
-        btnTeam.style.background = "#fff";
-        btnTeam.style.color = "#0F5132";
+        btnTeam.style.background = "var(--white)";
+        btnTeam.style.color = "var(--primary)";
         
         contentPersonal.style.display = "block";
         contentTeam.style.display = "none";
     } else {
-        btnTeam.style.background = "#0F5132";
+        btnTeam.style.background = "var(--primary)";
         btnTeam.style.color = "#fff";
-        btnPersonal.style.background = "#fff";
-        btnPersonal.style.color = "#0F5132";
+        btnPersonal.style.background = "var(--white)";
+        btnPersonal.style.color = "var(--primary)";
         
         contentTeam.style.display = "block";
         contentPersonal.style.display = "none";
