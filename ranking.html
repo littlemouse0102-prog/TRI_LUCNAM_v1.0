@@ -75,9 +75,9 @@
             <!-- PODIUM (TOP 3) -->
             <section class="podium-section">
                 <div class="podium-container" id="podiumContainer">
-                    <div class="podium-card skeleton" style="height: 120px;"></div>
-                    <div class="podium-card skeleton" style="height: 140px;"></div>
-                    <div class="podium-card skeleton" style="height: 110px;"></div>
+                    <div class="podium-card skeleton podium-card-1"></div>
+                    <div class="podium-card skeleton podium-card-2"></div>
+                    <div class="podium-card skeleton podium-card-3"></div>
                 </div>
             </section>
 
@@ -109,28 +109,14 @@
             </section>
 
             <!-- NÚT ĐĂNG XUẤT -->
-            <div id="logoutSection" style="margin: 30px 0 10px 0; text-align: center;">
-                <button id="adminLogoutBtn" class="btn-logout" style="
-                    background-color: #FFF5F5;
-                    color: #C53030;
-                    border: 1px solid #FEB2B2;
-                    padding: 12px 24px;
-                    border-radius: 12px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 10px;
-                    width: 100%;
-                    font-size: 14px;
-                    transition: all 0.3s;">
+            <div id="logoutSection" class="logout-section-wrap">
+                <button id="adminLogoutBtn" class="btn-logout">
                     <i class="fa-solid fa-power-off"></i> Đăng xuất
                 </button>
             </div>
 
             <!-- ĐOẠN ĐỆM TRÁNH BỊ THANH MENU CHE NỘI DUNG -->
-            <div class="bottom-spacer" style="height: 70px;"></div>
+            <div class="bottom-spacer bottom-spacer-large"></div>
 
         </main>
     </div>
@@ -152,7 +138,7 @@
         </a>
 
         <!-- Thùng chứa kiểm tra quyền Admin bằng JS -->
-        <div id="admin-link-container" style="display: contents;"></div>
+        <div id="admin-link-container" class="admin-link-contents"></div>
 
         <a href="wall.html" class="nav-item">
             <i class="fa-solid fa-medal"></i>
