@@ -10,31 +10,45 @@ let listUsersCache = []; // Lưu trữ tạm danh sách để nạp vào Select 
 document.addEventListener('DOMContentLoaded', () => {
     
     // ==========================================================================
+    // 0. XỬ LÝ THEME VÀ ĐĂNG XUẤT HỆ THỐNG
+    // ==========================================================================
+    const savedTheme = localStorage.getItem('app_theme');
+    if (savedTheme) {
+        loadThemeCss(savedTheme);
+    }
+
+    // Xử lý nút Đăng xuất hệ thống
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        });
+    }
+
+    // ==========================================================================
     // 1. KIỂM TRA BẢO MẬT & PHÂN QUYỀN (ĐỒNG BỘ CHUẨN LOCALSTORAGE)
     // ==========================================================================
     let currentUser = null;
     try {
-        // Đọc đúng gói dữ liệu "triathlon_user" được sinh ra từ file login.js
         const userJson = localStorage.getItem("triathlon_user");
         currentUser = userJson ? JSON.parse(userJson) : null;
 
-        // 2. Kiểm tra và chạy hàm
         if (currentUser) {
             if (currentUser.role === 'ADMIN') {
-                renderAdminProfile(currentUser); // Chạy hàm cho Admin
+                renderAdminProfile(currentUser);
             } else {
-                renderBasicProfile(currentUser); // Chạy hàm cho thành viên thường
+                renderBasicProfile(currentUser);
             }
         }
-
     } catch (err) {
         console.error("Lỗi đọc cấu hình bảo mật:", err);
     }
 
-    // Nếu không có dữ liệu hoặc quyền trong hệ thống KHÔNG PHẢI là ADMIN -> Đá ngược về login
     if (!currentUser || currentUser.role !== 'ADMIN') {
         alert('Cảnh báo bảo mật: Vui lòng đăng nhập tài khoản ADMIN để truy cập!');
-        localStorage.removeItem("triathlon_user"); // Dọn dẹp bộ nhớ nếu có dữ liệu rác
+        localStorage.removeItem("triathlon_user");
         window.location.href = 'index.html';
         return;
     }
@@ -43,15 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const today = new Date();
     document.getElementById('currentDate').textContent = 
         `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
-
-    // ==========================================================================
-    // 2. TẢI VÀ ĐỔ DỮ LIỆU DASHBOARD HỆ THỐNG
-    // ==========================================================================
-   
-   
-
-    // Đổ danh sách người dùng vào các ô Select Dropdown và List Modal
-   
 
     // Kích hoạt chạy hàm lấy dữ liệu ngay khi tải xong trang
     loadDashboardData();
@@ -66,45 +71,38 @@ document.addEventListener('DOMContentLoaded', () => {
         addMemberForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // 1. Lấy và chuẩn hóa dữ liệu đầu vào
             const name = document.getElementById('addName').value.trim();
             const pin = document.getElementById('addPin').value.trim();
             const role = document.getElementById('addRole').value;
 
-            // 2. Kiểm tra dữ liệu nhanh (Client-side Validation)
             if (!name || !pin || !role) {
                 alert("Vui lòng điền đầy đủ tất cả các trường thông tin!");
                 return;
             }
 
-            if (isNaN(pin) || pin.length < 4) { // Ví dụ: kiểm tra mã PIN phải là số và tối thiểu 4 số
+            if (isNaN(pin) || pin.length < 4) {
                 alert("Mã PIN phải là một chuỗi số (tối thiểu 4 ký số)!");
                 return;
             }
 
-            // 3. Thay đổi trạng thái Button để tránh người dùng click liên tục (Spam)
             const btn = e.target.querySelector('button[type="submit"]') || e.target.querySelector('button');
             const originalText = btn.textContent;
             btn.textContent = "Đang xử lý..."; 
             btn.disabled = true;
 
             try {
-                // 4. Gọi API hệ thống
                 const res = await callSystemAPI("addMember", { name, pin, role });
-                
                 alert(res.msg);
 
-                // 5. Nếu thành công, làm sạch form và đóng modal
                 if (res.success) {
                     e.target.reset();
                     toggleModal('modalAddMember');
-                    await loadDashboardData(); // Thêm await nếu loadDashboardData cũng là hàm async
+                    await loadDashboardData();
                 }
             } catch (error) {
                 console.error("Lỗi khi thêm thành viên:", error);
                 alert("Đã xảy ra lỗi kết nối đến máy chủ. Vui lòng thử lại sau!");
             } finally {
-                // 6. Khối này luôn chạy dù API thành công hay thất bại -> Trả lại trạng thái nút ban đầu
                 btn.textContent = originalText; 
                 btn.disabled = false;
             }
@@ -117,49 +115,76 @@ document.addEventListener('DOMContentLoaded', () => {
         resetPinForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // 1. Lấy dữ liệu đầu vào
             const userId = document.getElementById('resetUserSelect').value;
             const newPin = document.getElementById('resetNewPin').value.trim();
 
-            // 2. Kiểm tra dữ liệu nhanh (Client-side Validation)
             if (!userId || !newPin) {
                 alert("Vui lòng chọn thành viên và nhập mã PIN mới!");
                 return;
             }
 
-            // Sử dụng Regex để đảm bảo PIN chỉ gồm 4-6 chữ số
             const pinRegex = /^[0-9]{4,6}$/;
             if (!pinRegex.test(newPin)) {
                 alert("Mã PIN mới phải là số và có độ dài từ 4 đến 6 ký số!");
                 return;
             }
 
-            // 3. Khóa nút bấm chống spam click
             const btn = e.target.querySelector('button[type="submit"]') || e.target.querySelector('button');
             const originalText = btn.textContent;
             btn.textContent = "Đang cập nhật..."; 
             btn.disabled = true;
 
             try {
-                // 4. Gọi API hệ thống với hành động "resetPin"
                 const res = await callSystemAPI("resetPin", { userId, newPin });
                 alert(res.msg);
 
-                // 5. Nếu thành công, làm sạch form và đóng modal
                 if (res.success) {
                     e.target.reset();
                     toggleModal('modalResetPin');
                     if (typeof loadDashboardData === "function") {
-                        await loadDashboardData(); // Cập nhật lại giao diện nếu cần
+                        await loadDashboardData();
                     }
                 }
             } catch (error) {
                 console.error("Lỗi khi đặt lại mã PIN:", error);
                 alert("Đã xảy ra lỗi kết nối. Không thể cập nhật mã PIN lúc này!");
             } finally {
-                // 6. Luôn mở khóa nút bấm dù thành công hay thất bại
                 btn.textContent = originalText; 
                 btn.disabled = false;
+            }
+        });
+    }
+
+    // Form Sửa Thành Tích
+    const editActivityForm = document.getElementById('editActivityForm');
+    if (editActivityForm) {
+        editActivityForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                rowIndex: document.getElementById('editRowIndex').value,
+                swim: document.getElementById('editSwim').value,
+                bike: document.getElementById('editBike').value,
+                run: document.getElementById('editRun').value
+            };
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = "Đang cập nhật...";
+
+            try {
+                const res = await callSystemAPI("editActivity", data);
+                alert(res.msg);
+                if (res.success) {
+                    toggleModal('modalEditActivity');
+                    await loadDashboardData();
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi kết nối máy chủ!");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Cập Nhật Dữ Liệu";
             }
         });
     }
@@ -173,7 +198,6 @@ function populateUserDropdowns() {
     if(listContainer) listContainer.innerHTML = '';
 
     listUsersCache.forEach(user => {
-        // Điền vào form Reset PIN
         if (selectDrop) {
             const opt = document.createElement('option');
             opt.value = user.id;
@@ -181,7 +205,6 @@ function populateUserDropdowns() {
             selectDrop.appendChild(opt);
         }
 
-        // Điền vào danh sách quản lý thành viên công khai
         if (listContainer) {
             const item = `
                 <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; font-size:13px;">
@@ -195,16 +218,14 @@ function populateUserDropdowns() {
 }
 
 async function loadDashboardData() {
-    // Gọi hàm kết nối từ file api.js
     const res = await callSystemAPI("getDashboard");
 
-    // Kiểm tra xem res có tồn tại và thành công không
     if (!res || !res.success) {
         console.error("Dữ liệu trả về bị lỗi hoặc trống:", res);
         alert("Không thể tải dữ liệu: " + (res?.msg || "Lỗi không xác định"));
         return;
     }
-    // --- A. Đổ dữ liệu Thống kê tổng quan & Tắt Skeleton ---
+
     const m = document.getElementById('statMembers');
     if (m && res.rankings) { m.textContent = res.rankings.length; m.classList.remove('skeleton'); }
     
@@ -220,8 +241,6 @@ async function loadDashboardData() {
     const r = document.getElementById('statRun');
     if (r) { r.innerHTML = `${res.summary?.run ? res.summary.run.toFixed(1) : 0} <span>km</span>`; r.classList.remove('skeleton'); }
 
-            
-    // 3. Đổ dữ liệu Top Vận động viên (Hàng 2)
     if (res.rankings && res.rankings.length > 0) {
         const list = res.rankings;
         const findMax = (arr, key) => arr.reduce((max, curr) => 
@@ -233,7 +252,6 @@ async function loadDashboardData() {
             run: { data: findMax(list, 'run'), key: 'run', unit: 'km', factor: 1 }
         };
 
-        // Hàm cập nhật cả tên và số liệu
         const updateTop = (nameId, valId, obj) => {
             const nameEl = document.getElementById(nameId);
             const valEl = document.getElementById(valId);
@@ -253,32 +271,20 @@ async function loadDashboardData() {
         updateTop('topRunName', 'topRunVal', topData.run);
     }
 
-    
-
-
-    // --- E. Lưu danh sách thành viên vào bộ nhớ tạm phục vụ Form Thao Tác ---
     listUsersCache = res.rankings || [];
     populateUserDropdowns();
 }
 
-// HÀM ĐIỀU KHIỂN BẬT TẮT SLIDE UP POPUP MODAL (GLOBAL SCOPE)
-// Sửa hàm toggleModal trong admin.js
 function toggleModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.toggle('show');
-        
-        // Nếu mở đúng modal quản lý thành viên, thì chạy hàm render
         if (modalId === 'modalMembers' && modal.classList.contains('show')) {
             renderMembersList();
         }
     }
 }
 
-/**
- * Render thông tin chuyên biệt cho Admin
- * @param {Object} admin - Đối tượng thông tin admin
- */
 function renderAdminProfile(admin) {
     const adminNameEl = document.getElementById("adminName");
     const adminRoleEl = document.getElementById("adminCode");
@@ -287,7 +293,6 @@ function renderAdminProfile(admin) {
     if (adminNameEl) adminNameEl.innerText = admin.name || "Quản Trị Viên";
     if (adminRoleEl) adminRoleEl.innerText = `Mã số: ${admin.id || "AD--"}`;
 
-    // Xử lý Avatar chuyên biệt cho Admin
     if (adminAvatarEl && admin.id) {
         adminAvatarEl.src = `avatars/${admin.id}.jpg`;
         adminAvatarEl.onerror = function() {
@@ -296,70 +301,26 @@ function renderAdminProfile(admin) {
         };
     }
 }
-/**
- * Hàm mở Modal Sửa Hoạt Động
- * @param {number} rowIndex - Vị trí dòng trong sheet (bao gồm cả header)
- * @param {Object} act - Đối tượng hoạt động
- */
+
+function renderBasicProfile(user) {
+    // Hàm phụ trợ nếu cần dùng cho tài khoản thường
+}
+
 function openEditModal(rowIndex, act) {
-    // Điền dữ liệu vào form
     document.getElementById('editRowIndex').value = rowIndex;
     document.getElementById('editSwim').value = act.swim || 0;
     document.getElementById('editBike').value = act.bike || 0;
     document.getElementById('editRun').value = act.run || 0;
-    
-    // Hiển thị modal
     toggleModal('modalEditActivity');
 }
 
-// Xử lý gửi form Sửa
-const editActivityForm = document.getElementById('editActivityForm');
-if (editActivityForm) {
-    editActivityForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const data = {
-            rowIndex: document.getElementById('editRowIndex').value,
-            swim: document.getElementById('editSwim').value,
-            bike: document.getElementById('editBike').value,
-            run: document.getElementById('editRun').value
-        };
-
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.textContent = "Đang cập nhật...";
-
-        try {
-            const res = await callSystemAPI("editActivity", data);
-            alert(res.msg);
-            if (res.success) {
-                toggleModal('modalEditActivity');
-                await loadDashboardData(); // Làm mới dashboard
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Lỗi kết nối máy chủ!");
-        } finally {
-            btn.disabled = false;
-            btn.textContent = "Cập Nhật Dữ Liệu";
-        }
-    });
-}
 function renderMembersList() {
     const container = document.getElementById('membersContainerList');
     if (!container) return;
 
-    // 1. Log dữ liệu để xem tên trường chính xác (Mở F12 -> Console để xem)
-    console.log("Dữ liệu listUsersCache đang có:", listUsersCache);
-    if (listUsersCache.length > 0) {
-        console.log("Cấu trúc của một user:", listUsersCache[0]);
-    }
-
     let htmlContent = ''; 
 
     listUsersCache.forEach(user => {
-        // 2. Tự động lấy giá trị từ bất kỳ tên trường nào có thể xảy ra
-        // Nếu tên trường là 'Name', 'name', 'hoTen',... code này vẫn chạy được
         const userName = user.name || user.Name || user.NAME || user.hoTen || "Không tên"; 
         const userRole = user.role || user.Role || user.ROLE || "MEMBER";
         const userId = user.id || user.ID || user.Id || "default";
@@ -381,4 +342,30 @@ function renderMembersList() {
     });
 
     container.innerHTML = htmlContent;
+}
+
+// Các hàm hỗ trợ Theme
+function setTheme(themeName) {
+    localStorage.setItem('app_theme', themeName);
+    loadThemeCss(themeName);
+    
+    const dropdown = document.getElementById('themeDropdown');
+    if (dropdown) dropdown.classList.remove('show');
+}
+
+function loadThemeCss(themeName) {
+    let themeLink = document.getElementById('dynamic-theme-css');
+    
+    if (!themeLink) {
+        themeLink = document.createElement('link');
+        themeLink.id = 'dynamic-theme-css';
+        themeLink.rel = 'stylesheet';
+        document.head.appendChild(themeLink);
+    }
+
+    if (themeName === 'default') {
+        themeLink.href = '';
+    } else {
+        themeLink.href = `css/${themeName}.css`;
+    }
 }
