@@ -107,6 +107,13 @@
                     <div class="list-item-skeleton"></div>
                 </div>
             </section>
+            <!-- DÒNG CHI TIẾT THÀNH TÍCH TỪ SHEET -->
+            <section class="leaderboard-section activity-logs-wrapper">
+                <div class="section-title">NHẬT KÝ THÀNH TÍCH</div>
+                <div class="leaderboard-list" id="activityLogsRows">
+                    <div class="text-center text-muted" style="padding: 10px; font-size: 13px;">Đang tải nhật ký thành tích...</div>
+                </div>
+            </section>
 
             <!-- NÚT ĐĂNG XUẤT -->
             <div id="logoutSection" class="logout-section-wrap">
@@ -159,89 +166,5 @@
     <!-- SCRIPTS -->
     <script src="js/api.js"></script>
     <script src="js/ranking.js"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        // Xử lý nút Đăng xuất
-        const logoutBtn = document.getElementById("adminLogoutBtn");
-        if (logoutBtn) {
-            logoutBtn.addEventListener("click", () => {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = "index.html";
-            });
-        }
-
-        // Kiểm tra quyền Admin để hiển thị icon trên thanh menu đáy
-        const userJson = localStorage.getItem("triathlon_user");
-        const user = userJson ? JSON.parse(userJson) : null;
-
-        if (user && user.role === "ADMIN") {
-            const container = document.getElementById('admin-link-container');
-            if (container) {
-                container.innerHTML = `
-                    <a href="admin.html" class="nav-item">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <span>ADMIN</span>
-                    </a>
-                `;
-            }
-        }
-    });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Tự động nạp theme đã lưu cho mọi file HTML ngay khi mở lên
-            const savedTheme = localStorage.getItem('app_theme');
-            if (savedTheme) {
-                loadThemeCss(savedTheme);
-            }
-
-            // Xử lý bật/tắt menu chấm màu sổ xuống (nếu trang đó có nút đổi màu)
-            const themeBtn = document.getElementById('themeSwitcherBtn');
-            const themeDropdown = document.getElementById('themeDropdown');
-
-            if (themeBtn && themeDropdown) {
-                themeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    themeDropdown.classList.toggle('show');
-                });
-
-                document.addEventListener('click', () => {
-                    themeDropdown.classList.remove('show');
-                });
-                
-                themeDropdown.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            }
-        });
-
-        // Hàm thay đổi, lưu trữ và đồng bộ hóa cho toàn bộ các trang HTML khác
-        function setTheme(themeName) {
-            localStorage.setItem('app_theme', themeName);
-            loadThemeCss(themeName);
-            
-            const dropdown = document.getElementById('themeDropdown');
-            if (dropdown) dropdown.classList.remove('show');
-        }
-
-        // Hàm thực thi chèn link CSS tương ứng vào thẻ <head>
-        function loadThemeCss(themeName) {
-            let themeLink = document.getElementById('dynamic-theme-css');
-            
-            if (!themeLink) {
-                themeLink = document.createElement('link');
-                themeLink.id = 'dynamic-theme-css';
-                themeLink.rel = 'stylesheet';
-                document.head.appendChild(themeLink);
-            }
-
-            if (themeName === 'default') {
-                themeLink.href = '';
-            } else {
-                themeLink.href = `css/${themeName}.css`;
-            }
-        }
-    </script>
 </body>
 </html>
