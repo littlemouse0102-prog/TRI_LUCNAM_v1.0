@@ -4,7 +4,78 @@
  * ==========================================
  */
 
-// 1. CÁC HÀM TIỆN ÍCH (Global Scope)
+// 0. XỬ LÝ THEME VÀ KHỞI TẠO CHUNG NGAY KHI LOAD TRANG
+document.addEventListener("DOMContentLoaded", () => {
+    // Kiểm tra quyền Admin hiển thị nút điều hướng
+    const userJson = localStorage.getItem("triathlon_user");
+    const user = userJson ? JSON.parse(userJson) : null;
+
+    if (user && user.role === "ADMIN") {
+        const container = document.getElementById('admin-link-container');
+        if (container) {
+            container.innerHTML = `
+                <a href="admin.html" class="nav-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>ADMIN</span>
+                </a>
+            `;
+        }
+    }
+
+    // Tự động nạp theme đã lưu cho mọi file HTML ngay khi mở lên
+    const savedTheme = localStorage.getItem('app_theme');
+    if (savedTheme) {
+        loadThemeCss(savedTheme);
+    }
+
+    // Xử lý bật/tắt menu chấm màu sổ xuống
+    const themeBtn = document.getElementById('themeSwitcherBtn');
+    const themeDropdown = document.getElementById('themeDropdown');
+
+    if (themeBtn && themeDropdown) {
+        themeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            themeDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            themeDropdown.classList.remove('show');
+        });
+        
+        themeDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+});
+
+// Hàm thay đổi, lưu trữ và đồng bộ hóa cho toàn bộ các trang HTML khác
+function setTheme(themeName) {
+    localStorage.setItem('app_theme', themeName);
+    loadThemeCss(themeName);
+    
+    const dropdown = document.getElementById('themeDropdown');
+    if (dropdown) dropdown.classList.remove('show');
+}
+
+// Hàm thực thi chèn link CSS tương ứng vào thẻ <head>
+function loadThemeCss(themeName) {
+    let themeLink = document.getElementById('dynamic-theme-css');
+    
+    if (!themeLink) {
+        themeLink = document.createElement('link');
+        themeLink.id = 'dynamic-theme-css';
+        themeLink.rel = 'stylesheet';
+        document.head.appendChild(themeLink);
+    }
+
+    if (themeName === 'default') {
+        themeLink.href = '';
+    } else {
+        themeLink.href = `css/${themeName}.css`;
+    }
+}
+
+// 1. CÁC HÀM TIỆN ÍCH (Global Scope)[cite: 4]
 function parseDecimal(value) {
     if (!value) return 0;
     return parseFloat(value.toString().replace(',', '.')) || 0;
@@ -17,7 +88,7 @@ function calculateEstimatedPoints(swim, bike, run) {
     return (sPts + bPts + rPts).toFixed(1);
 }
 
-// 2. SỰ KIỆN KHỞI TẠO DOM
+// 2. SỰ KIỆN KHỞI TẠO DOM CHO CHỨC NĂNG THÀNH VIÊN[cite: 4]
 document.addEventListener("DOMContentLoaded", async () => {
     let currentUser = null;
     try {
@@ -112,7 +183,7 @@ function handleLogout() {
     window.location.href = "index.html";
 }
 
-// 3. CÁC HÀM RENDER & XỬ LÝ DỮ LIỆU
+// 3. CÁC HÀM RENDER & XỬ LÝ DỮ LIỆU[cite: 4]
 function renderBasicProfile(user) {
     const userNameEl = document.getElementById("userName");
     const userCodeEl = document.getElementById("userCode");
@@ -128,7 +199,7 @@ function renderBasicProfile(user) {
 }
 
 /**
- * Gọi API lấy dữ liệu chỉ số cá nhân, thứ hạng, nhật ký và bảng xếp hạng từ Sheets
+ * Gọi API lấy dữ liệu chỉ số cá nhân, thứ hạng, nhật ký và bảng xếp hạng từ Sheets[cite: 4]
  */
 async function loadMemberDashboardData(userId) {
     const historyLogList = document.getElementById("historyLogList");
@@ -318,7 +389,7 @@ async function loadMemberDashboardData(userId) {
 }
 
 /**
- * Hàm chuyển đổi hiển thị giữa tab Cá nhân và tab Team
+ * Hàm chuyển đổi hiển thị giữa tab Cá nhân và tab Team[cite: 4]
  */
 function switchActivityTab(tabName) {
     const btnPersonal = document.getElementById("btnTabPersonal");
