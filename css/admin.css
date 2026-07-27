@@ -671,7 +671,7 @@ img {
 
 /* --- Bottom Nav --- */
 .bottom-nav {
-    position: fixed !important;
+    position: sticky !important;
     bottom: 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
@@ -687,6 +687,7 @@ img {
     padding: 0 4px !important;
     z-index: 9999 !important;
     box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
+    margin-top: auto !important;
 }
 
 .bottom-nav .nav-item {
