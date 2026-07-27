@@ -1,3 +1,72 @@
+/**
+ * ==========================================
+ * TRIATHLON LỤC NAM - RANKING LOGIC (ranking.js)
+ * ==========================================
+ */
+
+// Xử lý chung: Nạp theme, phân quyền Admin và nút Đăng xuất khi trang được tải
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Xử lý nút Đăng xuất
+    const logoutBtn = document.getElementById("adminLogoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        });
+    }
+
+    // 2. Kiểm tra quyền Admin để hiển thị icon trên thanh menu đáy
+    const userJson = localStorage.getItem("triathlon_user");
+    const user = userJson ? JSON.parse(userJson) : null;
+
+    if (user && user.role === "ADMIN") {
+        const container = document.getElementById('admin-link-container');
+        if (container) {
+            container.innerHTML = `
+                <a href="admin.html" class="nav-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>ADMIN</span>
+                </a>
+            `;
+        }
+    }
+
+    // 3. Tự động nạp theme đã lưu cho trang
+    const savedTheme = localStorage.getItem('app_theme');
+    if (savedTheme) {
+        loadThemeCss(savedTheme);
+    }
+});
+
+// Hàm thay đổi, lưu trữ và đồng bộ hóa theme
+function setTheme(themeName) {
+    localStorage.setItem('app_theme', themeName);
+    loadThemeCss(themeName);
+    
+    const dropdown = document.getElementById('themeDropdown');
+    if (dropdown) dropdown.classList.remove('show');
+}
+
+// Hàm thực thi chèn link CSS tương ứng vào thẻ <head>
+function loadThemeCss(themeName) {
+    let themeLink = document.getElementById('dynamic-theme-css');
+    
+    if (!themeLink) {
+        themeLink = document.createElement('link');
+        themeLink.id = 'dynamic-theme-css';
+        themeLink.rel = 'stylesheet';
+        document.head.appendChild(themeLink);
+    }
+
+    if (themeName === 'default') {
+        themeLink.href = '';
+    } else {
+        themeLink.href = `css/${themeName}.css`;
+    }
+}
+
+// Logic chính của Bảng Xếp Hạng và Nhật ký
 document.addEventListener('DOMContentLoaded', () => {
     let rawMembersData = [];
     let currentTab = 'all'; // Lưu trạng thái tab hiện tại (all, swim, bike, run)
@@ -54,52 +123,52 @@ document.addEventListener('DOMContentLoaded', () => {
     // HÀM CHUẨN HÓA DỮ LIỆU: Đổi tất cả Key thành chữ thường
     // ==========================================
     function cleanAndNormalizeData(dataArray) {
-    if (!dataArray || !Array.isArray(dataArray)) return [];
-    
-    return dataArray.map((item) => {
-        if (!item) return null;
+        if (!dataArray || !Array.isArray(dataArray)) return [];
+        
+        return dataArray.map((item) => {
+            if (!item) return null;
 
-        let swimVal = 0, bikeVal = 0, runVal = 0, pointsVal = 0, cupVal = 0, rankVal = 0;
-        let idVal = '', nameVal = 'Ẩn danh';
+            let swimVal = 0, bikeVal = 0, runVal = 0, pointsVal = 0, cupVal = 0, rankVal = 0;
+            let idVal = '', nameVal = 'Ẩn danh';
 
-        for (let originalKey in item) {
-            if (item.hasOwnProperty(originalKey)) {
-                let key = originalKey.toLowerCase().trim();
-                let val = item[originalKey];
+            for (let originalKey in item) {
+                if (item.hasOwnProperty(originalKey)) {
+                    let key = originalKey.toLowerCase().trim();
+                    let val = item[originalKey];
 
-                // Khớp chính xác theo cấu trúc cột trên Link Google Sheets của bạn
-                if (key === 'id' || key.includes('ms') || key.includes('mã') || key.includes('ma')) {
-                    idVal = String(val).trim();
-                } else if (key.includes('tên') || key.includes('ten') || key === 'name') {
-                    nameVal = String(val).trim();
-                } else if (key.includes('bơi') || key.includes('boi') || key.includes('swim')) {
-                    swimVal = parseVietnameseNumber(val);
-                } else if (key.includes('đạp') || key.includes('dap') || key.includes('bike')) {
-                    bikeVal = parseVietnameseNumber(val);
-                } else if (key.includes('chạy') || key.includes('chay') || key.includes('run')) {
-                    runVal = parseVietnameseNumber(val);
-                } else if (key.includes('điểm') || key.includes('diem') || key.includes('point')) {
-                    pointsVal = parseVietnameseNumber(val);
-                } else if (key.includes('cup') || key.includes('cúp')) {
-                    cupVal = parseVietnameseNumber(val);
-                } else if (key.includes('hạng') || key.includes('hang') || key.includes('rank')) {
-                    rankVal = parseVietnameseNumber(val);
+                    // Khớp chính xác theo cấu trúc cột trên Link Google Sheets của bạn
+                    if (key === 'id' || key.includes('ms') || key.includes('mã') || key.includes('ma')) {
+                        idVal = String(val).trim();
+                    } else if (key.includes('tên') || key.includes('ten') || key === 'name') {
+                        nameVal = String(val).trim();
+                    } else if (key.includes('bơi') || key.includes('boi') || key.includes('swim')) {
+                        swimVal = parseVietnameseNumber(val);
+                    } else if (key.includes('đạp') || key.includes('dap') || key.includes('bike')) {
+                        bikeVal = parseVietnameseNumber(val);
+                    } else if (key.includes('chạy') || key.includes('chay') || key.includes('run')) {
+                        runVal = parseVietnameseNumber(val);
+                    } else if (key.includes('điểm') || key.includes('diem') || key.includes('point')) {
+                        pointsVal = parseVietnameseNumber(val);
+                    } else if (key.includes('cup') || key.includes('cúp')) {
+                        cupVal = parseVietnameseNumber(val);
+                    } else if (key.includes('hạng') || key.includes('hang') || key.includes('rank')) {
+                        rankVal = parseVietnameseNumber(val);
+                    }
                 }
             }
-        }
 
-        return {
-            id: idVal,
-            name: nameVal,
-            swim: swimVal,
-            bike: bikeVal,
-            run: runVal,
-            points: pointsVal,
-            cup: cupVal,
-            rank: rankVal
-        };
-    }).filter(item => item !== null);
-}
+            return {
+                id: idVal,
+                name: nameVal,
+                swim: swimVal,
+                bike: bikeVal,
+                run: runVal,
+                points: pointsVal,
+                cup: cupVal,
+                rank: rankVal
+            };
+        }).filter(item => item !== null);
+    }
 
     // ==========================================
     // 2. KHỞI TẠO TRANG & LẤY DỮ LIỆU TỪ GOOGLE SHEETS
@@ -107,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initRankingPage() {
         try {
             const res = await callSystemAPI("getDashboard");
-            console.log("Dữ liệu gốc từ API:", res); // Hãy bật F12 xem cấu trúc object này
+            console.log("Dữ liệu gốc từ API:", res);
 
             if (!res || !res.success) {
                 console.error("Lỗi: Không lấy được dữ liệu từ Google Sheets");
@@ -127,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const bikeDist = parseVietnameseNumber(cleanSummary.bike);
                 const runDist = parseVietnameseNumber(cleanSummary.run);
 
-                // Hiển thị dữ liệu tổng của CLB (Môn bơi chia 1000 từ mét ra km)
-                if (document.getElementById('clubSwim')) document.getElementById('clubSwim').textContent = (swimDist ).toFixed(1) + " km";
+                // Hiển thị dữ liệu tổng của CLB
+                if (document.getElementById('clubSwim')) document.getElementById('clubSwim').textContent = swimDist.toFixed(1) + " km";
                 if (document.getElementById('clubBike')) document.getElementById('clubBike').textContent = bikeDist.toFixed(1) + " km";
                 if (document.getElementById('clubRun')) document.getElementById('clubRun').textContent = runDist.toFixed(1) + " km";
                 
@@ -162,6 +231,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.error("Không tìm thấy cấu trúc mảng danh sách xếp hạng phù hợp trong API!");
             }
+
+            // 3. Xử lý bóc tách mảng history/logs cho phần nhật ký thành tích gần đây
+            let historyTarget = res.history || res.logs || res.activities || [];
+            if (historyTarget.length === 0 && res.data) {
+                historyTarget = res.data.history || res.data.logs || res.data.activities || [];
+            }
+            renderActivityLogs(historyTarget);
+
         } catch (error) {
             console.error("Lỗi khởi tạo trang:", error);
         }
@@ -274,5 +351,52 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchBar) {
         searchBar.addEventListener('input', renderLeaderboard);
     }
+
+    // ==========================================
+    
+    // ==========================================
+    // 6. HÀM RENDER CHI TIẾT NHẬT KÝ THÀNH TÍCH GẦN ĐÂY (THỨ TỰ TỪ TRÊN XUỐNG DƯỚI)
+    // ==========================================
+    function renderActivityLogs(logsArray) {
+        const logsContainer = document.getElementById('activityLogsRows');
+        if (!logsContainer) return;
+
+        if (!logsArray || logsArray.length === 0) {
+            logsContainer.innerHTML = `<div class="text-center text-muted" style="padding: 10px; font-size: 13px;">Chưa có dữ liệu nhật ký</div>`;
+            return;
+        }
+
+        // Giữ nguyên thứ tự dữ liệu từ trên xuống dưới (không đảo ngược)
+        logsContainer.innerHTML = "";
+
+        logsArray.forEach(item => {
+            const name = item.name || item.Tên || "Thành viên";
+            const date = item.date || item.Ngày || "Gần đây";
+            const category = item.category || item.Loại || "Sprint";
+            const history = item.history || item.Thành_tích || "";
+            const time = item.time || item.Thời_gian || "";
+
+            const row = `
+                <div class="row-item">
+                    <div class="row-header">
+                        <div class="row-user-info">
+                            <span class="row-name">${name}</span>
+                            <span class="row-category">${category}</span>
+                        </div>
+                        <span class="row-date">📅 ${date}</span>
+                    </div>
+                    <div class="row-details">
+                        ${history}
+                    </div>
+                    <div class="row-time">
+                        ⏱️ Tổng thời gian: <strong>${time}</strong>
+                    </div>
+                </div>
+            `;
+            logsContainer.insertAdjacentHTML('beforeend', row);
+        });
+    }
+
+    // Khởi chạy toàn bộ logic trang khi DOM đã sẵn sàng
     initRankingPage();
 });
