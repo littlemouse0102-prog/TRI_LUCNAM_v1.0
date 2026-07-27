@@ -1,109 +1,148 @@
+/**
+ * TRIATHLON LỤC NAM - WALL / ACHIEVEMENT CABINET CSS (Cho phép cuộn trang)
+ */
+
+:root {
+    --primary: #059669;
+    --primary-hover: #047857;
+    --dark: #064E3B;
+    --light: #ECFDF5;
+    --white: #FFFFFF;
+    --background: #F8FAFC;
+    --border: #E2E8F0;
+    --text-main: #1E293B;
+    --text-muted: #64748B;
+    --amber: #F59E0B;
+    --danger: #EF4444;
+    --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: #CBD5E1;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    touch-action: pan-y;
+    overflow-y: auto; /* Cho phép body cuộn dọc */
+}
+
+/* --- Layout Container --- */
+.app-container {
+    width: 100%;
+    max-width: 430px;
+    background-color: var(--background);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+    overflow-x: hidden;
+    margin: 0 auto;
+    padding-bottom: 70px;
+}
+
+/* --- Achievement Cabinet (Cho phép cuộn và phủ nền rộng 430px) --- */
+/* --- Achievement Cabinet (Mở rộng background rộng hơn và cho phép cuộn) --- */
 .achievement-cabinet {
     position: relative;
-    width: 100%;
-    max-width: 430px; /* Điều chỉnh theo độ rộng web Triathlon Lục Nam */
-    height: 900px;    /* Tỉ lệ chiều cao theo wall.jpg */
+    width: 100%; /* Mở rộng toàn bộ chiều ngang khung chứa */
+    min-height: 100vh;
     margin: 0 auto;
     background-image: url('../avatars/wall.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    background-size: 100% auto; /* Phủ kín chiều rộng 100%, chiều cao tự động co giãn theo tỷ lệ ảnh để cuộn */
+    background-repeat: repeat-y; /* Cho phép lặp ảnh mượt mà khi cuộn trang */
+    background-position: center top;
+    flex: 1;
 }
 
 .cup-slot {
     position: absolute;
-    width: 80px; 
+    width: 80px;
     height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transform: translateX(-50%);
 }
 
 .avatar-img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    /* Bỏ border-radius: 50%; */
-    border: none; /* Xóa viền */
-    box-shadow: none; /* Xóa bóng đổ */
+    border: none;
+    box-shadow: none;
     transition: transform 0.3s;
 }
 
-.avatar-img:hover { transform: scale(1.1); }
-
-/* Định vị 9 vị trí (Căn giữa đối xứng) */
-.cup-slot {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    transform: translateX(-50%); /* Giúp căn giữa chính xác tại điểm left */
+.avatar-img:hover { 
+    transform: scale(1.1); 
 }
 
-/* Tầng trên cùng */
-.top-left   { top: 230px; left: 65px; }
-.top-center { top: 210px; left: 215px; }
-.top-right  { top: 230px; left: 365px; }
+/* --- Định vị 9 vị trí trong tủ --- */
+/* --- Định vị 9 vị trí trong tủ (Đã được đẩy cao lên thêm 50px) --- */
+.top-left   { top: 150px; left: 70px; }
+.top-center { top: 135px; left: 215px; }
+.top-right  { top: 150px; left: 360px; }
 
-/* Tầng giữa */
-.mid-left   { top: 340px; left: 85px; }
-.mid-center { top: 340px; left: 215px; }
-.mid-right  { top: 340px; left: 345px; }
+.mid-left   { top: 275px; left: 80px; }
+.mid-center { top: 275px; left: 215px; }
+.mid-right  { top: 275px; left: 350px; }
 
-/* Tầng dưới */
-.bot-left   { top: 455px; left: 85px; }
-.bot-center { top: 455px; left: 215px; }
-.bot-right  { top: 455px; left: 345px; }
+.bot-left   { top: 410px; left: 80px; }
+.bot-center { top: 410px; left: 215px; }
+.bot-right  { top: 410px; left: 350px; }
 
-/* CSS viết lại cho chế độ phóng to full chiều ngang tủ */
+/* --- Full-Screen Zoom Mode --- */
 .is-full-screen {
-    position: absolute !important;
-    top: 50% !important; /* Đẩy xuống giữa theo chiều dọc tủ */
-    left: 50% !important; /* Đẩy sang giữa theo chiều ngang tủ */
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
     transform: translate(-50%, -50%) !important;
-    
-    /* Phóng to và căn giữa ảnh */
-    width: 90% !important;    
-    max-width: 350px !important; /* Giới hạn độ rộng để không bị quá to */
+    width: 90% !important;
+    max-width: 350px !important;
     height: auto !important;
-    
-    z-index: 9999 !important;
-    background-color: transparent !important; /* Thay đổi từ màu đen chuyển sang trong suốt */
+    z-index: 99999 !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    padding: 20px;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     cursor: zoom-out;
-    border-radius: 10px; /* Bo góc cho đẹp */
+    border-radius: 12px;
 }
 
-/* Đảm bảo ảnh bên trong cũng giãn đều */
-/* Đảm bảo ảnh bên trong cũng giãn đều */
 .is-full-screen .avatar-img {
-    /* Câu lệnh tự phóng theo chiều ngang điện thoại */
-    width: 100vw !important;  /* Chiều rộng bằng 100% màn hình thiết bị */
-    max-width: 100% !important; /* Đảm bảo không vượt quá khung chứa */
-    height: auto !important;    /* Tự động điều chỉnh chiều cao để giữ tỷ lệ ảnh */
-    object-fit: contain;        /* Hiển thị toàn bộ ảnh mà không bị cắt */
+    width: 100% !important;
+    height: auto !important;
+    max-height: 70vh !important;
+    object-fit: contain;
 }
 
+/* --- Back Button --- */
 .back-btn {
-    position: absolute !important; 
+    position: absolute !important;
     top: 20px !important;
     left: 20px !important;
     padding: 8px 16px;
-    
-    /* Điều chỉnh nền và chữ để có độ tương phản cao */
-    background-color: rgba(255, 255, 255, 0.2) !important; /* Nền trắng mờ */
-    backdrop-filter: blur(5px) !important;                /* Hiệu ứng kính mờ */
-    color: #ffffff !important;                            /* Chữ màu trắng để nổi bật */
-    
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(5px) !important;
+    color: #ffffff !important;
     text-decoration: none !important;
     border-radius: 8px;
     font-size: 14px;
     font-weight: bold;
-    z-index: 99999 !important; 
-    border: 1px solid rgba(255, 255, 255, 0.4) !important; /* Viền sáng hơn */
+    z-index: 9999 !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
     cursor: pointer;
-    display: block !important; 
+    display: block !important;
     transition: all 0.3s ease;
 }
 
@@ -111,85 +150,120 @@
     background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Container loading tối giản - không nền, tập trung vào chữ và animation */
+/* --- Loading Spinner --- */
 .loading-spinner {
     position: absolute;
-    top: 20%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #150c3a; /* Màu trắng hơi mờ tạo cảm giác sang trọng */
-    font-weight: 400;
+    color: #ffffff;
+    font-weight: 500;
     font-size: 14px;
     letter-spacing: 1px;
     z-index: 1000;
     display: flex;
-    flex-direction: column; /* Xếp dọc: vòng tròn trên, chữ dưới */
+    flex-direction: column;
     align-items: center;
     gap: 12px;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Vòng xoay thanh mảnh */
 .loading-spinner::before {
     content: "";
-    width: 24px;
-    height: 24px;
-    border: 2px solid #150c3a; /* Vòng ngoài mờ */
-    border-top: 2px solid #150c3a; /* Vòng trên sáng */
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #ffffff;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
 
-/* Hiệu ứng mờ dần (Fade in) để khi xuất hiện không bị gắt */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-.loading-spinner {
-    animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-/* Mặc định ẩn trong tủ */
+
+/* --- Comment Overlay --- */
 .cmt-overlay {
     display: none;
     pointer-events: none;
 }
 
-/* Khi huy chương ở chế độ phóng to (is-full-screen) */
-/* Thiết lập định dạng chữ tri ân mới */
 .is-full-screen .cmt-overlay {
     display: block !important;
     position: absolute;
-    /* CỐ ĐỊNH KHOẢNG CÁCH: Sử dụng % hoặc giá trị âm đủ lớn */
-    /* top: -60px; Thay vì cố định pixel, hãy thử cách này: */
-    bottom: 110%; /* Luôn nằm cách mép dưới của ảnh một khoảng bằng 110% chiều cao ảnh */
+    bottom: 5px;
     left: 50%;
     transform: translateX(-50%);
-    
-    width: 400px;           /* Tăng độ rộng để chữ trải dài hơn */
-    text-align: justify; /* Căn đều hai bên */
-    
-    /* Phong cách chữ: không đậm, in nghiêng, nhỏ hơn, không nền */
-    font-family: 'Playfair Display', 'Times New Roman', serif; /* Ưu tiên font cổ điển, sang trọng */ 
-    font-size: 16px;        /* Kích thước chữ nhỏ hơn */
-    font-weight: 300;       /* Độ mỏng của chữ (không đậm) */
-    font-style: italic;     /* In nghiêng */
-    
-    color: #150c3a;         /* Màu trắng tinh tế */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Bóng nhẹ để dễ đọc trên nền ảnh */
-    background: transparent !important; /* Loại bỏ hoàn toàn nền */
-    
-    padding: 5px;
-    z-index: 10001;
+    width: 90%;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.6) !important;
+    padding: 10px;
+    border-radius: 8px;
+    z-index: 100001;
     pointer-events: none;
 }
+
 .content {
     line-height: 1.8;
     margin-bottom: 20px;
-    text-align: justify;       /* Căn đều hai bên */
-    white-space: pre-wrap;     /* GIỮ NGUYÊN xuống dòng từ dữ liệu gốc */
+    text-align: justify;
+    white-space: pre-wrap;
+}
+
+/* --- Bottom Navigation (Cố định chiều rộng 430px ở đáy màn hình khi cuộn) --- */
+.bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 430px !important;
+    max-width: 430px !important;
+    height: 60px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 4px !important;
+    z-index: 99999 !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+.bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    flex: 1;
+    height: 100%;
+    transition: all 0.2s ease;
+    gap: 3px;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--primary) !important;
+}
+
+.bottom-nav .nav-item.active i {
+    transform: translateY(-2px);
 }
