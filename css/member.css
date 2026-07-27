@@ -572,7 +572,7 @@ img {
 .admin-link-contents { display: contents; }
 
 .bottom-nav {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -587,6 +587,7 @@ img {
     padding: 10px 6px 14px 6px;
     z-index: 999;
     box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06);
+    margin-top: auto; /* Đẩy thanh này luôn nằm ở đáy khung flex container */
 }
 
 .nav-item {
