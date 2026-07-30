@@ -1,0 +1,910 @@
+/* ==========================================
+   profile.css - Giao diện Đồng bộ Theme & Nền Xám Cố Định
+========================================== */
+
+:root {
+    --bg-app: #cbd5e1;          /* Nền tổng thể bên ngoài cố định màu xám */
+    --bg-inner: var(--light, #f8fafc); /* Nền bên trong khung ứng dụng */
+    --bg-card: var(--white, #ffffff);         
+    --text-primary: var(--text-main, #1d1d1f);    
+    --text-secondary: var(--text-muted, #86868b);  
+    --strava-orange: var(--primary, #0284c7);   
+    --border-color: var(--border, #e5e5ea);    
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    background-color: var(--bg-inner);
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 70px;
+}
+
+/* Header Strava App */
+.app-header-strava {
+    background-color: var(--bg-inner);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 12px 16px 0 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.user-mini-profile img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.header-title {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Thanh Tabs chính phía trên */
+.strava-main-tabs {
+    display: flex;
+    justify-content: space-around;
+}
+
+.main-tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 0;
+    position: relative;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+}
+
+.main-tab-btn.active {
+    color: var(--text-primary);
+}
+
+.main-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--strava-orange);
+}
+
+/* Nội dung thông tin cá nhân trên cùng */
+.app-content-strava {
+    padding: 16px;
+}
+
+.profile-main-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.avatar-large-wrapper img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details-text h2 {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.location-text {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.social-stats-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+.s-stat span {
+    color: var(--text-secondary);
+    margin-right: 4px;
+}
+
+.s-stat strong {
+    color: var(--text-primary);
+}
+
+.profile-actions-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.streak-pill {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.streak-pill strong {
+    color: var(--strava-orange);
+}
+
+.btn-strava-outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Tabs Pane ẩn hiện */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Sport Filter Chips */
+.sport-filter-chips {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.chip {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chip.active {
+    background-color: transparent;
+    border-color: var(--strava-orange);
+    color: var(--text-primary);
+}
+
+/* Card chung */
+.strava-card,
+.members-carousel-card,
+.menu-list-section,
+.search-activity-box,
+.premium-unlock-card,
+.strava-feed-card {
+    background-color: var(--bg-card) !important;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.card-section-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.card-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.count-badge {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.m-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.m-value {
+    font-size: 16px;
+    font-weight: 750;
+    color: var(--text-primary);
+}
+
+/* Biểu đồ */
+.strava-chart-container {
+    position: relative;
+    height: 130px;
+    margin-top: 10px;
+}
+
+.chart-y-labels {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+.chart-visual {
+    margin-left: 45px;
+    height: 100px;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.chart-line-svg svg {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-x-labels {
+    margin-left: 45px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    position: relative;
+}
+
+.peak-label {
+    color: var(--strava-orange);
+    font-weight: bold;
+}
+
+/* Menu danh sách các mục */
+.menu-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+.menu-item-row:last-child {
+    border-bottom: none;
+}
+
+.menu-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-primary);
+}
+
+.menu-item-left i {
+    width: 20px;
+    color: var(--text-secondary);
+}
+
+.menu-item-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+/* Thử thách & Tủ huy hiệu */
+.challenge-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.btn-strava-solid {
+    width: 100%;
+    background-color: var(--strava-orange);
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.trophy-case-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.trophy-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-secondary);
+    gap: 6px;
+}
+
+.badge-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.badge-box.gold {
+    background: linear-gradient(135deg, #fef9c3, #fef08a);
+    border: 2px solid #eab308;
+    color: #a16207;
+}
+
+.badge-box.event {
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    color: #334155;
+    font-size: 10px;
+    padding: 4px;
+}
+
+/* Buổi tập Tab Styling */
+.goal-card {
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-inner));
+}
+
+.sub-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.goal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--text-primary);
+}
+
+.intensity-filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.intensity-btn {
+    flex: 1;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 8px 0;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.intensity-btn.active {
+    background-color: var(--strava-orange);
+    border-color: var(--strava-orange);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.banner-notice {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.banner-notice i {
+    color: var(--strava-orange);
+}
+
+.workout-card-main {
+    background: linear-gradient(135deg, var(--strava-orange), #0369a1);
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.2);
+}
+
+.w-top-info {
+    display: flex;
+    gap: 24px;
+    font-size: 12px;
+    color: #e0f2fe;
+    margin-bottom: 24px;
+}
+
+.w-top-info strong {
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.workout-icon-bg {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 40px;
+    color: rgba(255,255,255,0.15);
+}
+
+.w-body-info h2 {
+    margin: 0 0 8px 0;
+    font-size: 22px;
+}
+
+.w-body-info p {
+    margin: 0;
+    font-size: 13px;
+    color: #e0f2fe;
+    line-height: 1.4;
+}
+
+/* Hoạt động Tab Styling */
+.search-activity-box {
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    gap: 10px;
+}
+
+.search-activity-box i {
+    color: var(--text-secondary);
+}
+
+.search-activity-box input {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+}
+
+.search-activity-box input::placeholder {
+    color: var(--text-secondary);
+}
+
+.premium-unlock-card {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    border-left: 4px solid var(--strava-orange);
+}
+
+.lock-icon-circle {
+    background-color: rgba(2, 132, 199, 0.1);
+    color: var(--strava-orange);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.premium-unlock-card h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.premium-unlock-card p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.3;
+}
+
+.feed-user-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.feed-user-row img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.feed-user-row strong {
+    font-size: 14px;
+    display: block;
+    color: var(--text-primary);
+}
+
+.feed-user-row p {
+    margin: 2px 0 0 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.feed-content-title h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: var(--text-primary);
+}
+
+.sub-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0 0 12px 0;
+}
+
+.feed-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+    background: var(--bg-inner);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.feed-metrics-grid span {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.feed-metrics-grid strong {
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.feed-map-preview {
+    height: 140px;
+    background-color: var(--border-color);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-badge-overlay {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 2;
+    font-weight: 500;
+}
+
+.map-fake-bg {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.route-line-svg {
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    border-bottom: 4px solid var(--strava-orange);
+    border-right: 4px solid var(--strava-orange);
+    border-radius: 0 0 20px 0;
+    top: 20%;
+    left: 30%;
+    transform: rotate(-15deg);
+}
+
+.map-place {
+    position: absolute;
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.map-place.p1 { top: 10px; right: 20px; }
+.map-place.p2 { top: 50%; left: 10px; }
+.map-place.p3 { bottom: 20px; left: 30%; }
+.map-place.p4 { top: 30%; left: 10px; }
+
+/* Thanh điều hướng dưới cùng */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 60px;
+    z-index: 1000;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.03);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 10px;
+    gap: 4px;
+    flex: 1;
+}
+
+.nav-item i {
+    font-size: 18px;
+}
+
+.nav-item.active {
+    color: var(--strava-orange);
+}
+
+.bottom-spacer {
+    height: 20px;
+}
+
+.chart-time-filters {
+    display: flex;
+    background-color: var(--bg-inner);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2px;
+    gap: 2px;
+}
+
+.time-filter-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-filter-btn.active {
+    background-color: var(--strava-orange);
+    color: #ffffff;
+}
+
+.multisport-chart-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px 0;
+    gap: 16px;
+}
+
+/* ==========================================
+   BIỂU ĐỒ TRÒN (DONUT CHART)
+========================================== */
+.pie-chart {
+    --color-swim: #06b6d4;   
+    --color-bike: #d1762b;   
+    --color-run: #f97316;    
+    --color-empty: var(--border-color);  
+
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--color-empty);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pie-chart-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%; 
+    height: 80%;
+    background-color: var(--bg-card);
+    border-radius: 50%;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pie-center-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.legend-item strong {
+    margin-left: auto;
+    color: var(--text-primary);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.legend-dot.swim { background-color: var(--color-swim); } 
+.legend-dot.bike { background-color: var(--color-bike); } 
+.legend-dot.run  { background-color: var(--color-run); } 
+
+/* ==========================================
+   MARQUEE CAROUSEL
+========================================== */
+.members-carousel-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    display: flex;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.avatar-scroll-list {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    animation: scrollMembersReverse 25s linear infinite;
+    padding-left: 16px;
+}
+
+.avatar-scroll-list::-webkit-scrollbar {
+    display: none;
+}
+
+.members-carousel-wrapper:hover .avatar-scroll-list {
+    animation-play-state: paused;
+}
+
+@keyframes scrollMembersReverse {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.member-avatar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.member-avatar-item:active {
+    transform: scale(0.92);
+}
+
+.member-avatar-item img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--strava-orange);
+    padding: 2px;
+    background: var(--bg-card);
+}
+
+.member-avatar-item .member-name {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 4px;
+    color: var(--text-primary);
+    max-width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
