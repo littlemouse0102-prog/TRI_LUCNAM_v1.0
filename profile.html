@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hồ Sơ Vận Động Viên - Strava Style</title>
+    
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Hệ thống & CSS riêng -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/profile.css">
+    
+    <!-- Thẻ đồng bộ theme động -->
+    <link id="dynamic-theme-css" rel="stylesheet" href="">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- HEADER CỐ ĐỊNH PHONG CÁCH STRAVA APP -->
+        <header class="app-header-strava">
+            <div class="header-top-row">
+                <div class="user-mini-profile">
+                    <img src="https://ui-avatars.com/api/?name=Hung+Vu&background=FC4C02&color=fff&rounded=true" alt="Avatar" id="header-avatar">
+                </div>
+                <div class="header-title">Bạn</div>
+                <div class="header-actions">
+                    <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                    <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+                </div>
+            </div>
+
+            <!-- THANH TABS CHÍNH ĐÃ ĐỒNG BỘ ĐIỀU HƯỚNG -->
+            <div class="strava-main-tabs">
+                <button class="main-tab-btn active" onclick="window.location.href='profile_2.html'">Tiến trình</button>
+                <button class="main-tab-btn" onclick="window.location.href='activities.html'">Hoạt động</button>
+                <button class="main-tab-btn" onclick="window.location.href='wall.html'">Thành tích</button>
+            </div>
+        </header>
+
+        <!-- NỘI DUNG CHÍNH -->
+        <main class="app-content-strava">
+
+            <!-- THANH DANH SÁCH THÀNH VIÊN CUỘN NGANG -->
+            <div class="members-carousel-card" style="background-color: var(--bg-card); padding: 12px 0; margin: 12px 0; border-radius: 12px; border: 1px solid var(--border-color);">
+                <div class="members-carousel-wrapper">
+                    <div class="avatar-scroll-list" id="members-avatar-list">
+                        <!-- Danh sách avatar render động từ JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- THÔNG TIN TỔNG QUAN HỒ SƠ -->
+            <div id="profile-bio-section">
+                <div class="profile-main-info">
+                    <div class="avatar-large-wrapper">
+                        <img src="https://ui-avatars.com/api/?name=Hung+Vu&background=FC4C02&color=fff&rounded=true" alt="Avatar" id="user-avatar">
+                    </div>
+                    <div class="user-details-text">
+                        <h2 id="user-name">Hưng Vũ</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= THẺ 1: TIẾN TRÌNH ================= -->
+            <div class="tab-pane active" id="tab-progress">
+                
+                <!-- Bộ lọc môn thể thao -->
+                <div class="sport-filter-chips">
+                    <button class="chip active" onclick="filterSport('all', event)"><i class="fa-solid fa-chart-pie"></i> Tổng</button>
+                    <button class="chip" onclick="filterSport('bike', event)"><i class="fa-solid fa-person-biking"></i> Đạp xe</button>
+                    <button class="chip" onclick="filterSport('swim', event)"><i class="fa-solid fa-person-swimming"></i> Bơi lội</button>
+                    <button class="chip" onclick="filterSport('run', event)"><i class="fa-solid fa-person-running"></i> Chạy bộ</button>
+                </div>
+
+                <!-- Card Biểu đồ & Thống kê theo thời gian -->
+                <div class="strava-card">
+                    <div class="card-section-header">
+                        <div class="card-section-title" style="margin:0;" id="chart-title">Dữ liệu</div>
+                        <div class="chart-time-filters">
+                            <button class="time-filter-btn" onclick="switchChartTime('month', event)">Tháng</button>
+                        </div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div>
+                            <span class="m-label">Quãng đường</span>
+                            <strong class="m-value" id="val-distance">0 km</strong>
+                        </div>
+                        <div>
+                            <span class="m-label">Điểm IM</span>
+                            <strong class="m-value" id="val-time">0 điểm</strong>
+                        </div>
+                    </div>
+
+                    <!-- Biểu đồ đường SVG -->
+                    <div class="strava-chart-container">
+                        <div class="chart-y-labels" id="chart-y-max">
+                            <span>0 km</span>
+                            <span>0 km</span>
+                            <span>0 km</span>
+                        </div>
+                        <div class="chart-visual">
+                            <div class="chart-line-svg">
+                                <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+                                    <path id="chart-path-svg" d="M 0,90 L 50,90 L 100,90 L 150,90 L 200,90 L 250,90 L 300,90" fill="none" stroke="var(--strava-orange, #FC4C02)" stroke-width="2.5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Thống kê Tỷ lệ Bơi - Đạp - Chạy -->
+                <div class="strava-card">
+                    <div class="card-section-header">
+                        <div class="card-section-title" style="margin:0;">Tỷ lệ Ba môn phối hợp</div>
+                        <div class="count-badge">Tổng quan</div>
+                    </div>
+
+                    <div class="multisport-chart-wrapper">
+                        <div class="pie-chart" style="background: conic-gradient(#e5e7eb 0% 100%);"></div>
+
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot swim"></span>
+                                <span class="legend-label">Bơi (Swim)</span>
+                                <strong>0%</strong>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot bike"></span>
+                                <span class="legend-label">Đạp (Bike)</span>
+                                <strong>0%</strong>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot run"></span>
+                                <span class="legend-label">Chạy (Run)</span>
+                                <strong>0%</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="bottom-spacer"></div>
+
+         <!-- THANH ĐIỀU HƯỚNG ĐỒNG BỘ -->
+        <nav class="bottom-nav">
+            <a href="member.html" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Cá nhân</span>
+            </a>
+            <a href="admin.html" class="nav-item">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>ADMIN</span>
+            </a>
+            <a href="wall.html" class="nav-item active">
+                <i class="fa-solid fa-medal"></i>
+                <span>Thành tích</span>
+            </a>
+            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Báo cáo</span>
+             </a>
+            <a href="ranking.html" class="nav-item">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Xếp hạng</span>
+            </a>  
+        </nav>
+    </div>
+
+    <!-- Tệp JavaScript xử lý giao diện -->
+    <script src="js/api.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
