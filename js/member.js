@@ -150,13 +150,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (detailModal) {
                 detailModal.style.display = "flex";
             } else {
-                // Nếu lỡ chưa có popup trên HTML thì gửi luôn mặc định
-                submitFinalActivity(currentUser, tempActivityData, "Bình thường", "", "Không", "");
+                // Nếu chưa có popup thì gửi trực tiếp kèm loading
+                await submitFinalActivityWithLoading(currentUser, tempActivityData, "Bình thường", "", "Không", "");
             }
         });
     }
 
-    // Xử lý nút Hoàn tất trong Popup chi tiết
+    // Xử lý nút Hoàn tất trong Popup chi tiết (Có khóa nút & Loading)
     const btnSubmitDetail = document.getElementById("btnSubmitDetail");
     if (btnSubmitDetail) {
         btnSubmitDetail.addEventListener("click", async () => {
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const detailModal = document.getElementById("detailModal");
             if (detailModal) detailModal.style.display = "none";
 
-            await submitFinalActivity(currentUser, tempActivityData, level, goal, injury, note);
+            await submitFinalActivityWithLoading(currentUser, tempActivityData, level, goal, injury, note);
             if (activityForm) activityForm.reset();
         });
     }
@@ -195,8 +195,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Hàm gửi dữ liệu hoàn tất lên Server
-async function submitFinalActivity(currentUser, data, level, goal, injury, note) {
+// Hàm gửi dữ liệu hoàn tất kèm trạng thái Khóa nút và Hiệu ứng Loading
+async function submitFinalActivityWithLoading(currentUser, data, level, goal, injury, note) {
+    const btnSubmitDetail = document.getElementById("btnSubmitDetail");
+    const mainSubmitBtn = document.querySelector(".submit-btn");
+
+    // 1. Vô hiệu hóa nút và hiển thị hiệu ứng đang xử lý
+    if (btnSubmitDetail) {
+        btnSubmitDetail.disabled = true;
+        btnSubmitDetail.style.opacity = "0.6";
+        btnSubmitDetail.style.cursor = "not-allowed";
+        btnSubmitDetail.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang ghi nhận...';
+    }
+    if (mainSubmitBtn) {
+        mainSubmitBtn.disabled = true;
+        mainSubmitBtn.style.opacity = "0.6";
+        mainSubmitBtn.style.cursor = "not-allowed";
+        mainSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+    }
+
     const payload = {
         id: currentUser.id,
         name: currentUser.name,
@@ -209,13 +226,32 @@ async function submitFinalActivity(currentUser, data, level, goal, injury, note)
         note: note
     };
 
-    const response = await callSystemAPI("addActivity", payload);
+    try {
+        const response = await callSystemAPI("addActivity", payload);
 
-    if (response && response.success) {
-        alert("🎉 Ghi nhận thành công!");
-        await loadMemberDashboardData(currentUser.id);
-    } else {
-        alert("❌ Lỗi: " + (response?.msg || "Không thể kết nối hệ thống"));
+        if (response && response.success) {
+            alert("🎉 Ghi nhận thành công!");
+            await loadMemberDashboardData(currentUser.id);
+        } else {
+            alert("❌ Lỗi: " + (response?.msg || "Không thể kết nối hệ thống"));
+        }
+    } catch (err) {
+        console.error("Lỗi khi gửi thành tích:", err);
+        alert("❌ Đã xảy ra lỗi hệ thống, vui lòng thử lại.");
+    } finally {
+        // 2. Mở khóa nút bấm trở lại sau khi hoàn tất quá trình
+        if (btnSubmitDetail) {
+            btnSubmitDetail.disabled = false;
+            btnSubmitDetail.style.opacity = "1";
+            btnSubmitDetail.style.cursor = "pointer";
+            btnSubmitDetail.innerHTML = 'Hoàn tất';
+        }
+        if (mainSubmitBtn) {
+            mainSubmitBtn.disabled = false;
+            mainSubmitBtn.style.opacity = "1";
+            mainSubmitBtn.style.cursor = "pointer";
+            mainSubmitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Gửi Thành Tích';
+        }
     }
 }
 
@@ -314,7 +350,7 @@ async function loadMemberDashboardData(userId) {
             if (suggestionEl) suggestionEl.textContent = "Hãy cập nhật thành tích để nhận đề xuất tối ưu!";
         }
 
-        // 5. Cập nhật Nhật ký hoạt động Cá Nhân (Hiển thị đầy đủ Ghi chú, Mức độ, Chấn thương, Mục tiêu)
+        // 5. Cập nhật Nhật ký hoạt động Cá Nhân
         if (myActivities.length > 0) {
             historyLogList.innerHTML = "";
             myActivities.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
@@ -388,6 +424,7 @@ async function loadMemberDashboardData(userId) {
                 });
             }
         }
+        
         // 7. Cập nhật Bảng xếp hạng trong trang cá nhân
         const rankingTableBody = document.getElementById("rankingTableBody");
         if (rankingTableBody && response.rankings) {
