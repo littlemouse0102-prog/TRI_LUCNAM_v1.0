@@ -2,18 +2,19 @@
 
 let clubMembers = [];
 let currentUser = null;
+let globalActivitiesList = []; // Lưu trữ danh sách hoạt động toàn cục để render tab Hoạt động
 
 // ==========================================
 // 1. KHỞI TẠO KHI TẢI TRANG (DOM LOADED)
 // ==========================================
 document.addEventListener("DOMContentLoaded", async function() {
-    // Tự động nạp theme đã lưu cho trang profile[cite: 3, 7, 8]
+    // Tự động nạp theme đã lưu cho trang profile[cite: 3]
     const savedTheme = localStorage.getItem('app_theme');
     if (savedTheme) {
         loadThemeCss(savedTheme);
     }
 
-    // Xử lý bật/tắt menu chấm màu sổ xuống[cite: 6, 7]
+    // Xử lý bật/tắt menu chấm màu sổ xuống
     const themeBtn = document.getElementById('themeSwitcherBtn');
     const themeDropdown = document.getElementById('themeDropdown');
 
@@ -44,6 +45,14 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 
     await fetchClubMembersData(currentUser.id);
+
+    // Lắng nghe sự kiện tìm kiếm hoạt động ở Tab Hoạt động
+    const searchInput = document.getElementById('activity-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            renderUserActivities(currentUser.id, this.value);
+        });
+    }
 });
 
 // ==========================================
@@ -53,51 +62,60 @@ async function fetchClubMembersData(currentUserId) {
     try {
         const response = await callSystemAPI("getDashboard", { userId: currentUserId });
         
-        if (response && response.success && response.rankings) {
+        if (response && response.success) {
+            // Lưu lại danh sách hoạt động toàn cục nếu có trả về từ server
+            if (response.activities) {
+                globalActivitiesList = response.activities;
+            }
+
             let rankingsTarget = response.rankings;
-            if (rankingsTarget.data) {
+            if (rankingsTarget && rankingsTarget.data) {
                 rankingsTarget = rankingsTarget.data;
             }
 
-            clubMembers = rankingsTarget.map(item => {
-                let idVal = '', nameVal = 'Thành viên', locVal = 'Lục Nam', swimVal = 0, bikeVal = 0, runVal = 0, pointsVal = 0, rankVal = '--', cupVal = 0;
-                
-                for (let key in item) {
-                    if (item.hasOwnProperty(key)) {
-                        let k = key.toLowerCase().trim();
-                        let val = item[key];
-                        
-                        if (k.includes('id') || k.includes('mã')) idVal = String(val).trim();
-                        else if (k.includes('tên') || k.includes('name')) nameVal = String(val).trim();
-                        else if (k.includes('địa điểm') || k.includes('location')) locVal = String(val).trim();
-                        else if (k.includes('bơi') || k.includes('swim')) swimVal += parseVietnameseNumber(val);
-                        else if (k.includes('đạp') || k.includes('bike')) bikeVal += parseVietnameseNumber(val);
-                        else if (k.includes('chạy') || k.includes('run')) runVal += parseVietnameseNumber(val);
-                        else if (k.includes('điểm') || k.includes('point')) pointsVal = parseVietnameseNumber(val);
-                        else if (k.includes('hạng') || k.includes('rank')) rankVal = val;
-                        else if (k.includes('cup') || k.includes('cúp')) cupVal = parseVietnameseNumber(val);
+            if (rankingsTarget && Array.isArray(rankingsTarget)) {
+                clubMembers = rankingsTarget.map(item => {
+                    let idVal = '', nameVal = 'Thành viên', locVal = 'Lục Nam', swimVal = 0, bikeVal = 0, runVal = 0, pointsVal = 0, rankVal = '--', cupVal = 0;
+                    
+                    for (let key in item) {
+                        if (item.hasOwnProperty(key)) {
+                            let k = key.toLowerCase().trim();
+                            let val = item[key];
+                            
+                            if (k.includes('id') || k.includes('mã')) idVal = String(val).trim();
+                            else if (k.includes('tên') || k.includes('name')) nameVal = String(val).trim();
+                            else if (k.includes('địa điểm') || k.includes('location')) locVal = String(val).trim();
+                            else if (k.includes('bơi') || k.includes('swim')) swimVal += parseVietnameseNumber(val);
+                            else if (k.includes('đạp') || k.includes('bike')) bikeVal += parseVietnameseNumber(val);
+                            else if (k.includes('chạy') || k.includes('run')) runVal += parseVietnameseNumber(val);
+                            else if (k.includes('điểm') || k.includes('point')) pointsVal = parseVietnameseNumber(val);
+                            else if (k.includes('hạng') || k.includes('rank')) rankVal = val;
+                            else if (k.includes('cup') || k.includes('cúp')) cupVal = parseVietnameseNumber(val);
+                        }
                     }
-                }
 
-                let finalCalculatedPoints = pointsVal;
-                if (!pointsVal || pointsVal === 0) {
-                    const sKm = swimVal >= 1000 ? swimVal / 1000 : swimVal;
-                    finalCalculatedPoints = Math.round((sKm * 8) + (bikeVal * 0.6) + (runVal * 1.4));
-                }
+                    let finalCalculatedPoints = pointsVal;
+                    if (!pointsVal || pointsVal === 0) {
+                        const sKm = swimVal >= 1000 ? swimVal / 1000 : swimVal;
+                        finalCalculatedPoints = Math.round((sKm * 8) + (bikeVal * 0.6) + (runVal * 1.4));
+                    }
 
-                return {
-                    id: idVal || nameVal,
-                    name: nameVal,
-                    location: locVal,
-                    swim: swimVal,
-                    bike: bikeVal,
-                    run: runVal,
-                    points: Math.round(finalCalculatedPoints),
-                    rank: rankVal,
-                    cup: cupVal
-                };
-            });
-        } else {
+                    return {
+                        id: idVal || nameVal,
+                        name: nameVal,
+                        location: locVal,
+                        swim: swimVal,
+                        bike: bikeVal,
+                        run: runVal,
+                        points: Math.round(finalCalculatedPoints),
+                        rank: rankVal,
+                        cup: cupVal
+                    };
+                });
+            }
+        } 
+        
+        if (!clubMembers || clubMembers.length === 0) {
             clubMembers = [
                 { id: currentUser.id, name: currentUser.name, location: currentUser.location || "Lục Nam", swim: 0, bike: 0, run: 0, points: 0 }
             ];
@@ -110,6 +128,7 @@ async function fetchClubMembersData(currentUserId) {
 
         renderBasicProfile(currentUser);
         renderUserSportMetrics(currentUser);
+        renderUserActivities(currentUser.id);
         updatePieChart();
 
     } catch (error) {
@@ -119,6 +138,7 @@ async function fetchClubMembersData(currentUserId) {
         renderMembersCarousel(clubMembers);
         renderBasicProfile(currentUser);
         renderUserSportMetrics(currentUser);
+        renderUserActivities(currentUser.id);
         updatePieChart();
     }
 }
@@ -161,6 +181,8 @@ function selectMember(memberId) {
         currentUser = selectedUser;
         renderBasicProfile(currentUser);
         renderUserSportMetrics(currentUser);
+        renderUserActivities(currentUser.id);
+        updatePieChart();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
@@ -211,14 +233,96 @@ function renderUserSportMetrics(user) {
     
     if (scoreEl) {
         const calculatedScore = (user.points && user.points > 0) ? user.points : Math.round((swimKm * 8) + (bikeKm * 0.6) + (runKm * 1.4));
-        scoreEl.textContent = `${isNaN(calculatedScore) ? 0 : Math.round(calculatedScore)} `;
+        scoreEl.textContent = `${isNaN(calculatedScore) ? 0 : Math.round(calculatedScore)}`;
     }
 
     updatePieChart();
 }
 
 // ==========================================
-// 3. ĐIỀU HƯỚNG TAB & BỘ LỌC MÔN THỂ THAO[cite: 3]
+// ==========================================
+// 3. RENDER THẺ HOẠT ĐỘNG CÁ NHÂN (CHI TIẾT MỨC ĐỘ, MỤC TIÊU, CHẤN THƯƠNG, GHI CHÚ)
+// ==========================================
+function renderUserActivities(userId, searchQuery = "") {
+    const container = document.getElementById("activities-list-container");
+    if (!container) return;
+
+    // Lọc các hoạt động thuộc về user hiện tại
+    const myActivities = globalActivitiesList.filter(act => 
+        String(act.userId || act.id || "").trim().toLowerCase() === String(userId).trim().toLowerCase() ||
+        (act.name && currentUser && String(act.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase())
+    );
+
+    // Lọc theo từ khóa tìm kiếm (nếu có)
+    let filteredActivities = myActivities;
+    if (searchQuery.trim() !== "") {
+        const query = searchQuery.toLowerCase();
+        filteredActivities = myActivities.filter(act => {
+            const note = (act.note || "").toLowerCase();
+            const goal = (act.goal || "").toLowerCase();
+            const level = (act.level || "").toLowerCase();
+            return note.includes(query) || goal.includes(query) || level.includes(query);
+        });
+    }
+
+    if (filteredActivities.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 25px; background: var(--white); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">Chưa có hoạt động nào được ghi nhận.</div>`;
+        return;
+    }
+
+    // Sắp xếp mới nhất lên đầu
+    filteredActivities.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    let html = '';
+    filteredActivities.forEach(act => {
+        const swimVal = act.swim ? parseFloat(act.swim) : 0;
+        const bikeVal = act.bike ? parseFloat(act.bike) : 0;
+        const runVal = act.run ? parseFloat(act.run) : 0;
+
+        const sPts = swimVal * 0.008;
+        const bPts = bikeVal * 0.6;
+        const rPts = runVal * 1.4;
+        const points = (sPts + bPts + rPts).toFixed(1);
+
+        const formattedDate = act.date 
+            ? new Date(act.date).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) 
+            : 'Hôm nay';
+
+        const levelBadge = act.level ? `<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${act.level}</span>` : '';
+
+        html += `
+            <div class="activity-card" style="background: var(--white); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-left: 4px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">🕒 ${formattedDate}</span>
+                    <div>
+                        ${levelBadge}
+                        <span style="font-weight: 700; color: var(--primary); background-color: var(--light); padding: 3px 10px; border-radius: 20px; font-size: 12px; margin-left: 6px;">
+                            +${points}đ
+                        </span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; font-weight: 700; margin-bottom: 10px; font-size: 15px; color: var(--text-main);">
+                    ${swimVal > 0 ? `<span>🏊‍♂️ Bơi: ${swimVal}m</span>` : ''}
+                    ${bikeVal > 0 ? `<span>🚴‍♂️ Đạp: ${bikeVal}km</span>` : ''}
+                    ${runVal > 0 ? `<span>🏃‍♂️ Chạy: ${runVal}km</span>` : ''}
+                </div>
+
+                <!-- Khu vực hiển thị mục tiêu, chấn thương và ghi chú -->
+                <div style="font-size: 13px; color: var(--text-main); border-top: 1px solid var(--border); padding-top: 8px; line-height: 1.5;">
+                    ${act.goal ? `<div style="margin-bottom: 3px;">🎯 <b>Mục tiêu:</b> ${act.goal}</div>` : ''}
+                    ${act.injury && act.injury !== 'Không' ? `<div style="color: #d32f2f; margin-bottom: 3px;">⚠️ <b>Chấn thương:</b> ${act.injury}</div>` : ''}
+                    ${act.note ? `<div style="font-style: italic; color: var(--text-secondary);">📝 <b>Ghi chú:</b> "${act.note}"</div>` : ''}
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+// ==========================================
+// 4. ĐIỀU HƯỚNG TAB & BỘ LỌC MÔN THỂ THAO[cite: 3]
 // ==========================================
 function switchMainTab(tabName, event) {
     document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
@@ -250,6 +354,9 @@ function switchMainTab(tabName, event) {
     } else if (tabName === 'activities') {
         document.getElementById('tab-activities').classList.add('active');
         document.getElementById('profile-bio-section').style.display = 'none';
+        if (currentUser) {
+            renderUserActivities(currentUser.id);
+        }
     }
 
     if (event && event.currentTarget) {
@@ -298,12 +405,12 @@ function filterSport(sportType, event) {
     }
 
     if (scoreEl) {
-        scoreEl.textContent = `${Math.round(targetScore)} `;
+        scoreEl.textContent = `${Math.round(targetScore)}`;
     }
 }
 
 // ==========================================
-// 4. QUẢN LÝ THEME & GIAO DIỆN SÁNG/TỐI[cite: 3, 7, 8]
+// 5. QUẢN LÝ THEME & GIAO DIỆN SÁNG/TỐI[cite: 3]
 // ==========================================
 function setTheme(themeName) {
     localStorage.setItem('app_theme', themeName);
@@ -331,7 +438,7 @@ function loadThemeCss(themeName) {
 }
 
 // ==========================================
-// 5. BIỂU ĐỒ & BỘ LỌC THỜI GIAN[cite: 3]
+// 6. BIỂU ĐỒ & BỘ LỌC THỜI GIAN[cite: 3]
 // ==========================================
 function switchChartTime(timeType, event) {
     document.querySelectorAll('.time-filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -340,35 +447,18 @@ function switchChartTime(timeType, event) {
     }
 
     const titleEl = document.getElementById('chart-title');
-    const xLabelsEl = document.getElementById('chart-x-labels');
-    const yLabelsEl = document.getElementById('chart-y-max');
-    const pathSvg = document.getElementById('chart-path-svg');
-
-    if (yLabelsEl) {
-        yLabelsEl.innerHTML = `<span>0 km</span><span>0 km</span><span>0 km</span>`;
-    }
-
-    if (pathSvg) {
-        pathSvg.setAttribute('d', 'M 0,90 L 50,90 L 100,90 L 150,90 L 200,90 L 250,90 L 300,90');
-    }
-
     if (timeType === 'week') {
         if (titleEl) titleEl.textContent = "Tuần này";
-        if (xLabelsEl) xLabelsEl.innerHTML = `<span>T2</span><span>T4</span><span>T6</span><span class="peak-label">CN (0 km)</span>`;
-    } 
-    else if (timeType === 'month') {
+    } else if (timeType === 'month') {
         if (titleEl) titleEl.textContent = "Tháng này";
-        if (xLabelsEl) xLabelsEl.innerHTML = `<span>TUẦN 1</span><span>TUẦN 2</span><span>TUẦN 3</span><span class="peak-label">TUẦN 4 (0 km)</span>`;
-    } 
-    else if (timeType === 'year') {
+    } else if (titleEl === 'year') {
         if (titleEl) titleEl.textContent = "Năm nay";
-        if (xLabelsEl) xLabelsEl.innerHTML = `<span>Q1</span><span>Q2</span><span>Q3</span><span class="peak-label">Q4 (0 km)</span>`;
     }
 
     updatePieChart(timeType);
 }
 
-function updatePieChart(timeType) {
+function updatePieChart() {
     const pieChart = document.querySelector('.pie-chart');
     const legendItems = document.querySelectorAll('.pie-legend .legend-item strong');
 
@@ -411,51 +501,5 @@ function updatePieChart(timeType) {
         legendItems[0].textContent = `${Math.round(swimPercent)}%`;
         legendItems[1].textContent = `${Math.round(bikePercent)}%`;
         legendItems[2].textContent = `${Math.round(runPercent)}%`;
-    }
-}
-
-// ==========================================
-// 6. HÀM TÍNH ĐIỂM IM TỪ HOẠT ĐỘNG (ĐỘC LẬP)[cite: 3]
-// ==========================================
-function calculateIMScore(activitiesData) {
-    let totalSwimKm = 0;
-    let totalBikeKm = 0;
-    let totalRunKm = 0;
-    let totalDirectPoints = 0;
-    let useDirectPoints = false;
-
-    activitiesData.forEach(activity => {
-        const distance = parseFloat(activity.distance) || 0;
-        const point = parseFloat(activity.point) || 0;
-        const type = activity.type ? activity.type.toLowerCase() : '';
-
-        if (point > 0 && !activity.distance) {
-            totalDirectPoints += point;
-            useDirectPoints = true;
-        }
-
-        if (type.includes('swim') || type.includes('bơi')) {
-            totalSwimKm += distance;
-        } else if (type.includes('bike') || type.includes('đạp')) {
-            totalBikeKm += distance;
-        } else if (type.includes('run') || type.includes('chạy')) {
-            totalRunKm += distance;
-        }
-    });
-
-    if (useDirectPoints) {
-        return Math.round(totalDirectPoints);
-    }
-
-    const calculatedScore = (totalSwimKm * 8) + (totalBikeKm * 0.6) + (totalRunKm * 1.4);
-    return Math.round(calculatedScore);
-}
-
-function updateIMScoreUI(sheetData) {
-    const finalScore = calculateIMScore(sheetData);
-    
-    const scoreElement = document.getElementById('im-score-value');
-    if (scoreElement) {
-        scoreElement.innerText = Math.round(finalScore);
     }
 }
