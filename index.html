@@ -9,8 +9,8 @@
     <!-- Favicon chuẩn cho tab trình duyệt -->
     <link rel="icon" type="image/png" href="avatars/TRILN.png">
     
-    <!-- Hỗ trợ hiển thị Logo khi thêm ra màn hình chính trên thiết bị iOS (iPhone/iPad) -->
-    <link rel="apple-touch-icon" href="iavatars/TRILN.png">
+    <!-- ĐÃ SỬA: Sửa 'iavatars' thành 'avatars' cho đúng thư mục -->
+    <link rel="apple-touch-icon" href="avatars/TRILN.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Triathlon Lục Nam">
@@ -63,8 +63,6 @@
                     <div class="spinner hidden"></div>
                 </button>
             </form>
-
-           
         </div>
     </div>
 
@@ -72,6 +70,33 @@
     <script src="js/api.js"></script>
     <script src="js/login.js"></script>
     <script>
+        // Hàm thực thi chèn link CSS tương ứng vào thẻ <head>
+        function loadThemeCss(themeName) {
+            let themeLink = document.getElementById('dynamic-theme-css');
+            
+            if (!themeLink) {
+                themeLink = document.createElement('link');
+                themeLink.id = 'dynamic-theme-css';
+                themeLink.rel = 'stylesheet';
+                document.head.appendChild(themeLink);
+            }
+
+            if (themeName === 'default') {
+                themeLink.href = '';
+            } else {
+                themeLink.href = `css/${themeName}.css`;
+            }
+        }
+
+        // Hàm thay đổi, lưu trữ và đồng bộ hóa cho toàn bộ các trang HTML khác
+        function setTheme(themeName) {
+            localStorage.setItem('app_theme', themeName);
+            loadThemeCss(themeName);
+            
+            const dropdown = document.getElementById('themeDropdown');
+            if (dropdown) dropdown.classList.remove('show');
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             // Tự động nạp theme đã lưu cho mọi file HTML ngay khi mở lên
             const savedTheme = localStorage.getItem('app_theme');
@@ -98,33 +123,6 @@
                 });
             }
         });
-
-        // Hàm thay đổi, lưu trữ và đồng bộ hóa cho toàn bộ các trang HTML khác
-        function setTheme(themeName) {
-            localStorage.setItem('app_theme', themeName);
-            loadThemeCss(themeName);
-            
-            const dropdown = document.getElementById('themeDropdown');
-            if (dropdown) dropdown.classList.remove('show');
-        }
-
-        // Hàm thực thi chèn link CSS tương ứng vào thẻ <head>
-        function loadThemeCss(themeName) {
-            let themeLink = document.getElementById('dynamic-theme-css');
-            
-            if (!themeLink) {
-                themeLink = document.createElement('link');
-                themeLink.id = 'dynamic-theme-css';
-                themeLink.rel = 'stylesheet';
-                document.head.appendChild(themeLink);
-            }
-
-            if (themeName === 'default') {
-                themeLink.href = '';
-            } else {
-                themeLink.href = `css/${themeName}.css`;
-            }
-        }
     </script>
 </body>
 </html>
