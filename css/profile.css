@@ -22,12 +22,14 @@ body {
 }
 
 .app-container {
-    max-width: 480px;
+    width: 100%;
+    max-width: 480px; /* Đồng bộ tuyệt đối, không bị bóp nhỏ hơn 430px */
     margin: 0 auto;
     background-color: var(--bg-inner);
     min-height: 100vh;
     position: relative;
     padding-bottom: 70px;
+    box-sizing: border-box;
 }
 
 /* Header Strava App */
@@ -696,21 +698,51 @@ body {
 .map-place.p4 { top: 30%; left: 10px; }
 
 /* Thanh điều hướng dưới cùng */
+/* --- Bottom Nav (Đã đồng bộ tuyệt đối max-width 480px và cố định đáy màn hình) --- */
 .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background-color: var(--bg-card);
-    border-top: 1px solid var(--border-color);
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    height: 60px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+.bottom-nav .nav-item {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     align-items: center;
-    height: 60px;
-    z-index: 1000;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.03);
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    flex: 1;
+    height: 100%;
+    transition: all 0.2s ease;
+    gap: 3px;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--primary) !important;
+}
+
+.bottom-nav .nav-item.active i {
+    transform: translateY(-2px);
 }
 
 .nav-item {
@@ -771,12 +803,12 @@ body {
 }
 
 /* ==========================================
-   BIỂU ĐỒ TRÒN (DONUT CHART)
+   BIỂU ĐỒ TRÒN (DONUT CHART) - TÂM RỖNG 40/100
 ========================================== */
 .pie-chart {
-    --color-swim: #06b6d4;   
-    --color-bike: #d1762b;   
-    --color-run: #f97316;    
+    --color-swim: #0ea5e9;   /* Màu bơi (Xanh dương)[cite: 10] */
+    --color-bike: #10b981;   /* Màu đạp (Xanh lá)[cite: 10] */
+    --color-run: #f59e0b;    /* Màu chạy (Cam vàng)[cite: 10] */
     --color-empty: var(--border-color);  
 
     position: relative;
@@ -793,8 +825,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80%; 
-    height: 80%;
+    width: 60%;  /* Tâm rỗng tỷ lệ 40/100[cite: 10] */
+    height: 60%;
     background-color: var(--bg-card);
     border-radius: 50%;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -817,12 +849,17 @@ body {
     display: flex;
     align-items: center;
     font-size: 13px;
-    color: var(--text-secondary);
+    color: var(--text-primary); /* Màu chữ chú giải hiển thị rõ nét hơn[cite: 10] */
 }
 
 .legend-item strong {
     margin-left: auto;
     color: var(--text-primary);
+    font-weight: 600;
+}
+
+.legend-label {
+    color: var(--text-primary); /* Màu nhãn tên môn tập[cite: 10] */
 }
 
 .legend-dot {
