@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin Portal - TRIATHLON LỤC NAM</title>
+    
+    <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <!-- Các thẻ meta, font, css cũ của anh -->
-    <link rel="stylesheet" href="css/global.css">
     
-    <!-- THẺ QUAN TRỌNG ĐỂ ĐỒNG BỘ MÀU -->
+    <!-- CSS DÙNG CHUNG VÀ CSS RIÊNG -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+    
+    <!-- THẺ QUAN TRỌNG ĐỂ ĐỒNG BỘ MÀU THEME ĐỘNG -->
     <link id="dynamic-theme-css" rel="stylesheet" href="">
 </head>
 <body>
@@ -22,11 +25,12 @@
         <!-- HEADER CỐ ĐỊNH -->
         <header class="app-header">
             <div class="header-left">
-                <img src="avatars/TRILN.png" alt="Logo" class="mini-logo">
+                <img src="avatars/TRILN.png" alt="Logo" class="mini-logo" onerror="this.src='avatars/default.jpg'">
                 <span class="brand-name">TRIATHLON LỤC NAM</span>
             </div>
         </header>
 
+        <!-- NỘI DUNG CHÍNH -->
         <main class="app-content">
             
             <div class="admin-card">
@@ -78,7 +82,7 @@
             </section>
         </main>
 
-        <!-- Đặt đoạn này ngay trước thẻ đóng </div> của app-container -->
+        <!-- Nút đăng xuất hệ thống -->
         <div class="logout-wrapper">
             <button id="logoutBtn" class="btn-logout">
                 <i class="fa-solid fa-power-off"></i> Đăng xuất hệ thống
@@ -86,13 +90,10 @@
         </div>
         <div class="bottom-spacer"></div>
 
-        <!-- THANH ĐIỀU HƯỚNG ĐỒNG BỘ -->
+        <!-- THANH ĐIỀU HƯỚNG ĐÁY MÀN HÌNH (Đã gắn chính xác class active cho mục ADMIN) -->
+        <!-- THANH ĐIỀU HƯỚNG DƯỚI CÙNG -->
         <nav class="bottom-nav">
-            <a href="member.html" class="nav-item">
-                <i class="fa-solid fa-user"></i>
-                <span>Cá nhân</span>
-            </a>
-            <a href="admin.html" class="nav-item active">
+            <a href="admin.html" class="nav-item">
                 <i class="fa-solid fa-shield-halved"></i>
                 <span>ADMIN</span>
             </a>
@@ -100,18 +101,23 @@
                 <i class="fa-solid fa-medal"></i>
                 <span>Tường</span>
             </a>
-            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Báo cáo</span>
-             </a>
+            <a href="member.html" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Cá nhân</span>
+            </a>
             <a href="ranking.html" class="nav-item">
                 <i class="fa-solid fa-trophy"></i>
                 <span>Xếp hạng</span>
             </a>  
+            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Báo cáo</span>
+            </a>
         </nav>
 
     </div>
 
+    <!-- CÁC MODAL HỆ THÔNG -->
     <div id="modalMembers" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
@@ -200,5 +206,6 @@
     <!-- SCRIPTS -->
     <script src="js/api.js"></script>
     <script src="js/admin.js"></script>
+    <script src="js/swipe.js" defer></script>
 </body>
 </html>
