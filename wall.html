@@ -2,56 +2,58 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Tủ Kỷ Niệm Chương</title>
-    <!-- Khai báo thư viện FontAwesome để hiển thị icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Đảm bảo đường dẫn đến wall.css đúng với cấu trúc thư mục của bạn -->
-    <link rel="stylesheet" href="css/wall.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tủ Kỷ Niệm Chương - Triathlon Lục Nam</title>
+    
+    <!-- Thư viện biểu tượng FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- File CSS chuẩn hóa giao diện tủ wall -->
+    <link rel="stylesheet" href="css/wall.css">
 </head>
 <body>
 
-    <!-- Khung ứng dụng chính giúp đồng bộ layout với member và admin -->
+    <!-- Khung bọc ứng dụng chính -->
     <div class="app-container">
 
-        <!-- Khung tủ chính -->
+        <!-- Tủ trưng bày cúp và huy chương (Achievement Cabinet) -->
         <div class="achievement-cabinet">
-            <!-- Nút quay lại được đặt trực tiếp trong khung để đảm bảo tính logic -->
-            <a href="member.html" class="back-btn" style="z-index: 99999 !important;">← Quay lại</a>
+            <!-- Nút điều hướng quay lại trang cá nhân -->
+            <a href="member.html" class="back-btn">← Quay lại</a>
             
-            <!-- Các phần tử huy chương (cup-slot) sẽ được JS render vào đây -->
+            <!-- Nội dung danh sách các cúp/huy chương tại các vị trí sẽ được render động bằng file wall.js -->
         </div>
 
-        <!-- THANH ĐIỀU HƯỚNG ĐỒNG BỘ -->
+        <!-- Thanh điều hướng cố định dưới màn hình -->
         <nav class="bottom-nav">
-            <a href="member.html" class="nav-item">
-                <i class="fa-solid fa-user"></i>
-                <span>Cá nhân</span>
-            </a>
             <a href="admin.html" class="nav-item">
                 <i class="fa-solid fa-shield-halved"></i>
                 <span>ADMIN</span>
             </a>
-            <a href="wall.html" class="nav-item active">
+            <a href="profile.html" class="nav-item active">
                 <i class="fa-solid fa-medal"></i>
-                <span>Thành tích</span>
+                <span>Tường</span>
             </a>
-            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Báo cáo</span>
-             </a>
+            <a href="member.html" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Cá nhân</span>
+            </a>
             <a href="ranking.html" class="nav-item">
                 <i class="fa-solid fa-trophy"></i>
                 <span>Xếp hạng</span>
             </a>  
+            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Báo cáo</span>
+            </a>
         </nav>
 
     </div>
 
-    <!-- Nạp script: Đảm bảo api.js được nạp trước -->
+    <!-- Các tập lệnh JavaScript xử lý logic -->
     <script src="js/api.js"></script>
-    <!-- Sử dụng defer để script chạy sau khi DOM đã sẵn sàng -->
     <script src="js/wall.js" defer></script>
+    <script src="js/swipe.js" defer></script>
 
 </body>
 </html>
