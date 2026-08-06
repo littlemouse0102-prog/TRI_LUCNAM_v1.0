@@ -364,13 +364,14 @@ body {
 .admin-link-contents { display: contents; }
 
 /* --- Bottom Nav --- */
+/* --- Bottom Nav (Đã đồng bộ tuyệt đối max-width 480px và cố định đáy màn hình) --- */
 .bottom-nav {
     position: fixed !important;
     bottom: 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: 100% !important;
-    max-width: 430px !important;
+    max-width: 480px !important;
     height: 60px !important;
     background-color: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
@@ -396,9 +397,19 @@ body {
     transition: all 0.2s ease;
     gap: 3px;
 }
-.bottom-nav .nav-item i { font-size: 18px; transition: transform 0.2s; }
-.bottom-nav .nav-item.active { color: var(--primary) !important; }
-.bottom-nav .nav-item.active i { transform: translateY(-2px); }
+
+.bottom-nav .nav-item i {
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--primary) !important;
+}
+
+.bottom-nav .nav-item.active i {
+    transform: translateY(-2px);
+}
 
 /* --- Modal --- */
 .modal-overlay {
