@@ -75,7 +75,7 @@ function loadThemeCss(themeName) {
     }
 }
 
-// 1. CÁC HÀM TIỆN ÍCH (Global Scope)[cite: 4]
+// 1. CÁC HÀM TIỆN ÍCH (Global Scope)
 function parseDecimal(value) {
     if (!value) return 0;
     return parseFloat(value.toString().replace(',', '.')) || 0;
@@ -88,7 +88,7 @@ function calculateEstimatedPoints(swim, bike, run) {
     return (sPts + bPts + rPts).toFixed(1);
 }
 
-// 2. SỰ KIỆN KHỞI TẠO DOM CHO CHỨC NĂNG THÀNH VIÊN[cite: 4]
+// 2. SỰ KIỆN KHỞI TẠO DOM CHO CHỨC NĂNG THÀNH VIÊN
 document.addEventListener("DOMContentLoaded", async () => {
     let currentUser = null;
     try {
@@ -123,8 +123,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await loadMemberDashboardData(currentUser.id);
 
-    // Xử lý Form gửi thành tích
+    // Xử lý Form gửi thành tích (Tích hợp Popup nhập chi tiết)
     const activityForm = document.getElementById("activityForm");
+    let tempActivityData = {}; // Biến tạm lưu kết quả bơi/đạp/chạy
+
     if (activityForm) {
         activityForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -142,25 +144,41 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
-            const submitBtn = activityForm.querySelector(".submit-btn");
-            if (submitBtn) {
-                const originalBtnText = submitBtn.innerHTML;
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = `Đang gửi...`;
-
-                const activityData = { id: currentUser.id, name: currentUser.name, swim: swimVal, bike: bikeVal, run: runVal };
-                const response = await callSystemAPI("addActivity", activityData);
-
-                if (response && response.success) {
-                    alert("🎉 Ghi nhận thành công!");
-                    activityForm.reset();
-                    await loadMemberDashboardData(currentUser.id);
-                } else {
-                    alert("❌ Lỗi: " + (response?.msg || "Không thể kết nối hệ thống"));
-                }
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+            // Lưu tạm thông số và bật Popup nhập chi tiết
+            tempActivityData = { swim: swimVal, bike: bikeVal, run: runVal };
+            const detailModal = document.getElementById("detailModal");
+            if (detailModal) {
+                detailModal.style.display = "flex";
+            } else {
+                // Nếu lỡ chưa có popup trên HTML thì gửi luôn mặc định
+                submitFinalActivity(currentUser, tempActivityData, "Bình thường", "", "Không", "");
             }
+        });
+    }
+
+    // Xử lý nút Hoàn tất trong Popup chi tiết
+    const btnSubmitDetail = document.getElementById("btnSubmitDetail");
+    if (btnSubmitDetail) {
+        btnSubmitDetail.addEventListener("click", async () => {
+            const level = document.getElementById("inputLevel")?.value || "Bình thường";
+            const goal = document.getElementById("inputGoal")?.value || "";
+            const injury = document.getElementById("inputInjury")?.value || "Không";
+            const note = document.getElementById("inputNote")?.value || "";
+
+            const detailModal = document.getElementById("detailModal");
+            if (detailModal) detailModal.style.display = "none";
+
+            await submitFinalActivity(currentUser, tempActivityData, level, goal, injury, note);
+            if (activityForm) activityForm.reset();
+        });
+    }
+
+    // Xử lý nút Hủy trong Popup chi tiết
+    const btnCancelDetail = document.getElementById("btnCancelDetail");
+    if (btnCancelDetail) {
+        btnCancelDetail.addEventListener("click", () => {
+            const detailModal = document.getElementById("detailModal");
+            if (detailModal) detailModal.style.display = "none";
         });
     }
 
@@ -177,13 +195,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+// Hàm gửi dữ liệu hoàn tất lên Server
+async function submitFinalActivity(currentUser, data, level, goal, injury, note) {
+    const payload = {
+        id: currentUser.id,
+        name: currentUser.name,
+        swim: data.swim,
+        bike: data.bike,
+        run: data.run,
+        level: level,
+        goal: goal,
+        injury: injury,
+        note: note
+    };
+
+    const response = await callSystemAPI("addActivity", payload);
+
+    if (response && response.success) {
+        alert("🎉 Ghi nhận thành công!");
+        await loadMemberDashboardData(currentUser.id);
+    } else {
+        alert("❌ Lỗi: " + (response?.msg || "Không thể kết nối hệ thống"));
+    }
+}
+
 function handleLogout() {
     localStorage.clear();
     sessionStorage.clear();
     window.location.href = "index.html";
 }
 
-// 3. CÁC HÀM RENDER & XỬ LÝ DỮ LIỆU[cite: 4]
+// 3. CÁC HÀM RENDER & XỬ LÝ DỮ LIỆU
 function renderBasicProfile(user) {
     const userNameEl = document.getElementById("userName");
     const userCodeEl = document.getElementById("userCode");
@@ -199,7 +241,7 @@ function renderBasicProfile(user) {
 }
 
 /**
- * Gọi API lấy dữ liệu chỉ số cá nhân, thứ hạng, nhật ký và bảng xếp hạng từ Sheets[cite: 4]
+ * Gọi API lấy dữ liệu chỉ số cá nhân, thứ hạng, nhật ký và bảng xếp hạng từ Sheets
  */
 async function loadMemberDashboardData(userId) {
     const historyLogList = document.getElementById("historyLogList");
@@ -272,7 +314,7 @@ async function loadMemberDashboardData(userId) {
             if (suggestionEl) suggestionEl.textContent = "Hãy cập nhật thành tích để nhận đề xuất tối ưu!";
         }
 
-        // 5. Cập nhật Nhật ký hoạt động Cá Nhân
+        // 5. Cập nhật Nhật ký hoạt động Cá Nhân (Hiển thị đầy đủ Ghi chú, Mức độ, Chấn thương, Mục tiêu)
         if (myActivities.length > 0) {
             historyLogList.innerHTML = "";
             myActivities.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
@@ -346,7 +388,6 @@ async function loadMemberDashboardData(userId) {
                 });
             }
         }
-
         // 7. Cập nhật Bảng xếp hạng trong trang cá nhân
         const rankingTableBody = document.getElementById("rankingTableBody");
         if (rankingTableBody && response.rankings) {
@@ -389,7 +430,7 @@ async function loadMemberDashboardData(userId) {
 }
 
 /**
- * Hàm chuyển đổi hiển thị giữa tab Cá nhân và tab Team[cite: 4]
+ * Hàm chuyển đổi hiển thị giữa tab Cá nhân và tab Team
  */
 function switchActivityTab(tabName) {
     const btnPersonal = document.getElementById("btnTabPersonal");
