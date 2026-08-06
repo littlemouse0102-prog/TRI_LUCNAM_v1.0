@@ -138,33 +138,33 @@
     </div>
 
     <!-- THANH ĐIỀU HƯỚNG ĐÁY MÀN HÌNH (BOTTOM NAVIGATION) -->
+    <!-- THANH ĐIỀU HƯỚNG DƯỚI CÙNG -->
     <nav class="bottom-nav">
-        <a href="member.html" class="nav-item">
-            <i class="fa-solid fa-user"></i>
-            <span>Cá nhân</span>
+        <a href="admin.html" class="nav-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>ADMIN</span>
         </a>
-
-        <!-- Thùng chứa kiểm tra quyền Admin bằng JS -->
-        <div id="admin-link-container" class="admin-link-contents"></div>
-
         <a href="profile.html" class="nav-item">
             <i class="fa-solid fa-medal"></i>
             <span>Tường</span>
         </a>
-        
+        <a href="member.html" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Cá nhân</span>
+        </a>
+        <a href="ranking.html" class="nav-item">
+            <i class="fa-solid fa-trophy"></i>
+            <span>Xếp hạng</span>
+        </a>  
         <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
             <i class="fa-solid fa-chart-line"></i>
             <span>Báo cáo</span>
         </a>
-        
-        <a href="ranking.html" class="nav-item active">
-            <i class="fa-solid fa-trophy"></i>
-            <span>Xếp hạng</span>
-        </a>  
     </nav>
 
     <!-- SCRIPTS -->
     <script src="js/api.js"></script>
     <script src="js/ranking.js"></script>
+    <script src="js/swipe.js" defer></script>
 </body>
 </html>
