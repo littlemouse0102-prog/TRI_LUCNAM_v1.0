@@ -1,5 +1,5 @@
 /**
- * TRIATHLON LỤC NAM - RANKING & ADMIN STYLES (TỐI ƯU HOÁ & KHẮC PHỤC ẢNH)
+ * TRIATHLON LỤC NAM - RANKING & ADMIN STYLES (ĐÃ ĐỒNG BỘ 480PX VÀ CỐ ĐỊNH THANH DƯỚI)
  */
 
 :root {
@@ -43,17 +43,16 @@ img {
     display: block;
 }
 
-/* --- Layout --- */
+/* --- Layout (Đồng bộ max-width 480px để không bị lệch) --- */
 .app-container {
     width: 100%;
-    max-width: 430px;
+    max-width: 480px;
     background-color: var(--background);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
-    padding-bottom: 70px;
     overflow-x: hidden;
     margin: 0 auto;
 }
@@ -665,18 +664,20 @@ img {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
 }
 
-.bottom-spacer, .bottom-spacer-large { height: 80px; }
+.bottom-spacer, .bottom-spacer-large { height: 100px; }
 .admin-link-contents { display: contents; }
 .hidden-username-input { display: none; }
 
+/* --- Bottom Nav (Cố định tuyệt đối dưới màn hình và đồng bộ max-width 480px) --- */
 /* --- Bottom Nav --- */
+/* --- Bottom Nav (Đã đồng bộ tuyệt đối max-width 480px và cố định đáy màn hình) --- */
 .bottom-nav {
-    position: sticky !important;
+    position: fixed !important;
     bottom: 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: 100% !important;
-    max-width: 430px !important;
+    max-width: 480px !important;
     height: 60px !important;
     background-color: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
@@ -684,10 +685,8 @@ img {
     display: flex !important;
     justify-content: space-around !important;
     align-items: center !important;
-    padding: 0 4px !important;
     z-index: 9999 !important;
     box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
-    margin-top: auto !important;
 }
 
 .bottom-nav .nav-item {
@@ -704,9 +703,20 @@ img {
     transition: all 0.2s ease;
     gap: 3px;
 }
-.bottom-nav .nav-item i { font-size: 18px; transition: transform 0.2s; }
-.bottom-nav .nav-item.active { color: var(--primary) !important; }
-.bottom-nav .nav-item.active i { transform: translateY(-2px); }
+
+.bottom-nav .nav-item i {
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--primary) !important;
+}
+
+.bottom-nav .nav-item.active i {
+    transform: translateY(-2px);
+}
+
 
 /* --- Modal --- */
 .modal-overlay {
@@ -724,7 +734,7 @@ img {
 .modal-overlay.show { opacity: 1; visibility: visible; }
 
 .modal-box {
-    width: 100%; max-width: 430px;
+    width: 100%; max-width: 480px;
     background-color: var(--white);
     border-top-left-radius: 24px; border-top-right-radius: 24px;
     padding: 22px;
