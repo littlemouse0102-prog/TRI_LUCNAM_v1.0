@@ -1,5 +1,6 @@
 /**
- * TRIATHLON LỤC NAM - WALL / ACHIEVEMENT CABINET CSS (Cho phép cuộn trang)
+ * TRIATHLON LỤC NAM - WALL / ACHIEVEMENT CABINET CSS
+ * Phiên bản viết lại chuẩn hóa, tối ưu responsive và tràn nền rộng mượt mà
  */
 
 :root {
@@ -31,34 +32,33 @@ body {
     justify-content: center;
     min-height: 100vh;
     touch-action: pan-y;
-    overflow-y: auto; /* Cho phép body cuộn dọc */
+    overflow-y: auto;
 }
 
 /* --- Layout Container --- */
 .app-container {
     width: 100%;
-    max-width: 430px;
+    max-width: 480px;
     background-color: var(--background);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
     overflow-x: hidden;
     margin: 0 auto;
     padding-bottom: 70px;
 }
 
-/* --- Achievement Cabinet (Cho phép cuộn và phủ nền rộng 430px) --- */
-/* --- Achievement Cabinet (Mở rộng background rộng hơn và cho phép cuộn) --- */
+/* --- Achievement Cabinet (Nền wall tràn rộng và chuẩn xác) --- */
 .achievement-cabinet {
     position: relative;
-    width: 100%; /* Mở rộng toàn bộ chiều ngang khung chứa */
+    width: 100%;
     min-height: 100vh;
     margin: 0 auto;
     background-image: url('../avatars/wall.jpg');
-    background-size: 100% auto; /* Phủ kín chiều rộng 100%, chiều cao tự động co giãn theo tỷ lệ ảnh để cuộn */
-    background-repeat: repeat-y; /* Cho phép lặp ảnh mượt mà khi cuộn trang */
+    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center top;
     flex: 1;
 }
@@ -71,6 +71,7 @@ body {
     justify-content: center;
     align-items: center;
     transform: translateX(-50%);
+    cursor: pointer;
 }
 
 .avatar-img {
@@ -79,28 +80,27 @@ body {
     object-fit: contain;
     border: none;
     box-shadow: none;
-    transition: transform 0.3s;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .avatar-img:hover { 
     transform: scale(1.1); 
 }
 
-/* --- Định vị 9 vị trí trong tủ --- */
-/* --- Định vị 9 vị trí trong tủ (Đã được đẩy cao lên thêm 50px) --- */
-.top-left   { top: 150px; left: 70px; }
-.top-center { top: 135px; left: 215px; }
-.top-right  { top: 150px; left: 360px; }
+/* --- Định vị 9 vị trí trong tủ cúp --- */
+.top-left   { top: 150px; left: 21%; }
+.top-center { top: 135px; left: 50%; }
+.top-right  { top: 150px; left: 79%; }
 
-.mid-left   { top: 275px; left: 80px; }
-.mid-center { top: 275px; left: 215px; }
-.mid-right  { top: 275px; left: 350px; }
+.mid-left   { top: 275px; left: 21%; }
+.mid-center { top: 275px; left: 50%; }
+.mid-right  { top: 275px; left: 79%; }
 
-.bot-left   { top: 410px; left: 80px; }
-.bot-center { top: 410px; left: 215px; }
-.bot-right  { top: 410px; left: 350px; }
+.bot-left   { top: 410px; left: 21%; }
+.bot-center { top: 410px; left: 50%; }
+.bot-right  { top: 410px; left: 79%; }
 
-/* --- Full-Screen Zoom Mode --- */
+/* --- Full-Screen Zoom Mode (Phóng to huy chương) --- */
 .is-full-screen {
     position: fixed !important;
     top: 50% !important;
@@ -110,13 +110,14 @@ body {
     max-width: 350px !important;
     height: auto !important;
     z-index: 99999 !important;
-    background-color: rgba(0, 0, 0, 0.8) !important;
+    background-color: transparent !important;
     padding: 20px;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     cursor: zoom-out;
-    border-radius: 12px;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 .is-full-screen .avatar-img {
@@ -134,6 +135,7 @@ body {
     padding: 8px 16px;
     background-color: rgba(255, 255, 255, 0.2) !important;
     backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px);
     color: #ffffff !important;
     text-decoration: none !important;
     border-radius: 8px;
@@ -188,7 +190,7 @@ body {
     to { opacity: 1; }
 }
 
-/* --- Comment Overlay --- */
+/* --- Comment Overlay (Hiển thị chú thích khi phóng to) --- */
 .cmt-overlay {
     display: none;
     pointer-events: none;
@@ -197,46 +199,39 @@ body {
 .is-full-screen .cmt-overlay {
     display: block !important;
     position: absolute;
-    bottom: 5px;
+    bottom: -30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
+    width: 100%;
     text-align: center;
     font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.6) !important;
-    padding: 10px;
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.7) !important;
+    padding: 8px 12px;
+    border-radius: 6px;
     z-index: 100001;
     pointer-events: none;
 }
 
-.content {
-    line-height: 1.8;
-    margin-bottom: 20px;
-    text-align: justify;
-    white-space: pre-wrap;
-}
-
-/* --- Bottom Navigation (Cố định chiều rộng 430px ở đáy màn hình khi cuộn) --- */
+/* --- Bottom Navigation (Thanh điều hướng dưới cùng) --- */
 .bottom-nav {
     position: fixed !important;
     bottom: 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: 430px !important;
-    max-width: 430px !important;
+    width: 100% !important;
+    max-width: 480px !important;
     height: 60px !important;
     background-color: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--border) !important;
     display: flex !important;
     justify-content: space-around !important;
     align-items: center !important;
-    padding: 0 4px !important;
-    z-index: 99999 !important;
+    z-index: 9999 !important;
     box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
 }
 
