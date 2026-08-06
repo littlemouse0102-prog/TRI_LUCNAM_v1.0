@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * TRIATHLON LỤC NAM - GLOBAL & THEME SYSTEM (UPGRADED)
+ * TRIATHLON LỤC NAM - GLOBAL & THEME SYSTEM (UPGRADED & FIXED)
  * ==========================================================================
  */
 
@@ -32,13 +32,16 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-body {
+html, body {
+    width: 100%;
+    min-height: 100vh;
     background-color: #cbd5e1;
     color: var(--text-main);
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
     touch-action: pan-y;
 }
 
@@ -50,7 +53,7 @@ img {
     display: block;
 }
 
-/* Khung ứng dụng di động chung */
+/* Khung ứng dụng di động chung - Ép chuẩn chiều cao và vị trí neo */
 .app-container {
     width: 100%;
     max-width: 480px;
@@ -62,7 +65,7 @@ img {
     position: relative;
     overflow-x: hidden;
     margin: 0 auto;
-    padding-bottom: 70px;
+    padding-bottom: 90px; /* Đảm bảo không bị che nội dung cuối */
 }
 
 .app-content {
@@ -207,7 +210,7 @@ img {
 .theme-rainbow-neon { background: radial-gradient(circle, #ff007f, #7f00ff, #00ffff); }
 
 /* ==========================================================================
-   NAVIGATION ĐÁY MÀN HÌNH (BOTTOM NAV)
+   NAVIGATION ĐÁY MÀN HÌNH (BOTTOM NAV) - CỐ ĐỊNH CHUẨN XÁC
    ========================================================================== */
 .bottom-nav {
     position: fixed !important;
@@ -223,7 +226,7 @@ img {
     justify-content: space-around !important;
     align-items: center !important;
     padding: 8px 4px 12px 4px !important;
-    z-index: 999 !important;
+    z-index: 9999 !important;
     box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
 }
 
@@ -255,13 +258,13 @@ img {
     transform: translateY(-2px);
 }
 
-.bottom-spacer {
-    height: 80px;
+.bottom-spacer { 
+    height: 85px; 
     width: 100%;
 }
 
 /* ==========================================================================
-   HIỆU ỨNG & TIỆN ÍCH CHUNG
+   HIỆU ỨNG & THÀNH PHẦN HOẠT ĐỘNG (ACTIVITY CARD)
    ========================================================================== */
 @keyframes fadeIn {
     from {
@@ -277,7 +280,7 @@ img {
 .animate-fade-in {
     animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-/* CSS tùy chỉnh cho thẻ hoạt động có kèm chi tiết */
+
 .activity-card {
     background: var(--white, #fff);
     border-radius: 12px;
@@ -314,7 +317,4 @@ img {
     border-top: 1px solid var(--border, #eee);
     padding-top: 8px;
     line-height: 1.5;
-}
-.bottom-spacer { 
-    height: 80px; 
 }
