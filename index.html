@@ -10,8 +10,10 @@
     <link rel="icon" type="image/png" href="avatars/TRILN.png">
     
     <!-- ĐÃ SỬA: Sửa 'iavatars' thành 'avatars' cho đúng thư mục -->
+   <!-- Cấu hình chuẩn cho ứng dụng màn hình chính -->
     <link rel="apple-touch-icon" href="avatars/TRILN.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes"> <!-- Thêm dòng này để sửa cảnh báo -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Triathlon Lục Nam">
 
@@ -84,7 +86,7 @@
             if (themeName === 'default') {
                 themeLink.href = '';
             } else {
-                themeLink.href = `css/${themeName}.css`;
+                themeLink.href = `css/theme/${themeName}.css`;
             }
         }
 
