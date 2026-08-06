@@ -315,3 +315,6 @@ img {
     padding-top: 8px;
     line-height: 1.5;
 }
+.bottom-spacer { 
+    height: 80px; 
+}
