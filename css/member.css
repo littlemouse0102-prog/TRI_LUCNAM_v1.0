@@ -1,6 +1,6 @@
 /**
  * TRIATHLON LỤC NAM - DESIGN SYSTEM (MEMBER CSS)
-[cite: 7] */
+ */
 
 :root {
     --primary: #059669;
@@ -43,7 +43,7 @@ img {
 /* --- Layout --- */
 .app-container {
     width: 100%;
-    max-width: 480px; /* Đã nới rộng kích thước khung tối đa giúp hiển thị thoáng và to hơn[cite: 7] */
+    max-width: 480px; /* Đã nới rộng kích thước khung tối đa giúp hiển thị thoáng và to hơn */
     background-color: var(--background);
     min-height: 100vh;
     display: flex;
@@ -568,27 +568,57 @@ img {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
 }
 
-.bottom-spacer { height: 90px; width: 100%; }
+.bottom-spacer { height: 100px; width: 100%; }
 .admin-link-contents { display: contents; }
 
+/* --- Bottom Nav --- */
+/* --- Bottom Nav (Đã đồng bộ tuyệt đối max-width 480px và cố định đáy màn hình) --- */
 .bottom-nav {
-    position: sticky;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px; /* Khớp với độ rộng app-container[cite: 7] */
-    background-color: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 6px 14px 6px;
-    z-index: 999;
-    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06);
-    margin-top: auto; /* Đẩy thanh này luôn nằm ở đáy khung flex container */
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    height: 60px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border) !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
 }
+
+.bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    flex: 1;
+    height: 100%;
+    transition: all 0.2s ease;
+    gap: 3px;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.bottom-nav .nav-item.active {
+    color: var(--primary) !important;
+}
+
+.bottom-nav .nav-item.active i {
+    transform: translateY(-2px);
+}
+
 
 .nav-item {
     flex: 1;
