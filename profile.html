@@ -26,19 +26,18 @@
         <header class="app-header-strava">
             <div class="header-top-row">
                 <div class="user-mini-profile">
-                    <img src= "avatars/default.png" alt="Avatar" id="header-avatar">
+                    <img src="avatars/default.png" alt="Avatar" id="header-avatar" onerror="this.src='avatars/default.jpg'">
                 </div>
-                <div class="header-title">Bạn</div>
+                <div class="header-title">Hồ Sơ</div>
                 <div class="header-actions">
-                    <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
-                    <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+                   
                 </div>
             </div>
 
-            <!-- THANH TABS CHÍNH ĐÃ ĐỒNG BỘ ĐIỀU HƯỚNG -->
+            <!-- THANH TABS CHÍNH -->
             <div class="strava-main-tabs">
-                <button class="main-tab-btn active" onclick="window.location.href='profile_2.html'">Tiến trình</button>
-                <button class="main-tab-btn" onclick="window.location.href='activities.html'">Hoạt động</button>
+                <button class="main-tab-btn active" onclick="switchMainTab('progress', event)">Tiến trình</button>
+                <button class="main-tab-btn" onclick="switchMainTab('activities', event)">Hoạt động</button>
                 <button class="main-tab-btn" onclick="window.location.href='wall.html'">Thành tích</button>
             </div>
         </header>
@@ -47,7 +46,7 @@
         <main class="app-content-strava">
 
             <!-- THANH DANH SÁCH THÀNH VIÊN CUỘN NGANG -->
-            <div class="members-carousel-card" style="background-color: var(--bg-card); padding: 12px 0; margin: 12px 0; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div class="members-carousel-card">
                 <div class="members-carousel-wrapper">
                     <div class="avatar-scroll-list" id="members-avatar-list">
                         <!-- Danh sách avatar render động từ JS -->
@@ -59,10 +58,11 @@
             <div id="profile-bio-section">
                 <div class="profile-main-info">
                     <div class="avatar-large-wrapper">
-                        <img src= "avatars/default.png" alt="Avatar" id="user-avatar">
+                        <img src="avatars/default.png" alt="Avatar" id="user-avatar" onerror="this.src='avatars/default.jpg'">
                     </div>
                     <div class="user-details-text">
-                        <h2 id="user-name">...</h2>
+                        <h2 id="user-name">Đang tải...</h2>
+                        <p class="location-text" id="user-location">Triathlon Lục Nam</p>
                     </div>
                 </div>
             </div>
@@ -78,12 +78,12 @@
                     <button class="chip" onclick="filterSport('run', event)"><i class="fa-solid fa-person-running"></i> Chạy bộ</button>
                 </div>
 
-                <!-- Card Biểu đồ & Thống kê theo thời gian -->
+                <!-- Card Thống kê theo thời gian -->
                 <div class="strava-card">
                     <div class="card-section-header">
-                        <div class="card-section-title" style="margin:0;" id="chart-title">Dữ liệu</div>
+                        <div class="card-section-title" id="chart-title">Tháng này</div>
                         <div class="chart-time-filters">
-                            <button class="time-filter-btn" onclick="switchChartTime('month', event)">Tháng</button>
+                            <button class="time-filter-btn active" onclick="switchChartTime('month', event)">Tháng</button>
                         </div>
                     </div>
 
@@ -97,28 +97,12 @@
                             <strong class="m-value" id="val-time">0 điểm</strong>
                         </div>
                     </div>
-
-                    <!-- Biểu đồ đường SVG -->
-                    <div class="strava-chart-container">
-                        <div class="chart-y-labels" id="chart-y-max">
-                            <span>0 km</span>
-                            <span>0 km</span>
-                            <span>0 km</span>
-                        </div>
-                        <div class="chart-visual">
-                            <div class="chart-line-svg">
-                                <svg viewBox="0 0 300 100" preserveAspectRatio="none">
-                                    <path id="chart-path-svg" d="M 0,90 L 50,90 L 100,90 L 150,90 L 200,90 L 250,90 L 300,90" fill="none" stroke="var(--strava-orange, #FC4C02)" stroke-width="2.5"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 
                 <!-- Card Thống kê Tỷ lệ Bơi - Đạp - Chạy -->
                 <div class="strava-card">
                     <div class="card-section-header">
-                        <div class="card-section-title" style="margin:0;">Tỷ lệ Ba môn phối hợp</div>
+                        <div class="card-section-title">Tỷ lệ Ba môn phối hợp</div>
                         <div class="count-badge">Tổng quan</div>
                     </div>
 
@@ -128,54 +112,75 @@
                         <div class="pie-legend">
                             <div class="legend-item">
                                 <span class="legend-dot swim"></span>
-                                <span class="legend-label">Bơi (Swim)</span>
+                                <span class="legend-label">Bơi</span>
                                 <strong>0%</strong>
                             </div>
                             <div class="legend-item">
                                 <span class="legend-dot bike"></span>
-                                <span class="legend-label">Đạp (Bike)</span>
+                                <span class="legend-label">Đạp</span>
                                 <strong>0%</strong>
                             </div>
                             <div class="legend-item">
                                 <span class="legend-dot run"></span>
-                                <span class="legend-label">Chạy (Run)</span>
+                                <span class="legend-label">Chạy</span>
                                 <strong>0%</strong>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- ================= THẺ 2: HOẠT ĐỘNG (HIỂN THỊ CHI TIẾT GHI CHÚ, MỨC ĐỘ, CHẤN THƯƠNG) ================= -->
+            <div class="tab-pane" id="tab-activities">
+                <div class="search-activity-box" style="margin-bottom: 12px;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="activity-search-input" placeholder="Tìm kiếm hoạt động...">
+                </div>
+                <!-- Container chứa danh sách hoạt động render từ JS -->
+                <div id="activities-list-container">
+                    <p style="text-align: center; color: var(--text-secondary); margin: 20px 0;">Đang cập nhật danh sách hoạt động gần đây...</p>
+                </div>
+            </div>
+
+            <!-- ================= THẺ 3: THÀNH TÍCH (WALL) ================= -->
+            <div class="tab-pane" id="tab-workouts">
+                <div class="strava-card">
+                    <p style="text-align: center; color: var(--text-secondary); margin: 20px 0;">Đang tải bảng thành tích...</p>
+                </div>
+            </div>
+
         </main>
 
         <div class="bottom-spacer"></div>
 
-         <!-- THANH ĐIỀU HƯỚNG ĐỒNG BỘ -->
+        <!-- THANH ĐIỀU HƯỚNG DƯỚI CÙNG -->
         <nav class="bottom-nav">
-            <a href="member.html" class="nav-item">
-                <i class="fa-solid fa-user"></i>
-                <span>Cá nhân</span>
-            </a>
             <a href="admin.html" class="nav-item">
                 <i class="fa-solid fa-shield-halved"></i>
                 <span>ADMIN</span>
             </a>
-            <a href="wall.html" class="nav-item active">
+            <a href="profile.html" class="nav-item">
                 <i class="fa-solid fa-medal"></i>
-                <span>Thành tích</span>
+                <span>Tường</span>
             </a>
-            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Báo cáo</span>
-             </a>
+            <a href="member.html" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Cá nhân</span>
+            </a>
             <a href="ranking.html" class="nav-item">
                 <i class="fa-solid fa-trophy"></i>
                 <span>Xếp hạng</span>
             </a>  
+            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Báo cáo</span>
+            </a>
         </nav>
     </div>
 
     <!-- Tệp JavaScript xử lý giao diện -->
     <script src="js/api.js"></script>
     <script src="js/profile.js"></script>
+    <script src="js/swipe.js" defer></script>
 </body>
 </html>
