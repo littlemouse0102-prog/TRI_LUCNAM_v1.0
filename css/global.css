@@ -277,3 +277,41 @@ img {
 .animate-fade-in {
     animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+/* CSS tùy chỉnh cho thẻ hoạt động có kèm chi tiết */
+.activity-card {
+    background: var(--white, #fff);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--primary, #2e7d32);
+    transition: transform 0.2s ease;
+}
+
+.activity-card:hover {
+    transform: translateY(-2px);
+}
+
+.activity-card .activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.activity-card .activity-metrics {
+    display: flex;
+    gap: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--text-main, #333);
+}
+
+.activity-card .activity-details {
+    font-size: 13px;
+    color: var(--text-main, #444);
+    border-top: 1px solid var(--border, #eee);
+    padding-top: 8px;
+    line-height: 1.5;
+}
