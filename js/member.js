@@ -200,7 +200,6 @@ async function submitFinalActivityWithLoading(currentUser, data, level, goal, in
     const btnSubmitDetail = document.getElementById("btnSubmitDetail");
     const mainSubmitBtn = document.querySelector(".submit-btn");
 
-    // 1. Vô hiệu hóa nút và hiển thị hiệu ứng đang xử lý
     if (btnSubmitDetail) {
         btnSubmitDetail.disabled = true;
         btnSubmitDetail.style.opacity = "0.6";
@@ -227,11 +226,15 @@ async function submitFinalActivityWithLoading(currentUser, data, level, goal, in
     };
 
     try {
-        const response = await callSystemAPI("addActivity", payload);
+        // Sử dụng hàm upload đã được tối ưu xóa cache ở trên
+        const response = await uploadActivityData(payload);
 
         if (response && response.success) {
             alert("🎉 Ghi nhận thành công!");
+            
+            // 🔄 TỰ ĐỘNG LOAD LẠI TOÀN BỘ DỮ LIỆU NGAY LẬP TỨC MÀ KHÔNG CẦN TẢI LẠI TRANG
             await loadMemberDashboardData(currentUser.id);
+            
         } else {
             alert("❌ Lỗi: " + (response?.msg || "Không thể kết nối hệ thống"));
         }
@@ -239,7 +242,6 @@ async function submitFinalActivityWithLoading(currentUser, data, level, goal, in
         console.error("Lỗi khi gửi thành tích:", err);
         alert("❌ Đã xảy ra lỗi hệ thống, vui lòng thử lại.");
     } finally {
-        // 2. Mở khóa nút bấm trở lại sau khi hoàn tất quá trình
         if (btnSubmitDetail) {
             btnSubmitDetail.disabled = false;
             btnSubmitDetail.style.opacity = "1";
@@ -492,4 +494,16 @@ function switchActivityTab(tabName) {
         contentTeam.style.display = "block";
         contentPersonal.style.display = "none";
     }
+}
+// Hàm hỗ trợ chuyển File ảnh sang chuỗi Base64
+async function convertFilesToBase64(files) {
+    const promises = Array.from(files).map(file => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+    });
+    return Promise.all(promises);
 }
