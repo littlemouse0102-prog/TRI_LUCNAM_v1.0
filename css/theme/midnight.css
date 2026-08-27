@@ -1,0 +1,39 @@
+:root {
+    --primary: #475569;
+    --primary-hover: #334155;
+    --primary-light: #94A3B8;
+    --dark: #0F172A;
+    --dark-deep: #020617;
+    --light: #F1F5F9;
+    --background: #0F172A;
+    --surface: #1E293B;
+    --border: #334155;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border-focus: #64748B;
+}
+
+body {
+    background-color: #020617;
+}
+
+.app-container {
+    background-color: var(--background);
+}
+
+.app-header {
+    background: linear-gradient(135deg, var(--dark), #1E293B);
+    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.4);
+}
+
+.section-title::before {
+    background-color: var(--primary-light);
+}
+
+.bottom-nav {
+    background-color: rgba(30, 41, 59, 0.95) !important;
+}
+
+.nav-item.active {
+    color: #F8FAFC !important;
+}

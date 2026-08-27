@@ -1,0 +1,282 @@
+/* ==========================================================================
+   RESET & BASE STYLES (Ngọc Trai Enhanced Style)
+   ========================================================================== */
+:root {
+    --primary: #059669;
+    --primary-hover: #047857;
+    --primary-light: #34D399;
+    --dark: #064E3B;
+    --dark-deep: #022C22;
+    --light: #ECFDF5;
+    --white: #FFFFFF;
+    --background: #F1F5F9;
+    --surface: #FFFFFF;
+    --border: #CBD5E1;
+    --border-focus: #059669;
+    --text-main: #0F172A;
+    --text-muted: #475569;
+    --danger: #EF4444;
+    --danger-bg: #FEF2F2;
+    --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background: linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: var(--text-main);
+}
+
+/* ==========================================================================
+   LAYOUT & CONTAINER
+   ========================================================================== */
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ==========================================================================
+   LOGO SECTION (Phong cách chữ & màu sắc nhận diện)
+   ========================================================================== */
+.logo-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+    color: var(--white);
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 10px 20px rgba(5, 150, 105, 0.35);
+    border: 3px solid var(--white);
+    transition: transform 0.3s ease;
+}
+
+.logo-icon:hover {
+    transform: scale(1.05);
+}
+
+.logo-section h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--dark-deep);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   LOGIN CARD
+   ========================================================================== */
+.login-card {
+    background-color: var(--surface);
+    width: 100%;
+    border-radius: 28px;
+    padding: 36px 28px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.login-card h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: center;
+    margin-bottom: 24px;
+    letter-spacing: 0.4px;
+}
+
+/* ==========================================================================
+   INPUT FIELDS (Màu sắc và kiểu chữ hiển thị PIN)
+   ========================================================================== */
+.input-group {
+    margin-bottom: 22px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 18px;
+    color: var(--primary);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    transition: color 0.2s ease;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 15px 20px 15px 50px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    outline: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--background);
+    color: var(--text-main);
+    letter-spacing: 3px; /* Giúp giãn cách các ký tự mật khẩu rõ ràng, sắc nét */
+}
+
+.input-wrapper input::placeholder {
+    letter-spacing: normal;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--border-focus);
+    background-color: var(--white);
+    box-shadow: 0 0 0 5px rgba(5, 150, 105, 0.12);
+}
+
+.input-wrapper input:focus + .input-icon {
+    color: var(--dark);
+}
+
+/* Error State */
+.error-message {
+    color: var(--danger);
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 8px;
+    padding-left: 12px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+}
+
+.error-message.show {
+    display: flex;
+}
+
+.input-wrapper input.invalid {
+    border-color: var(--danger);
+    background-color: var(--danger-bg);
+}
+
+.input-wrapper input.invalid:focus {
+    box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.12);
+}
+
+/* ==========================================================================
+   BUTTONS & LINKS
+   ========================================================================== */
+.btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    color: var(--white);
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.3);
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, var(--primary-hover) 0%, var(--dark) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(5, 150, 105, 0.4);
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+.btn-submit:disabled {
+    background: #94A3B8;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.card-footer {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.contact-link {
+    font-size: 135%; /* Tối ưu cỡ chữ linh hoạt */
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.contact-link:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   ANIMATIONS & LOADING
+   ========================================================================== */
+.animate-fade-in {
+    animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.spinner {
+    width: 22px;
+    height: 22px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--white);
+    animation: spin 0.8s linear infinite;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
