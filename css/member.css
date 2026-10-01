@@ -579,15 +579,16 @@ img {
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: 100% !important;
-    max-width: 480px !important;
+    max-width: 480px !important; /* Khớp với max-width của .app-container */
     height: 60px !important;
     background-color: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--border) !important;
     display: flex !important;
     justify-content: space-around !important;
     align-items: center !important;
-    z-index: 9999 !important;
+    z-index: 99999 !important; /* Đảm bảo luôn nằm trên cùng các thành phần khác */
     box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
 }
 
