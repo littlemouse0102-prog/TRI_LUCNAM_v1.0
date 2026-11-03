@@ -89,12 +89,12 @@ body {
 
 /* --- Định vị 9 vị trí trong tủ cúp --- */
 .top-left   { top: 150px; left: 21%; }
-.top-center { top: 135px; left: 50%; }
+.top-center { top: 100px; left: 50%; }
 .top-right  { top: 150px; left: 79%; }
 
-.mid-left   { top: 275px; left: 21%; }
+.mid-left   { top: 275px; left: 14%; }
 .mid-center { top: 275px; left: 50%; }
-.mid-right  { top: 275px; left: 79%; }
+.mid-right  { top: 275px; left: 86%; }
 
 .bot-left   { top: 410px; left: 21%; }
 .bot-center { top: 410px; left: 50%; }
