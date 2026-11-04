@@ -6,11 +6,18 @@
 
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZE-xrzeiJUWscBaOF5zplTp3kPShJL5FjB7hhf-bxUkhCWd4B3cYj9sX1bCs4zi9dcQ/exec";
 
+/**
+ * Hàm gọi API hệ thống chung có hỗ trợ Cache thời gian thực
+ * @param {string} action - Tên hành động cần gọi (ví dụ: 'getDashboard', 'getRankings',...)
+ * @param {Object} data - Dữ liệu truyền đi
+ * @param {number} cacheDurationMinutes - Thời gian lưu cache (tính bằng phút, mặc định 3 phút)
+ */
 async function callSystemAPI(action, data = {}, cacheDurationMinutes = 3) {
     const isCacheable = ['getDashboard', 'getRankings', 'getMemberList'].includes(action);
     const cacheKey = `cache_${action}_${JSON.stringify(data)}`;
     const now = new Date().getTime();
 
+    // 1. Kiểm tra cache nếu hành động cho phép
     if (isCacheable) {
         const cachedData = localStorage.getItem(cacheKey);
         const cachedTime = localStorage.getItem(`${cacheKey}_time`);
@@ -18,6 +25,7 @@ async function callSystemAPI(action, data = {}, cacheDurationMinutes = 3) {
         if (cachedData && cachedTime) {
             const ageInMinutes = (now - parseInt(cachedTime)) / (1000 * 60);
             if (ageInMinutes < cacheDurationMinutes) {
+                console.log(`⚡ Lấy dữ liệu từ Cache cho action: ${action}`);
                 return JSON.parse(cachedData);
             }
         }
@@ -36,6 +44,7 @@ async function callSystemAPI(action, data = {}, cacheDurationMinutes = 3) {
         const textData = await response.text();
         const result = JSON.parse(textData);
 
+        // 2. Lưu cache nếu gọi thành công và thuộc nhóm được cache
         if (result && result.success && isCacheable) {
             localStorage.setItem(cacheKey, JSON.stringify(result));
             localStorage.setItem(`${cacheKey}_time`, now.toString());
@@ -45,18 +54,27 @@ async function callSystemAPI(action, data = {}, cacheDurationMinutes = 3) {
 
     } catch (error) {
         console.error("❌ Lỗi API:", error);
+        
+        // Dự phòng: Nếu lỗi mạng nhưng có cache cũ, trả về cache cũ để tránh sập giao diện
         const fallbackData = localStorage.getItem(cacheKey);
-        if (fallbackData) return JSON.parse(fallbackData);
+        if (fallbackData) {
+            console.warn("⚠️ Sử dụng dữ liệu dự phòng từ Cache do lỗi kết nối!");
+            return JSON.parse(fallbackData);
+        }
+        
         return { success: false, msg: "Lỗi kết nối server" };
     }
 }
 
-// Hàm upload hoạt động và xóa sạch cache cũ ngay lập tức
+/**
+ * Hàm upload hoạt động mới và tự động xóa sạch toàn bộ cache liên quan ngay lập tức
+ * @param {Object} activityData - Dữ liệu hoạt động cần thêm
+ */
 async function uploadActivityData(activityData) {
     const result = await callSystemAPI('addActivity', activityData);
 
     if (result && result.success) {
-        console.log("🚀 Upload thành công, đang dọn dẹp cache cũ...");
+        console.log("🚀 Upload thành công, đang dọn dẹp toàn bộ cache cũ...");
         const keysToRemove = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
@@ -70,6 +88,9 @@ async function uploadActivityData(activityData) {
     return result;
 }
 
+/**
+ * Lấy thông tin user hiện tại đang đăng nhập từ LocalStorage
+ */
 function getCurrentUser() {
     try {
         const userJson = localStorage.getItem("triathlon_user");
