@@ -1,5 +1,6 @@
 /**
  * TRIATHLON LỤC NAM - DESIGN SYSTEM (MEMBER CSS)
+ * Đã tối ưu chống nháy chớp & cuộn mượt màng
  */
 
 :root {
@@ -26,11 +27,13 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-body {
+html, body {
     background-color: #CBD5E1;
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    margin: 0;
+    overflow-y: auto; /* Cho phép cuộn tự nhiên */
 }
 
 img {
@@ -43,7 +46,7 @@ img {
 /* --- Layout --- */
 .app-container {
     width: 100%;
-    max-width: 480px; /* Đã nới rộng kích thước khung tối đa giúp hiển thị thoáng và to hơn */
+    max-width: 480px; /* Cố định chiều rộng chuẩn Mobile */
     background-color: var(--background);
     min-height: 100vh;
     display: flex;
@@ -52,6 +55,7 @@ img {
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
     overflow-x: hidden;
     margin: 0 auto;
+    padding-bottom: 20px;
 }
 
 .app-content {
@@ -394,10 +398,10 @@ img {
     display: none;
 }
 
-/* --- History & Viewports --- */
+/* --- History & Viewports (Cố định chiều cao tối thiểu chống giật) --- */
 .history-list, .scroll-viewport {
-    max-height: 200px !important;
-    min-height: 200px !important;
+    max-height: 220px !important;
+    min-height: 180px !important; /* Đảm bảo không bị giật nháy khi chờ nạp dữ liệu */
     overflow-y: auto !important;
     padding-right: 4px;
     scrollbar-width: thin;
@@ -443,7 +447,8 @@ img {
     background-color: var(--white);
     border-radius: 18px;
     border: 1px solid var(--border);
-    max-height: 220px !important;
+    max-height: 240px !important;
+    min-height: 180px !important; /* Cố định chống chớp nháy */
     overflow-y: auto !important;
     box-shadow: var(--card-shadow);
     scrollbar-width: thin;
@@ -536,10 +541,9 @@ img {
     border: 1px solid var(--border);
 }
 
-/* --- Logout & Bottom Navigation --- */
+/* --- Logout Wrapper --- */
 .logout-wrapper, .logout-section-wrap {
-    margin: 24px 0;
-    padding: 0 0 24px 0;
+    margin: 24px 0 10px 0;
     text-align: center;
 }
 
@@ -568,27 +572,30 @@ img {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
 }
 
-.bottom-spacer { height: 100px; width: 100%; }
-.admin-link-contents { display: contents; }
+/* Thẻ đệm đảm bảo không bị thanh bottom-nav đè nội dung cuối */
+.bottom-spacer, .bottom-spacer-large { 
+    height: 90px !important; 
+    width: 100%; 
+    clear: both;
+}
 
-/* --- Bottom Nav --- */
-/* --- Bottom Nav (Đã đồng bộ tuyệt đối max-width 480px và cố định đáy màn hình) --- */
+/* --- Bottom Navigation (Cố định chuẩn ở đáy màn hình) --- */
 .bottom-nav {
     position: fixed !important;
     bottom: 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: 100% !important;
-    max-width: 480px !important; /* Khớp với max-width của .app-container */
+    max-width: 480px !important;
     height: 60px !important;
-    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.96) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--border) !important;
     display: flex !important;
     justify-content: space-around !important;
     align-items: center !important;
-    z-index: 99999 !important; /* Đảm bảo luôn nằm trên cùng các thành phần khác */
+    z-index: 99999 !important;
     box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06) !important;
 }
 
@@ -617,33 +624,6 @@ img {
 }
 
 .bottom-nav .nav-item.active i {
-    transform: translateY(-2px);
-}
-
-
-.nav-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: var(--text-muted);
-    font-size: 11px;
-    font-weight: 600;
-    gap: 4px;
-    transition: all 0.2s;
-}
-
-.nav-item i {
-    font-size: 20px;
-    transition: transform 0.2s;
-}
-
-.nav-item.active {
-    color: var(--primary);
-}
-
-.nav-item.active i {
     transform: translateY(-2px);
 }
 
