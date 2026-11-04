@@ -19,8 +19,13 @@
         <!-- Tủ trưng bày cúp và huy chương (Achievement Cabinet) -->
         <div class="achievement-cabinet">
             <!-- Nút điều hướng quay lại trang cá nhân -->
-            <a href="member.html" class="back-btn">← Quay lại</a>
+            <a href="member.html" class="back-btn">←</a>
             
+            <!-- Nút đổi hình nền tủ -->
+            <button id="change-bg-btn" class="change-bg-btn" title="Đổi hình nền tủ">
+                <i class="fa-solid fa-image"></i>
+            </button>
+
             <!-- Nội dung danh sách các cúp/huy chương tại các vị trí sẽ được render động bằng file wall.js -->
         </div>
 
@@ -42,10 +47,6 @@
                 <i class="fa-solid fa-trophy"></i>
                 <span>Xếp hạng</span>
             </a>  
-            <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Báo cáo</span>
-            </a>
         </nav>
 
     </div>
@@ -53,7 +54,6 @@
     <!-- Các tập lệnh JavaScript xử lý logic -->
     <script src="js/api.js"></script>
     <script src="js/wall.js" defer></script>
-
 
 </body>
 </html>
