@@ -146,9 +146,9 @@
                     <button type="button" class="tab-btn" onclick="switchActivityTab('team')" id="btnTabTeam">Team</button>
                 </div>
 
-                <!-- Bảng 1: Nhật ký cá nhân -->
+                <!-- Bảng 1: Nhật ký cá nhân (Đã cố định min-height tránh nhảy khung) -->
                 <div id="tabContentPersonal" class="tab-content">
-                    <div id="historyLogList" class="history-list">
+                    <div id="historyLogList" class="history-list" style="min-height: 140px;">
                         <div class="empty-log">Đang tải nhật ký từ hệ thống...</div>
                     </div>
                 </div>
@@ -157,17 +157,17 @@
                 <div id="tabContentTeam" class="tab-content tab-content-team">
                     <div class="section-title"><i class="fa-solid fa-users"></i> HOẠT ĐỘNG GẦN ĐÂY CỦA TEAM</div>
                     <div class="admin-card-container">
-                        <div class="scroll-viewport" id="activityList">
+                        <div class="scroll-viewport" id="activityList" style="min-height: 140px;">
                             <!-- Dữ liệu team sẽ được đổ vào đây -->
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- BẢNG XẾP HẠNG -->
+            <!-- BẢNG XẾP HẠNG (Cố định min-height khung bảng) -->
             <section class="dashboard-section">
                 <div class="section-title"><i class="fa-solid fa-trophy"></i> Bảng xếp hạng</div>
-                <div class="ranking-table-container tab-content ranking-container-pad">
+                <div class="ranking-table-container tab-content ranking-container-pad" style="min-height: 180px;">
                     <table class="ranking-table">
                         <thead>
                             <tr class="ranking-header-row">
@@ -185,14 +185,22 @@
             </section> 
             
             <!-- GỢI Ý LUYỆN TẬP & ĐỀ XUẤT -->
+            <<!-- GỢI Ý LUYỆN TẬP & ĐỀ XUẤT -->
             <section class="dashboard-section suggestion-section">
                 <div class="section-title suggestion-title-margin">
                     <i class="fa-solid fa-bullseye"></i> GỢI Ý LUYỆN TẬP
                 </div>
                 
                 <div class="suggestion-goal-box">
-                    <strong>Chú ý:</strong> Mục tiêu tháng 7/2026: 🏆🏆<br>
-                    🏆 = 1,9 km 🏊 + 90 km 🚴 + 21,1 km 🏃 = 100 điểm IM
+                    <strong>Hệ số quy đổi điểm IM:</strong><br>
+                    • 🏊 <strong>Bơi:</strong> 1 km = 8 điểm <br>
+                    • 🚴 <strong>Đạp:</strong> 1 km = 0,6 điểm<br>
+                    • 🏃 <strong>Chạy:</strong> 1 km = 1,4 điểm<br>
+                    <strong>• 🏆 =  1,9 km 🏊 + 90 km 🚴 + 21,1 km 🏃</strong>
+                    <br><strong>• 🏆 = 100 điểm IM  (tối đa 🏆🏆)</strong><br>
+                    <strong>• T/l tối ưu:</strong> Bơi 30% - Đạp 45% - Chạy 25% (điểm IM)<br>
+                   <strong> • Độ lệch</strong> = TBC lệch 3 môn 🏊🚴🏃<br>
+                    
                 </div>
 
                 <div class="suggestion-group">
@@ -225,22 +233,23 @@
                 <i class="fa-solid fa-shield-halved"></i>
                 <span>ADMIN</span>
             </a>
+         
             <a href="profile.html" class="nav-item">
                 <i class="fa-solid fa-medal"></i>
                 <span>Tường</span>
             </a>
-            <a href="member.html" class="nav-item">
+            <a href="member.html" class="nav-item active">
                 <i class="fa-solid fa-user"></i>
                 <span>Cá nhân</span>
             </a>
             <a href="ranking.html" class="nav-item">
-                <i class="fa-solid fa-trophy"></i>
+                <i class="fa-solid fa-chart-line"></i>
                 <span>Xếp hạng</span>
             </a>  
-            <!-- <a href="https://docs.google.com/spreadsheets/d/1AWZRIlJTNjbVUdLm4X-oItdpyBzfO6kq/edit?gid=996045951#gid=996045951" class="nav-item" target="_blank">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Báo cáo</span>
-            </a> -->
+               <a href="wall.html" class="nav-item">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Thành tích</span>
+            </a>
         </nav>
                    
     </div>
@@ -260,10 +269,10 @@
                 </select>
             </div>
 
-            <!-- <div style="margin-bottom:12px;">
+            <div style="margin-bottom:12px;">
                 <label style="display:block; font-weight:600; font-size:13px; margin-bottom:5px;">Mục tiêu:</label>
                 <input type="text" id="inputGoal" placeholder="VD: Giữ pace, tăng tốc..." style="width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;">
-            </div> -->
+            </div>
 
             <div style="margin-bottom:12px;">
                 <label style="display:block; font-weight:600; font-size:13px; margin-bottom:5px;">Chấn thương:</label>
