@@ -61,6 +61,7 @@ body {
     background-repeat: no-repeat;
     background-position: center top;
     flex: 1;
+    transition: background-image 0.4s ease-in-out;
 }
 
 .cup-slot {
@@ -150,6 +151,38 @@ body {
 
 .back-btn:hover {
     background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* --- Change Background Button --- */
+.change-bg-btn {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    padding: 8px 14px;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px);
+    color: #ffffff !important;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 9999 !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.change-bg-btn:hover {
+    background-color: rgba(255, 255, 255, 0.35) !important;
+    transform: translateY(-1px);
+}
+
+.change-bg-btn:active {
+    transform: translateY(0);
 }
 
 /* --- Loading Spinner --- */
