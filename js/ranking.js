@@ -69,14 +69,14 @@ function loadThemeCss(themeName) {
 // Logic chính của Bảng Xếp Hạng và Nhật ký
 document.addEventListener('DOMContentLoaded', () => {
     let rawMembersData = [];
-    let currentTab = 'all'; // Lưu trạng thái tab hiện tại (all, swim, bike, run)
+    let currentTab = 'all'; // Lưu trạng thái tab hiện tại
 
     const leaderboardRows = document.getElementById('leaderboardRows');
     const podiumContainer = document.getElementById('podiumContainer');
     const searchBar = document.getElementById('searchBar');
 
     // ==========================================
-    // 1. SỰ KIỆN CLICK CHUYỂN TAB (TỔNG / BƠI / ĐẠP / CHẠY)
+    // 1. SỰ KIỆN CLICK CHUYỂN TAB
     // ==========================================
     document.querySelectorAll('.tab-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // HÀM CHUYỂN ĐỔI CHUỖI SỐ VIỆT NAM KHẮT KHE (15257,00 -> 15257.00)
+    // HÀM CHUYỂN ĐỔI CHUỖI SỐ VIỆT NAM (15257,00 -> 15257.00)
     // ==========================================
     function parseVietnameseNumber(val) {
         if (val === undefined || val === null || val === '') return 0;
@@ -114,53 +114,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // HÀM CHUẨN HÓA DỮ LIỆU: Đổi tất cả Key thành chữ thường
+    // HÀM CHUẨN HÓA & LỌC DỮ LIỆU CHUẨN XÁC
     // ==========================================
     function cleanAndNormalizeData(dataArray) {
         if (!dataArray || !Array.isArray(dataArray)) return [];
         
-        return dataArray.map((item) => {
-            if (!item) return null;
+        return dataArray
+            .map((item, index) => {
+                if (!item) return null;
 
-            let swimVal = 0, bikeVal = 0, runVal = 0, pointsVal = 0, cupVal = 0, rankVal = 0;
-            let idVal = '', nameVal = 'Ẩn danh';
-
-            for (let originalKey in item) {
-                if (item.hasOwnProperty(originalKey)) {
-                    let key = originalKey.toLowerCase().trim();
-                    let val = item[originalKey];
-
-                    if (key === 'id' || key.includes('ms') || key.includes('mã') || key.includes('ma')) {
-                        idVal = String(val).trim();
-                    } else if (key.includes('tên') || key.includes('ten') || key === 'name') {
-                        nameVal = String(val).trim();
-                    } else if (key.includes('bơi') || key.includes('boi') || key.includes('swim')) {
-                        swimVal = parseVietnameseNumber(val);
-                    } else if (key.includes('đạp') || key.includes('dap') || key.includes('bike')) {
-                        bikeVal = parseVietnameseNumber(val);
-                    } else if (key.includes('chạy') || key.includes('chay') || key.includes('run')) {
-                        runVal = parseVietnameseNumber(val);
-                    } else if (key.includes('điểm') || key.includes('diem') || key.includes('point')) {
-                        pointsVal = parseVietnameseNumber(val);
-                    } else if (key.includes('cup') || key.includes('cúp')) {
-                        cupVal = parseVietnameseNumber(val);
-                    } else if (key.includes('hạng') || key.includes('hang') || key.includes('rank')) {
-                        rankVal = parseVietnameseNumber(val);
-                    }
-                }
-            }
-
-            return {
-                id: idVal,
-                name: nameVal,
-                swim: swimVal,
-                bike: bikeVal,
-                run: runVal,
-                points: pointsVal,
-                cup: cupVal,
-                rank: rankVal
-            };
-        }).filter(item => item !== null);
+                return {
+                    rowIndex: index,
+                    id: String(item.id || "").trim(),
+                    name: String(item.name || "").trim(),
+                    swim: parseVietnameseNumber(item.swim),
+                    bike: parseVietnameseNumber(item.bike),
+                    run: parseVietnameseNumber(item.run),
+                    points: parseVietnameseNumber(item.points),
+                    cup: parseVietnameseNumber(item.cup),
+                    rank: String(item.rank || ""),
+                    deviation: String(item.deviation || "0.00%"),
+                    missing: String(item.missing || ""),
+                    medal: String(item.medal || ""),
+                    dev: String(item.dev || "") // Ánh xạ dữ liệu cột dev chuẩn xác
+                };
+            })
+            .filter(item => {
+                if (!item) return false;
+                const hasValidId = item.id !== "" && item.id.toUpperCase().startsWith("TL");
+                const hasValidName = item.name !== "" && item.name !== "Ẩn danh" && item.name.toLowerCase() !== "null";
+                return hasValidId && hasValidName;
+            });
     }
 
     // ==========================================
@@ -168,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     async function initRankingPage() {
         try {
-            const res = await callSystemAPI("getDashboard");
+            // Ép làm mới cache để nhận dữ liệu mới nhất từ server
+            const res = await callSystemAPI("getDashboard", { forceRefresh: true });
             console.log("Dữ liệu gốc từ API:", res);
 
             if (!res || !res.success) {
@@ -176,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Bóc tách mảng Rankings thành viên trước để có nguồn dữ liệu tổng chuẩn xác
             let rankingsTarget = null;
             if (res.users) {
                 rankingsTarget = Array.isArray(res.users) ? res.users : res.users.data;
@@ -188,15 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (rankingsTarget && Array.isArray(rankingsTarget)) {
                 rawMembersData = cleanAndNormalizeData(rankingsTarget);
-                console.log("Dữ liệu sau khi giải mã bóc tách thành công:", rawMembersData);
+                console.log("Dữ liệu sau khi làm sạch:", rawMembersData);
                 
-                // TÍNH TỔNG CLB TRỰC TIẾP TỪ DỮ LIỆU THÀNH VIÊN (rawMembersData)
                 const totalClubSwim = rawMembersData.reduce((sum, user) => sum + (parseFloat(user.swim) || 0), 0);
                 const totalClubBike = rawMembersData.reduce((sum, user) => sum + (parseFloat(user.bike) || 0), 0);
                 const totalClubRun  = rawMembersData.reduce((sum, user) => sum + (parseFloat(user.run) || 0), 0);
                 const totalClubCups = rawMembersData.reduce((sum, user) => sum + (parseInt(user.cup) || 0), 0);
 
-                // Hiển thị dữ liệu tổng lên giao diện
                 if (document.getElementById('clubSwim')) {
                     document.getElementById('clubSwim').textContent = (totalClubSwim / 1000).toFixed(1) + " km";
                 }
@@ -216,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Không tìm thấy cấu trúc mảng danh sách xếp hạng phù hợp trong API!");
             }
 
-            // Xử lý bóc tách mảng history/logs cho phần nhật ký thành tích gần đây
             let historyTarget = res.history || res.logs || res.activities || [];
             if (historyTarget.length === 0 && res.data) {
                 historyTarget = res.data.history || res.data.logs || res.data.activities || [];
@@ -236,6 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentTab === 'all') {
                 if (b.points !== a.points) return b.points - a.points;
                 return b.cup - a.cup; 
+            } else if (currentTab === 'deviation' || currentTab === 'dev' || currentTab === 'lech') {
+                return parseFloat(b.deviation) - parseFloat(a.deviation);
             } else {
                 return b[currentTab] - a[currentTab];
             }
@@ -243,20 +226,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 4. HÀM RENDER BỤC VINH QUANG TOP 3 (PODIUM) Theo Tab
+    // 4. HÀM RENDER BỤC VINH QUANG TOP 3 (PODIUM)
     // ==========================================
     function renderPodium(members) {
         if (!podiumContainer) return;
 
-        const sorted = sortMembersByTab(members).slice(0, 3);
-        const top3 = [sorted[1], sorted[0], sorted[2]]; // Giao diện bục: Hạng 2 - Hạng 1 - Hạng 3
+        const activeMembers = members.filter(item => {
+            if (currentTab === 'all') return item.points > 0 || item.cup > 0;
+            if (currentTab === 'deviation' || currentTab === 'dev' || currentTab === 'lech') return item.dev !== "" || item.deviation !== "0.00%";
+            return item[currentTab] > 0;
+        });
+
+        const sorted = sortMembersByTab(activeMembers).slice(0, 3);
+        const top3 = [sorted[1], sorted[0], sorted[2]]; 
 
         podiumContainer.innerHTML = top3.map((item, index) => {
             if (!item) return '<div class="podium-card empty"></div>';
             
             const originalRank = index === 1 ? 1 : (index === 0 ? 2 : 3);
             const label = originalRank === 1 ? "1st" : (originalRank === 2 ? "2nd" : "3rd");
-            const jpgAvatar = `avatars/${item.id}.jpg`;
+            const jpgAvatar = item.id ? `avatars/${item.id}.jpg` : 'avatars/default.jpg';
 
             let subText = '';
             if (currentTab === 'all') {
@@ -267,6 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 subText = `${item.bike.toFixed(1)} km`;
             } else if (currentTab === 'run') {
                 subText = `${item.run.toFixed(1)} km`;
+            } else if (currentTab === 'deviation' || currentTab === 'dev' || currentTab === 'lech') {
+                subText = `${item.deviation}`;
             }
 
             return `
@@ -283,30 +274,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // ==========================================
-    // 5. HÀM RENDER DANH SÁCH BẢNG XẾP HẠNG Theo Tab (Đã lọc bỏ giá trị 0)
+    // 5. HÀM RENDER DANH SÁCH BẢNG XẾP HẠNG
     // ==========================================
     function renderLeaderboard() {
         if (!leaderboardRows) return;
         const keyword = searchBar ? searchBar.value.trim().toLowerCase() : '';
         leaderboardRows.innerHTML = "";
         
-        // 1. Lọc theo từ khóa tìm kiếm (tên hoặc id)
         let filtered = rawMembersData.filter(item => 
             item.name.toLowerCase().includes(keyword) || 
             item.id.toLowerCase().includes(keyword)
         );
 
-        // 2. Lọc bỏ các thành viên có chỉ số bằng 0 tùy theo Tab đang chọn
         filtered = filtered.filter(item => {
             if (currentTab === 'all') {
-                return (parseFloat(item.points) || 0) > 0;
+                return (parseFloat(item.points) || 0) > 0 || (parseInt(item.cup) || 0) > 0;
             } else if (currentTab === 'swim') {
                 return (parseFloat(item.swim) || 0) > 0;
             } else if (currentTab === 'bike') {
                 return (parseFloat(item.bike) || 0) > 0;
             } else if (currentTab === 'run') {
                 return (parseFloat(item.run) || 0) > 0;
+            } else if (currentTab === 'deviation' || currentTab === 'dev' || currentTab === 'lech') {
+                return true; // Hiển thị toàn bộ danh sách ở tab lệch để kiểm tra chi tiết cột dev
             }
             return true;
         });
@@ -315,7 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sortedMembers.forEach((item, index) => {
             let displayRightSide = ''; 
+            let devInfoHtml = '';
 
+            // ------------------------------------------
+            // PHÂN LOẠI HIỂN THỊ CHÍNH XÁC THEO TỪNG TAB
+            // ------------------------------------------
             if (currentTab === 'all') {
                 displayRightSide = `
                     <div class="row-score">${item.points.toFixed(0)} điểm </div>
@@ -327,17 +321,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayRightSide = `<div class="row-score">${item.bike.toFixed(1)} km 🚴</div>`;
             } else if (currentTab === 'run') {
                 displayRightSide = `<div class="row-score">${item.run.toFixed(1)} km 🏃</div>`;
+            } else if (currentTab === 'deviation' || currentTab === 'dev' || currentTab === 'lech') {
+                // Tab Lệch: Hiển thị độ lệch bên phải và chi tiết cột dev bên dưới
+                displayRightSide = `<div class="row-score" style="color: #e67e22; font-weight: bold;">T/L: ${item.deviation}</div>`;
+                if (item.dev) {
+                    devInfoHtml = `<div class="row-dev" style="font-size: 11px; color: #888; margin-top: 4px;">⚠️ ${item.dev}</div>`;
+                } else {
+                    devInfoHtml = `<div class="row-dev" style="font-size: 11px; color: #aaa; margin-top: 4px;">✅ Đạt chuẩn </div>`;
+                }
             }
             
             const row = `
-                <div class="row-item">
-                    <div class="row-left">
-                        <div class="row-index">${index + 1}</div>
-                        <span class="row-name">${item.name}</span>
+                <div class="row-item" style="flex-direction: column; align-items: stretch;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div class="row-left" style="display: flex; align-items: center; gap: 8px;">
+                            <div class="row-index">${index + 1}</div>
+                            <span class="row-name" style="font-weight: bold;">${item.name}</span>
+                        </div>
+                        <div class="row-right" style="display: flex; align-items: center; gap: 10px;">
+                            ${displayRightSide}
+                        </div>
                     </div>
-                    <div class="row-right">
-                        ${displayRightSide}
-                    </div>
+                    ${devInfoHtml}
                 </div>
             `;
             leaderboardRows.insertAdjacentHTML('beforeend', row);
@@ -394,6 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Khởi chạy toàn bộ logic trang khi DOM đã sẵn sàng
+    // Khởi chạy toàn bộ hệ thống
     initRankingPage();
 });
